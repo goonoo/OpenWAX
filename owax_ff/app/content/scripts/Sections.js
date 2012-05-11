@@ -144,29 +144,31 @@ var getTextContent = function(el) {
 
 	if (nodeType == Node.ELEMENT_NODE &&
 			styleDisplay == 'none') {
-		txt = '';
-	} else if (nodeType == Node.ELEMENT_NODE &&
+		txt += '[__[';
+	};
+
+  if (nodeType == Node.ELEMENT_NODE &&
 			tagName == "IMG") {
-		txt = el.getAttribute('alt');
+		txt += el.getAttribute('alt');
 	} else if (nodeType == Node.ELEMENT_NODE &&
 			tagName == "AREA") {
-		txt = el.getAttribute('alt');
+		txt += el.getAttribute('alt');
 	} else if (nodeType == Node.ELEMENT_NODE &&
 			tagName == "INPUT" &&
 			attrType == 'image') {
-		txt = el.getAttribute('alt');
+		txt += el.getAttribute('alt');
 	} else if (nodeType == Node.ELEMENT_NODE &&
 			tagName == "INPUT" &&
 			(attrType == 'submit' ||
 				attrType == 'reset' ||
 				attrType == 'button')) {
-		txt = el.value;
+		txt += el.value;
 	} else if (nodeType == Node.ELEMENT_NODE &&
 			tagName == "INPUT") {
-		txt = getLabel(el);
+		txt += getLabel(el);
 	} else if (nodeType == Node.ELEMENT_NODE &&
 			(tagName == "TEXTAREA" || tagName == "SELECT")) {
-		txt = getLabel(el);
+		txt += getLabel(el);
 	} else if (nodeType == Node.ELEMENT_NODE &&
 			(tagName == "SCRIPT" || tagName == "STYLE")) {
 		// do nothing
@@ -178,6 +180,11 @@ var getTextContent = function(el) {
 			else
 				txt += getTextContent(cNodes[i]);
 		};
+	};
+
+	if (nodeType == Node.ELEMENT_NODE &&
+			styleDisplay == 'none') {
+		txt += ']__]';
 	};
 	txt = txt ? txt.replace(/^\s+/, '').replace(/\s+$/, '') : '';
 	return txt;

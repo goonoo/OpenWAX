@@ -183,7 +183,7 @@ achecker.Pajet.ListSection.prototype.getAsElement = function() {
 				// compatible with firebug 1.9.x
 				parent.Firebug.Inspector.highlightObject($targetEl, parent.Firebug.currentContext);
 			} else if (typeof console.log != 'undefined' && $targetEl){
-				console.log('N-WAX Info: ', Xpath.getElementXPath($targetEl));
+				console.log('O-WAX Info: ', Xpath.getElementXPath($targetEl));
 			};
 		}, false);
 		$contentList.appendChild($item);
@@ -299,10 +299,17 @@ achecker.Pajet.TableSection.prototype.getAsElement = function() {
 		for (var j in info.content) {
 			var _content = info.content[j];
 			var $td = doc.createElement('td');
-			if (typeof _content == 'string')
+			if (typeof _content == 'string') {
 				$td.textContent = _content;
-			else
+        $td.innerHTML = ($td.textContent.
+              replace(/</g, '&lt;').
+              replace(/>/g, '&gt;')
+            ).
+            replace(/\[__\[/g, '<span style="color:#777!important;text-decoration:line-through">').
+            replace(/\]__\]/g, '</span>');
+			} else {
 				$td.appendChild(_content);
+      };
 			if (this.colInfo[j].className)
 				$td.className = this.colInfo[j].className;
 			$tr.appendChild($td);
@@ -343,7 +350,7 @@ achecker.Pajet.TableSection.prototype.getAsElement = function() {
 				// compatible with firebug 1.9.x
 				parent.Firebug.Inspector.highlightObject($targetEl, parent.Firebug.currentContext);
 			} else if (typeof console.log != 'undefined' && $targetEl){
-				console.log('N-WAX Info: ', Xpath.getElementXPath($targetEl));
+				console.log('O-WAX Info: ', Xpath.getElementXPath($targetEl));
 			};
 		}, false);
 		$tbody.appendChild($tr);
