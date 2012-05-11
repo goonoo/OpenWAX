@@ -183,7 +183,7 @@ achecker.Pajet.ListSection.prototype.getAsElement = function() {
 				// compatible with firebug 1.9.x
 				parent.Firebug.Inspector.highlightObject($targetEl, parent.Firebug.currentContext);
 			} else if (typeof console.log != 'undefined' && $targetEl){
-				console.log('O-WAX Info: ', Xpath.getElementXPath($targetEl));
+				console.log('OpenWAX Info: ', Xpath.getElementXPath($targetEl));
 			};
 		}, false);
 		$contentList.appendChild($item);
@@ -350,7 +350,7 @@ achecker.Pajet.TableSection.prototype.getAsElement = function() {
 				// compatible with firebug 1.9.x
 				parent.Firebug.Inspector.highlightObject($targetEl, parent.Firebug.currentContext);
 			} else if (typeof console.log != 'undefined' && $targetEl){
-				console.log('O-WAX Info: ', Xpath.getElementXPath($targetEl));
+				console.log('OpenWAX Info: ', Xpath.getElementXPath($targetEl));
 			};
 		}, false);
 		$tbody.appendChild($tr);

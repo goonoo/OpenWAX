@@ -59,7 +59,7 @@
 
 	<toolbarpalette id="BrowserToolbarPalette">
 		<toolbarbutton id="achecker-button"
-			label="O-WAX" type="button"
+			label="OpenWAX" type="button"
 			oncommand="achecker.toggleChecker(); event.stopPropagation();"
 			disabled="false"
 			hidden="false">
@@ -68,12 +68,12 @@
 
 	<broadcasterset id="mainBroadcasterSet">
 		<broadcaster id="achecker-viewsidebar" 
-			label="O-WAX"
+			label="OpenWAX"
 			autoCheck="false"
 			type="checkbox"
 			group="sidebar"
 			sidebarurl="chrome://achecker/content/sidebar.xul"
-			sidebartitle="O-WAX"
+			sidebartitle="OpenWAX"
 			oncommand="achecker.toggleChecker();"
 			/>
 	</broadcasterset>

@@ -5,7 +5,7 @@
   <Description about="urn:mozilla:install-manifest">
     <em:id>achecker@tenshi</em:id>
     <em:type>2</em:type>
-    <em:name>O-WAX</em:name>
+    <em:name>OpenWAX</em:name>
     <em:version>1.0</em:version>
     <em:creator>Goonoo Kim</em:creator>
     <em:targetApplication>
@@ -15,7 +15,7 @@
         <em:maxVersion>14.*</em:maxVersion>
       </Description>
     </em:targetApplication>
-    <em:description>O-WAX(NHN Web Accessibility eXtension) is a tool that can help diagnose and fix the accessibility problem.</em:description>
+    <em:description>OpenWAX(Open Web Accessibility eXtension) is a tool that can help diagnose and fix the accessibility problem.</em:description>
     <em:iconURL>chrome://achecker/skin/logo32.png</em:iconURL>
     <em:icon64URL>chrome://achecker/skin/logo64.png</em:icon64URL>
   </Description>
