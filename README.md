@@ -4,7 +4,7 @@ O-WAX (Open Web Accessibility eXtension)
 O-WAX(Open Web Accessibility eXtension) is a tool that can help diagnose and fix the accessibility problem.
 
 O-WAX can diagnose following accessibility problems.
- * Text Alternatives of <img>, <area>, CSS Background
+ * Text Alternatives of \<img\>, \<area\>, CSS Background
  * Data Table
  * Shortcut
  * Language of page
