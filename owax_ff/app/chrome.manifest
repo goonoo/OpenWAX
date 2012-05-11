@@ -1,0 +1,7 @@
+content	achecker	content/
+skin	achecker	classic/1.0	skin/
+locale	achecker	en-US	locale/en-US/
+locale  achecker	ko-KR	locale/ko-KR/
+
+overlay	chrome://browser/content/browser.xul	chrome://achecker/content/firefoxOverlay.xul
+style	chrome://global/content/customizeToolbar.xul	chrome://achecker/skin/achecker.css

@@ -1,0 +1,770 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>N-WAX Template</title>
+<style type="text/css">
+/* Reset */
+#achecker-result,
+#achecker-result *{float:none;margin:0;padding:0;width:auto;height:auto;border:none;color:#000;background:transparent;font:normal normal normal 12px/1.2em '나눔고딕',NanumGothic}
+#achecker-result h1,#achecker-result h2,#achecker-result h3, #achecker-result h4{font-weight:bold}
+#achecker-result img{max-width:100px;max-height:100px}
+#achecker-result a{color:#00d;text-decoration:underline}
+#achecker-result .blind{overflow:hidden;position:absolute;top:0;left:0;width:0;height:0;font-size:0;line-height:0}
+/* CheckList Title */
+#achecker-result h2{position:relative;margin:0;padding:.5em 2em .5em .5em;color:#fff;text-shadow:1px 1px 1px rgba(0,0,0,0.7);font-size:14px;background:-moz-linear-gradient(top,#7f8887 0%,#7f8887 8%,#475355 8%,#272727 100%);background:-webkit-gradient(linear,0 0,0 100%,color-stop(0%,#7f8887),color-stop(8%,#7f8887),color-stop(8%,#475355),color-stop(100%,#272727))}
+#achecker-result .pajetSection h2{background:-moz-linear-gradient(top,#7f8887 0%,#7f8887 8%,#475355 8%,#272727 100%);background:-webkit-gradient(linear,0 0,0 100%,color-stop(0%,#7f8887),color-stop(8%,#7f8887),color-stop(8%,#475355),color-stop(100%,#272727));cursor:default}
+#achecker-result h2:hover{box-shadow:0 10px 10px rgba(255,255,255,0.2) inset}
+#achecker-result h2.folded+*{display:none}
+#achecker-result .pajetSection h2 a{position:absolute;top:50%;right:2%;width:44px;padding:3px 1px 3px 0;margin-top:-10px;border-radius:3px;border:1px solid #1e2627;background:#2d3639;box-shadow:1px 1px 1px rgba(255,255,255,0.1) inset,-1px -1px 1px rgba(255,255,255,0.1) inset;font-weight:700;font-size:11px;font-family:verdana;cursor:pointer;color:#bac7c2;letter-spacing:-1px;text-decoration:none;text-align:center;text-shadow:0 1px 0 #000}
+#achecker-result .pajetSection h2 a:hover{border-color:#2e3a3b;background:#445256;text-decoration:none;color:#eef5f3}
+
+/* Validation Title */
+#achecker-result h3{margin:0;padding:.5em;background:#eee;color:#333;font-size:13px}
+#achecker-result h3.warning{border-top:5px solid #ff0}
+#achecker-result h3.fail{border-top:5px solid #f00}
+/* Result - Table Type */
+#achecker-result table{width:100%;border-spacing:0;border:none;text-align:center}
+#achecker-result th{padding:7px 0;border-spacing:0;border:none;border-left:1px solid #ddd;background:#f0f0f0;box-shadow:2px 2px 1px rgba(255,255,255,0.6) inset}
+#achecker-result td{padding:5px 0;border-spacing:0;border:none;border-left:1px solid #ddd;border-top:1px solid #ddd;word-break:break-all}
+#achecker-result th:last-child,
+#achecker-result td:last-child,
+#achecker-result .lt{padding-left:5px;text-align:left}
+#achecker-result tr:hover td{background:#bfde6d;background:-moz-linear-gradient(top,#fff 0%,#f6f6f6 30%,#e1e1e1 100%);background:-webkit-gradient(linear,0 0,0 100%,color-stop(0%,#fff),color-stop(30%,#f6f6f6),color-stop(100%,#e1e1e1));color:#000;text-shadow:1px 1px 1px rgba(255,255,255,0.7)}
+#achecker-result tr.warning td{background:-moz-linear-gradient(top,#fcfcdd 0%,#ffffaa 100%);
+background:-webkit-gradient(linear,0 0,0 100%,color-stop(0%,#fcfcdd),color-stop(100%,#ffffaa))}
+#achecker-result tr.fail td{background-image:-moz-linear-gradient(top,#fceaea 0%,#fda6a6 100%);
+background-image:-webkit-gradient(linear,0 0,0 100%,color-stop(0%,#fceaea),color-stop(100%,#fda6a6))}
+#achecker-result tr.hidden_el td,
+#achecker-result tr.hidden_el td li{color:#999}
+#achecker-result tr.blind_el td:first-child:before{content:'Blind'}
+#achecker-result tr.hidden_el td:first-child:before{content:'Hidden'}
+/* Result - List Type */
+#achecker-result ul{margin:0;padding:0;list-style:none}
+#achecker-result li{display:block;padding:5px 15px;background:#fff;border-top:1px solid #ddd;color:#333;text-decoration:none}
+#achecker-result li:first-child{border-top:none}
+#achecker-result li:hover{background:#bfde6d;background:-moz-linear-gradient(top,#fff 0%,#f6f6f6 30%,#e1e1e1 100%);background:-webkit-gradient(linear,0 0,0 100%,color-stop(0%,#fff),color-stop(30%,#f6f6f6),color-stop(100%,#e1e1e1));color:#000;text-shadow:1px 1px 1px rgba(255,255,255,0.7)}
+#achecker-result li:hover>div{text-shadow:none}
+#achecker-result li.warning{background:-moz-linear-gradient(top,#fcfcdd 0%,#ffffaa 100%);background:-webkit-gradient(linear,0 0,0 100%,color-stop(0%,#fcfcdd),color-stop(100%,#ffffaa))}
+#achecker-result li.fail{background-image:-moz-linear-gradient(top,#fceaea 0%,#fda6a6 100%);background-image:-webkit-gradient(linear,0 0,0 100%,color-stop(0%,#fceaea),color-stop(100%,#fda6a6))}
+/* Inner Contents */
+#achecker-result .tb_str{padding:0 !important}
+#achecker-result .tb_str th:first-child{width:45px}
+#achecker-result .tb_str td:first-child:before{content:none !important}
+#achecker-result .tb_str th,
+#achecker-result .tb_str td{border-color:#f4f4f4;background:none !important;box-shadow:none}
+#achecker-result .tb_str th:first-child,.tb_str td:first-child{border-left:none}
+#achecker-result .tb_str ul{margin-left:-5px}
+#achecker-result .tb_str li{padding:3px 0 3px 5px;border-color:#f4f4f4;background:none !important}
+#achecker-result .contrast li:hover{background:none}
+#achecker-result .contrast .color{display:inline-block;margin:3px 3px -3px 0;border:1px solid #eee;width:15px;height:15px}
+#achecker-result .contrast button{border:solid 1px;border-color:#bbb #777 #777 #bbb;border-radius:2px;padding:3px 2px;background:#eee}
+#achecker-result .contrast .result{font-weight:bold}
+#achecker-result .contrast .resultText{display:inline-block;padding:3px 5px}
+#achecker-result .validationResult{margin:5px 0;border:solid 1px #ddd}
+#achecker-result .validationResult li{background:#fff}
+#achecker-result .subinfo{color:#777}
+#achecker-result .comment{margin:0;padding:10px 5px}
+/* Fold Control */
+#achecker-result .foldcontrol{position:fixed;z-index:10;top:-1px;right:2%;width:44px;margin-right:-4px;padding:4px 4px 1px 4px;border-radius:0 0 3px 3px;background:-moz-linear-gradient(top,#7f8887 0%,#465254 100%);background:-webkit-gradient(linear,0 0,0 100%,color-stop(0%,#7f8887),color-stop(100%,#465254));box-shadow:1px 1px 0 #272727;text-align:center}
+#achecker-result .foldcontrol .all{display:block;margin-bottom:4px;font-weight:700;font-family:tahoma;font-size:10px;color:#fff;text-shadow:1px 1px 1px rgba(42,42,42,0.8)}
+#achecker-result .foldcontrol button{display:block;width:44px;padding:3px 1px 3px 0;margin-bottom:3px;border-radius:3px;border:1px solid #1e2627;background:#2d3639;box-shadow:1px 1px 1px rgba(255,255,255,0.1) inset,-1px -1px 1px rgba(255,255,255,0.1) inset;font-weight:700;font-size:11px;font-family:verdana;cursor:pointer;color:#bac7c2;letter-spacing:-1px;text-align:center;text-decoration:none;text-shadow:0 1px 0 #000;line-height:1}
+#achecker-result .foldcontrol button:hover{border-color:#2e3a3b;background:#445256;text-decoration:none;color:#eef5f3}
+
+</style>
+</head>
+<body id="achecker-result">
+<div class="foldcontrol">
+	<span class="all">All</span>
+	<button type="button">Unfold</button>
+	<!-- <button type="button">Fold</button> -->
+</div>
+<div class="pajetFrames">
+	<h2>대상 페이지</h2>
+	<ul>
+	<li><a href="http://www.naver.com/" target="_blank">http://www.naver.com/</a></li>
+	<li><a href="http://www.naver.com/js/reatcmp.html?1005" target="_blank">http://www.naver.com/js/reatcmp.html?1005</a></li>
+	<li><a href="http://nv1.ad.naver.com/adshow?unit=002AG" target="_blank">http://nv1.ad.naver.com/adshow?unit=002AG</a></li>
+	<li><a href="http://static.nid.naver.com/login.nhn?svc=me&amp;url=http%3A%2F%2Fwww.naver.com" target="_blank">http://static.nid.naver.com/login.nhn?svc=me&amp;url=http%3A%2F%2Fwww.naver.com</a></li>
+	<li><a href="http://nv2.ad.naver.com/adshow?unit=002X" target="_blank">http://nv2.ad.naver.com/adshow?unit=002X</a></li>
+	<li><a href="http://castbox.shopping.naver.com/index.nhn" target="_blank">http://castbox.shopping.naver.com/index.nhn</a></li>
+	</ul>
+</div>
+<div class="pajetSection">
+	<h2 tabindex="0" class="folded">
+		1.1.1 대체 텍스트 (img) (108)
+		<a href="#">Guide</a>
+	</h2>
+	<table>
+	<caption class="blind">1.1.1 대체 텍스트 (img) 목록</caption>
+	<thead>
+	<tr>
+	<th scope="col" style="width:45px">숨김</th>
+	<th scope="col" style="width:106px">미리보기</th>
+	<th scope="col" style="width:45px">요소</th>
+	<th scope="col">내용</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr class="pass">
+	<td></td>
+	<td><img src="http://static.naver.net/www/u/2010/0611/nmms_215646753.gif" alt=""></td>
+	<td>img</td>
+	<td>네이버</td>
+	</tr>
+	<tr class="pass">
+	<td></td>
+	<td></td>
+	<td>area</td>
+	<td>네이버</td>
+	</tr>	
+	<tr class="warning">
+	<td></td>
+	<td><img src="http://static1.naver.net/w9/blank.gif" alt=""></td>
+	<td>img</td>
+	<td>alt=""</td>
+	</tr>
+	<tr class="warning  hidden_el">
+	<td></td>
+	<td><img src="http://static1.naver.net/w9/blank.gif" alt=""></td>
+	<td>img</td>
+	<td>alt=""</td>
+	</tr>
+	<tr class="pass">
+	<td></td>
+	<td><img src="http://static.naver.net/newscast/2011/1213/1132301814286424.jpg" alt=""></td>
+	<td>img</td>
+	<td>초등생 15명 사망…통학버스 또 '참사' 왜 </td>
+	</tr>
+	<tr class="pass  hidden_el">
+	<td></td>
+	<td><img src="http://static.naver.net/green/v2/img/btn_login_2.gif" alt=""></td>
+	<td>input</td>
+	<td>로그인</td>
+	</tr>
+	<tr class="pass  hidden_el">
+	<td></td>
+	<td><img src="http://static.naver.net/common/login/btn_x_main.gif" alt=""></td>
+	<td>img</td>
+	<td>오류메시지닫기</td>
+	</tr>
+	</tbody>
+	</table>
+</div>
+<div class="pajetSection">
+	<h2 tabindex="0">
+		1.1.1 대체 텍스트 (bg) (223)
+		<a href="#">Guide</a>
+	</h2>
+	<table>
+	<caption class="blind">1.1.1 대체 텍스트 (bg) 목록</caption>
+	<thead>
+	<tr>
+	<th scope="col" style="width:45px">숨김</th>
+	<th scope="col" style="width:106px">미리보기</th>
+	<th scope="col">내용</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr class="">
+	<td></td>
+	<td><div style="background-image: url(&quot;http://static.naver.net/www/sp_main20111209.png&quot;);background-position: 0px 0px;background-repeat: no-repeat;width: 48px;height: 31px;max-width: 100px;max-height: 200px;display: inline-block;overflow: hidden;"></div></td>
+	<td>네이버SE</td>
+	</tr>
+	<tr class="">
+	<td></td>
+	<td><div style="background-image: url(&quot;http://static.naver.net/www/sp_main20111209.png&quot;);background-position: -48px 0px;background-repeat: no-repeat;width: 47px;height: 31px;max-width: 100px;max-height: 200px;display: inline-block;overflow: hidden;"></div></td>
+	<td></td>
+	</tr>
+	<tr class="hidden_el">
+	<td></td>
+	<td><div style="background-image: url(&quot;http://static.naver.net/www/sp_main20111209.png&quot;);background-position: -110px -449px;background-repeat: no-repeat;width: 121px;height: 22px;max-width: 100px;max-height: 200px;display: inline-block;overflow: hidden;"></div></td>
+	<td>휴대폰번호 입력</td>
+	</tr>
+	<tr class="hidden_el">
+	<td></td>
+	<td><div style="background-image: url(&quot;http://static.naver.net/www/sp_main20111209.png&quot;);background-position: -230px -170px;background-repeat: no-repeat;width: 42px;height: 24px;max-width: 100px;max-height: 200px;display: inline-block;overflow: hidden;"></div></td>
+	<td>보내기</td>
+	</tr>
+	<tr class="hidden_el">
+	<td></td>
+	<td><div style="background-image: url(&quot;http://static.naver.net/www/sp_prmt20111207.png&quot;);background-position: 0px 0px;background-repeat: no-repeat;width: 68px;height: 84px;max-width: 100px;max-height: 200px;display: inline-block;overflow: hidden;"></div></td>
+	<td>네이버 앱 QR코드 </td>
+	</tr>
+	<tr class="hidden_el">
+	<td></td>
+	<td><div style="background-image: url(&quot;http://static.naver.net/www/sp_rgt20111121.png&quot;);background-position: 0px -90px;background-repeat: no-repeat;width: auto;height: auto;max-width: 100px;max-height: 200px;display: inline-block;overflow: hidden;"></div></td>
+	<td>지도 </td>
+	</tr>
+	<tr class="hidden_el">
+	<td></td>
+	<td><div style="background-image: url(&quot;http://static.naver.net/www/sp_rgt20111121.png&quot;);background-position: 0px -90px;background-repeat: no-repeat;width: auto;height: auto;max-width: 100px;max-height: 200px;display: inline-block;overflow: hidden;"></div></td>
+	<td>N드라이브</td>
+	</tr>
+	</tbody>
+	</table>
+</div>
+<div class="pajetSection">
+	<h2 tabindex="0">
+		1.1.1 대체 텍스트 (object) (4)
+		<a href="#">Guide</a>
+	</h2>
+	<table>
+	<caption class="blind">1.1.1 대체 텍스트 (object) 목록</caption>
+	<thead>
+	<tr>
+	<th scope="col" style="width:45px">숨김</th>
+	<th scope="col">요소</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr class="">
+	<td></td>
+	<td>object</td>
+	</tr>
+	<tr class="">
+	<td></td>
+	<td>embed</td>
+	</tr>
+	<tr class="hidden_el">
+	<td></td>
+	<td>object</td>
+	</tr>
+	<tr class="">
+	<td></td>
+	<td>embed</td>
+	</tr>
+	</tbody>
+	</table>
+</div>
+<div id="w3c_validation" class="pajetSection">
+	<h2 tabindex="0">
+		2.2.1 W3C Validation
+		<a href="#">Guide</a>
+	</h2>
+	<div>
+		<ul>
+		<li class="validationItem">
+			<span class="url">http://www.naver.com/</span>: <b class="errcnt">Loading...</b>
+			<div class="validationResult">
+				<h3 class="fail">Error</h3>
+				<ul>
+				<li>the name and VI delimiter can be omitted from an attribute specification only if SHORTTAG YES is specified
+					<div class="subinfo">165 line, 61 column</div>
+				<li>the name and VI delimiter can be omitted from an attribute specification only if SHORTTAG YES is specified
+					<div class="subinfo">165 line, 61 column</div>
+				</ul>
+				<h3 class="warning">Warning</h3>
+				<ul>
+				<li>the name and VI delimiter can be omitted from an attribute specification only if SHORTTAG YES is specified
+					<div class="subinfo">165 line, 61 column</div>
+				</ul>
+			</div>
+		</li>
+		<li class="fail validationItem">
+			<span class="url">http://www.naver.com/js/reatcmp.html?1005</span>: <b class="errcnt">1 Errors</b>
+		</li>
+		<li class="fail validationItem">
+			<span class="url">http://nv1.ad.naver.com/adshow?unit=002AG</span>: <b class="errcnt">24 Errors</b>
+		</li>
+		<li class="fail validationItem">
+			<span class="url">http://static.nid.naver.com/login.nhn?svc=me&amp;url=http%3A%2F%2Fwww.naver.com</span>: <b class="errcnt">18 Errors</b>
+		</li>
+		<li class="validationItem">
+			<span class="url">http://nv2.ad.naver.com/adshow?unit=002X</span>: <b class="errcnt">Loading...</b>
+		</li>
+		<li class="validationItem">
+			<span class="url">http://castbox.shopping.naver.com/index.nhn</span>: <b class="errcnt">Loading...</b>
+		</li>
+		</ul>
+	</div>
+</div>
+<div class="pajetSection">
+	<h2 tabindex="0">
+		2.3.1 표 제목 (0)
+		<a href="#">Guide</a>
+	</h2>
+	<table>
+	<caption class="blind">2.3.1 표 제목 목록</caption>
+	<thead>
+	<tr>
+	<th scope="col" style="width:45px">숨김</th>
+	<th scope="col" class="lt">Caption 내용</th>
+	<th scope="col">Summary 내용</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr class="fail hidden_el">
+	<td></td>
+	<td class="lt">없음</td>
+	<td>없음</td>
+	</tr>
+	<tr class="">
+	<td></td>
+	<td class="lt">환전 고시 환율</td>
+	<td>환전 고시 환율 리스트</td>
+	</tr>
+	<tr class="hidden_el">
+	<td></td>
+	<td class="lt">거래상위 종목</td>
+	<td>거래상위 종목 리스트</td>
+	</tr>
+	<tr class="hidden_el">
+	<td></td>
+	<td class="lt">시가총액 상위 종목</td>
+	<td>시가총액 상위 종목 리스트</td>
+	</tr>
+	<tr class="">
+	<td></td>
+	<td class="lt">환전 고시 환율</td>
+	<td>환전 고시 환율 리스트</td>
+	</tr>
+	</tbody>
+	</table>
+</div>
+<div class="pajetSection">
+	<h2 tabindex="0">
+		2.3.2, 2.3.3 표 구조화 (0)
+		<a href="#">Guide</a>
+	</h2>
+	<table>
+	<caption class="blind">2.3.2, 2.3.3 표 구조화 목록</caption>
+	<thead>
+	<tr>
+	<th scope="col" style="width:45px">숨김</th>
+	<th scope="col">구조</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr class="fail hidden_el">
+	<td></td>
+	<td class="tb_str">
+		<table>
+		<caption class="blind">표 구조</caption>
+		<thead>
+		<tr>
+		<th scope="col">요소</th>
+		<th scope="col" style="width:35px">유무</th>
+		<th scope="col">제목셀 정보 (scope 속성값)</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr>
+		<td>thead</td>
+		<td>O</td>
+		<td><ul><li>종목명(X)</li><li>현재가(X)</li><li>전일대비(X)</li><li>등락률(X)</li></ul></td>
+		</tr>
+		<tr>
+		<td>tfoot</td>
+		<td>X</td>
+		<td>-</td>
+		</tr>
+		<tr>
+		<td>tbody</td>
+		<td>O</td>
+		<td><ul><li>대유신소재(X)</li><li>영진약품(X)</li><li>우성사료(X)</li><li>유양디앤유(X)</li></ul></td>
+		</tr>
+		</tbody>
+		</table>
+	</td>
+	</tr>
+	<tr>
+	<td></td>
+	<td class="tb_str">
+		<table>
+		<caption class="blind">표 구조</caption>
+		<thead>
+		<tr>
+		<th scope="col">요소</th>
+		<th scope="col" style="width:35px">유무</th>
+		<th scope="col">제목셀 정보</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr>
+		<td>thead</td>
+		<td>O</td>
+		<td><ul><li>국가명(col)</li><li>지수명(col)</li><li>현재가(col)</li><li>전일대비(col)</li><li>등락률(col)</li><li>등락률 그래프(col)</li><li>시간(col)</li></ul></td>
+		</tr>
+		<tr>
+		<td>tfoot</td>
+		<td>X</td>
+		<td>-</td>
+		</tr>
+		<tr>
+		<td>tbody</td>
+		<td>O</td>
+		<td>0개</td>
+		</tr>
+		</tbody>
+		</table>
+	</td>
+	</tr>
+	</tbody>
+	</table>
+</div>
+<div class="pajetSection">
+	<h2 tabindex="0">
+		2.7.2 (레벨 AA) 단축키 (5)
+		<a href="#">Guide</a>
+	</h2>
+	<table>
+	<caption class="blind">2.7.2 (레벨 AA) 단축키 목록</caption>
+	<thead>
+	<tr>
+	<th scope="col" style="width:45px">숨김</th>
+	<th scope="col" style="width:45px">단축키</th>
+	<th scope="col" style="width:45px">요소</th>
+	<th scope="col">내용</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr class="pass">
+	<td></td>
+	<td>1</td>
+	<td>a</td>
+	<td>네이버</td>
+	</tr>
+	<tr class="pass">
+	<td></td>
+	<td>2</td>
+	<td>a</td>
+	<td>네이버SE</td>
+	</tr>
+	<tr class="pass">
+	<td></td>
+	<td>3</td>
+	<td>a</td>
+	<td>네이버me</td>
+	</tr>
+	<tr class="hidden_el pass">
+	<td></td>
+	<td>s</td>
+	<td>input</td>
+	<td>-</td>
+	</tr>
+	</tbody>
+	</table>
+</div>
+<div class="pajetSection">
+	<h2 tabindex="0">
+		3.1.1 주언어 명시 (6)
+		<a href="#">Guide</a>
+	</h2>
+	<ul>
+	<li class="fail  ">http://www.naver.com/: <b>주언어 없음</b>
+	</li>
+	<li class="pass  ">http://www.naver.com/js/reatcmp.html?1005: <b>xml:lang=ko, lang=ko </b>
+	</li>
+	<li class="fail  ">http://nv1.ad.naver.com/adshow?unit=002AG: <b>주언어 없음 </b>
+	</li>
+	<li class="pass  ">http://static.nid.naver.com/login.nhn?svc=me&amp;url=http%3A%2F%2Fwww.naver.com: <b>xml:lang=ko, lang=ko </b>
+	</li>
+	<li class="pass  ">http://nv2.ad.naver.com/adshow?unit=002X: <b>lang=ko </b>
+	</li>
+	<li class="fail  ">http://castbox.shopping.naver.com/index.nhn: <b>주언어 없음</b>
+	</li>
+	</ul>
+</div>
+<div id="" class="pajetSection">
+	<h2 tabindex="0">
+		3.3.1 명도 대비
+		<a href="#">Guide</a>
+	</h2>
+	<ul class="contrast">
+	<li class="color1">
+		<span>전경: </span><span class="color" style="background-color: rgb(0, 0, 0);"></span><span class="val">#000000</span>
+		<button type="submit">전경색 선택 
+		</button>
+	</li>
+	<li class="color2">
+		<span>배경: </span><span class="color" style="background-color: rgb(255, 255, 255);"></span><span class="val">#FFFFFF</span>
+		<button type="submit">배경색 선택 
+		</button>
+	</li>
+	<li class="pass">
+		<span>결과: </span><span class="result">21:1</span><span class="resultText">테스트</span>
+	</li>
+	</ul>
+</div>
+<div class="pajetSection">
+	<h2 tabindex="0">
+		6.3.1 키보드 포커스 (3)
+		<a href="#">Guide</a>
+	</h2>
+	<table>
+	<caption class="blind">6.3.1 키보드 포커스 목록</caption>
+	<thead>
+	<tr>
+	<th scope="col" style="width:45px">숨김</th>
+	<th scope="col" style="width:65px">오류 유형</th>
+	<th scope="col">내용</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr class="fail">
+	<td></td>
+	<td>blur()</td>
+	<td>서제스트 보기</td>
+	</tr>
+	<tr class="fail hidden_el">
+	<td></td>
+	<td>blur()</td>
+	<td>오늘만 특가!</td>
+	</tr>
+	<tr class="fail">
+	<td></td>
+	<td>outline:0</td>
+	<td>-</td>
+	</tr>
+	</tbody>
+	</table>
+</div>
+<div class="pajetSection">
+	<h2 tabindex="0">
+		7.1.1 페이지 타이틀 (6)
+		<a href="#">Guide</a>
+	</h2>
+	<ul>
+	<li class="pass  ">http://www.naver.com/: <b>네이버 :: 나의 경쟁력, 네이버</b>
+	</li>
+	<li class="pass  ">http://www.naver.com/js/reatcmp.html?1005: <b>네이버 자동완성 :: 세상의 모든 지식, 네이버</b> 
+	</li>
+	<li class="pass  ">http://nv1.ad.naver.com/adshow?unit=002AG: <b>네이버 :: 세상의 모든 지식, 네이버</b> 
+	</li>
+	<li class="pass  ">http://static.nid.naver.com/login.nhn?svc=me&amp;url=http%3A%2F%2Fwww.naver.com: <b>네이버 :: 보안로그인</b> 
+	</li>
+	<li class="pass  ">http://nv2.ad.naver.com/adshow?unit=002X: <b>AD</b> 
+	</li>
+	<li class="pass  ">http://castbox.shopping.naver.com/index.nhn: <b>쇼핑캐스트 :: 네이버</b> 
+	</li>
+	</ul>
+</div>
+<div class="pajetSection">
+	<h2 tabindex="0">
+		7.1.2 프레임 사용 (6)
+		<a href="#">Guide</a>
+	</h2>
+	<table>
+	<caption class="blind">7.1.2 프레임 사용 목록</caption>
+	<thead>
+	<tr>
+	<th scope="col" style="width:45px">숨김</th>
+	<th scope="col" style="width:45px">요소</th>
+	<th scope="col">제목</th>
+	<th scope="col">URL</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr class="hidden_el">
+	<td></td>
+	<td>iframe</td>
+	<td class="lt">자동완성</td>
+	<td><a href="/js/reatcmp.html?1005">/js/reatcmp.html?1005</a></td>
+	</tr>
+	<tr class="pass">
+	<td></td>
+	<td>iframe</td>
+	<td class="lt">광고</td>
+	<td><a href="http://nv1.ad.naver.com/adshow?unit=002AG">http://nv1.ad.naver.com/adshow?unit=002AG</a></td>
+	</tr>
+	<tr class="pass">
+	<td></td>
+	<td>iframe</td>
+	<td class="lt">로그인</td>
+	<td><a href="http://static.nid.naver.com/login.nhn?svc=me&amp;url=http%3A%2F%2Fwww.naver.com">http://static.nid.naver.com/login.nhn?svc=me&amp;url=http%3A%2F%2Fwww.naver.com</a></td>
+	</tr>
+	</tbody>
+	</table>
+</div>
+<div class="pajetSection">
+	<h2 tabindex="0">
+		7.1.3 콘텐츠 블록 제목 (32)
+		<a href="#">Guide</a>
+	</h2>
+	<table>
+	<caption class="blind">7.1.3 콘텐츠 블록 제목 목록</caption>
+	<thead>
+	<tr>
+	<th scope="col" style="width:45px">숨김</th>
+	<th scope="col" style="width:45px">요소</th>
+	<th scope="col">내용</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr class="blind_el">
+	<td></td>
+	<td>h2</td>
+	<td>홈 유형 선택 </td>
+	</tr>
+	<tr class="blind_el">
+	<td></td>
+	<td>h2</td>
+	<td>네이버 설정</td>
+	</tr>
+	<tr class="blind_el">
+	<td></td>
+	<td>h2</td>
+	<td>패밀리 사이트 </td>
+	</tr>
+	<tr class="">
+	<td></td>
+	<td>h1</td>
+	<td>네이버 네이버 네이버 </td>
+	</tr>
+	<tr class="hidden_el">
+	<td></td>
+	<td>h3</td>
+	<td>쇼핑캐스트 바로가기</td>
+	</tr>
+	</tbody>
+	</table>
+</div>
+<div class="pajetSection">
+	<h2 tabindex="0">
+		7.3.1 링크 텍스트 (375)
+		<a href="#">Guide</a>
+	</h2>
+	<table>
+	<caption class="blind">7.3.1 링크 텍스트 목록</caption>
+	<thead>
+	<tr>
+	<th scope="col" style="width:45px">숨김</th>
+	<th scope="col" style="width:45px">요소</th>
+	<th scope="col">내용</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr class="pass">
+	<td></td>
+	<td>a</td>
+	<td>네이버</td>
+	</tr>
+	<tr class="pass">
+	<td></td>
+	<td>a</td>
+	<td>네이버SE</td>
+	</tr>
+	<tr class="pass">
+	<td></td>
+	<td>a</td>
+	<td>네이버me</td>
+	</tr>
+	<tr class="pass hidden_el">
+	<td></td>
+	<td>a</td>
+	<td>네이버 앱 </td>
+	</tr>
+	<tr class="pass">
+	<td></td>
+	<td>area</td>
+	<td>네이버</td>
+	</tr>
+	<tr class="pass">
+	<td></td>
+	<td>a</td>
+	<td>2014년부터 고교 내신 절대평가로 바뀐다 (title: 2014년부터 고교 내신 절대평가로 바뀐다) </td>
+	</tr>
+	</tbody>
+	</table>
+</div>
+<div class="pajetSection">
+	<h2 tabindex="0">
+		8.1.1 의도하지 않은 기능 (10)
+		<a href="#">Guide</a>
+	</h2>
+	<table>
+	<caption class="blind">8.1.1 의도하지 않은 기능 목록</caption>
+	<thead>
+	<tr>
+	<th scope="col" style="width:45px">숨김</th>
+	<th scope="col" style="width:80px">이벤트</th>
+	<th scope="col" class="lt">내용</th>
+	<th scope="col">title 속성값</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr class="">
+	<td></td>
+	<td>window.open</td>
+	<td class="lt">보안 1 단계</td>
+	<td>보안 단계에 대한 자세한 도움말을 보실 수 있습니다.</td>
+	</tr>
+	<tr class="hidden_el">
+	<td></td>
+	<td>window.open</td>
+	<td class="lt">보안 2 단계</td>
+	<td>보안 단계에 대한 자세한 도움말을 보실 수 있습니다.</td>
+	</tr>
+	<tr class="hidden_el">
+	<td></td>
+	<td>window.open</td>
+	<td class="lt">보안 3 단계</td>
+	<td>보안 단계에 대한 자세한 도움말을 보실 수 있습니다.</td>
+	</tr>
+	<tr class="hidden_el">
+	<td></td>
+	<td>hange</td>
+	<td class="lt">ID저장 </td>
+	<td>-</td>
+	</tr>
+	</tbody>
+	</table>
+</div>
+<div class="pajetSection">
+	<h2 tabindex="0">
+		8.2.1 레이블 사용 (14)
+		<a href="#">Guide</a>
+	</h2>
+	<table>
+	<caption class="blind">8.2.1 레이블 사용 목록</caption>
+	<thead>
+	<tr>
+	<th scope="col" style="width:45px">숨김</th>
+	<th scope="col" style="width:45px">요소</th>
+	<th scope="col" style="width:66px">폼 유형</th>
+	<th scope="col" class="lt">label 연결</th>
+	<th scope="col">title 속성값</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr class="warning hidden_el">
+	<td></td>
+	<td>input</td>
+	<td >text</td>
+	<td class="lt">X</td>
+	<td>휴대폰번호 입력</td>
+	</tr>
+	<tr class="warning hidden_el">
+	<td></td>
+	<td>select</td>
+	<td>-</td>
+	<td class="lt">X</td>
+	<td>검색 범위 선택</td>
+	</tr>
+	<tr class="warning">
+	<td></td>
+	<td>input</td>
+	<td >text</td>
+	<td class="lt">X</td>
+	<td>검색어 입력</td>
+	</tr>
+	<tr class="pass">
+	<td></td>
+	<td>input</td>
+	<td >checkbox</td>
+	<td class="lt">ID저장</td>
+	<td>-</td>
+	</tr>
+	<tr class="pass">
+	<td></td>
+	<td>input</td>
+	<td >checkbox</td>
+	<td class="lt">로그인 후 네이버me로 이동</td>
+	<td>-</td>
+	</tr>
+	</tbody>
+	</table>
+</div>
+</body>
+</html>

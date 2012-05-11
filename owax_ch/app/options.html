@@ -1,0 +1,38 @@
+<!DOCTYPE>
+<html>
+<head>
+<title>Options for O-WAX</title>
+<script>
+function toggle(checkBtn) {
+	if (window.localStorage == null) {
+		alert('Local storage is required for changing providers');
+		return;
+	}
+	
+	window.localStorage.isIncludeFrame = checkBtn.checked ? 'true' : 'false';
+}
+
+function main() {
+	if (window.localStorage == null) {
+		alert("LocalStorage must be enabled for changing options.");
+		document.getElementById('isIncludeFrame').disabled = true;
+		return;
+	}
+
+	document.getElementById('isIncludeFrame').checked = window.localStorage.isIncludeFrame != 'false';
+}
+</script>
+</head>
+<body onload="main()">
+<table border="0">
+<tr>
+	<td valign="center">
+		<label><input id="isIncludeFrame" type="checkbox" name="isIncludeFrame" value="1"
+			onclick="toggle(this)">  Include Frame</label>
+		<br><br>
+		<strong>(Cross <abbr title="XML Http Request">XHR</abrr> frame will not included.)</strong>
+	</td>
+</tr>
+</table>
+</body>
+</html>

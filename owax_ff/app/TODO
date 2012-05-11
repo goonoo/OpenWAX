@@ -1,0 +1,73 @@
+2011-12-26
+ * 공통
+v - 전체 결과 UI 개편 (보기 좋은 표 스타일로)
+v - 전체 접기 버튼 추가
+
+2011-12-19
+ * 7.1.2 프레임 사용
+v - 상대경로 프레임 주소 잘못 링크되는 오류 
+
+2011-12-15
+ * 공통
+v - localization: english, korean
+v - 넘버링 체계 변경
+
+2011-12-12
+ * 1. 대체 텍스트
+v - 상대경로 img 제대로 표시안되는 오류 (ex: http://a.com/ 페이지의 <img src="../img/blah.gif">)
+
+2011-12-08
+ * 공통
+v - "해당없음" 텍스트 항목별로 다르게 표시
+ * 1. 대체 텍스트
+v - longdesc 링크 경로 오류
+v - 상대경로 img 제대로 표시안되는 오류
+ * 12. 주언어 명시
+v - xml:lang, lang 동시에 나올 때 동시에 표시
+ * 16. 명도대비 검사
+v - overlay 크기 충분하지 않은 오류
+ * 21. 의도하지 않은 기능
+v - window.open 클릭이벤트 대상 요소에 title 속성 있으면 같이 표시
+ * 25. 버튼 텍스트
+v - input type=submit 레이블 올바르게 표시
+
+2011-12-05
+ * 공통
+v - tabindex 정상적으로 조절되게
+ * 1. 대체 텍스트
+v - 자식요소 10개 이상인 요소 bg는 표시 안되게 
+
+2011-11-28
+ * 공통
+v - 테스트 케이스 페이지 만들기
+v - "-" 를 "해당없음"으로 변경
+v - 마우스 오버 포커스 시 브라우저 자동 스크롤
+ * 1. 대체 텍스트
+v - CSS Background, object, embed 추가
+v  -> object, embed는 그냥 태그명만 노출
+v  
+ * 7~8. 표(<table>), 제목 셀(<th>, scope), 그룹핑(<thead>,<tbody>,<tfoot>)
+v - 아래와 같이 템플릿 수정
+   [thead있음: 3개의 th] 순위(X) | 연속(col) | 누적(row)
+   [tbody있음: 0개의 th]
+   [tfoot없음]
+ * 9. 표 제목(<caption>)
+v - caption 없고 summary만 있는 경우 오류로 표시
+ * 16. 명도대비
+v - 마우스 오버 동작하지 않도록 수정
+ * 20. 키보드 포커스
+v - onfocus="this.blur()" 혹은 outline: none 선언된 경우 오류로 표시
+ * 21. 사용자가 의도하지 않은 기능
+v - <input>, <select>, <textarea>에 change 이벤트가 들어간 경우 표시
+v - click 이벤트에 window.open이 들어간 경우 표시
+ * 23. 프레임 사용
+v - "title 없음" 프레임 오류로 표시
+ * 25. 링크 텍스트
+v - area 대체 텍스트 나오지 않는 문제 수정
+v - 링크 텍스트 없을 때 오류로 표시
+
+2011-10-31
+v 버튼 텍스트에서 <input type="button">, <input type="reset">, <input type="submit"> 텍스트 제대로 나오게 수정
+v 암묵적 <label> 표시
+v 결과 헤딩 클릭 시 내용 토글
+

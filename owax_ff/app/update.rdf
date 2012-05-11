@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<RDF:RDF xmlns:RDF="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:em="http://www.mozilla.org/2004/em-rdf#">
+
+  <!-- This Description resource includes all the update and compatibility information for
+       a single add-on with the id foobar@developer.mozilla.org. You can list multiple
+       add-ons information in the same RDF file. -->
+  <RDF:Description about="urn:mozilla:extension:achecker@tenshi">
+    <em:updates>
+      <RDF:Seq>
+        <!-- The resource attribute points to an RDF:Description entry below with
+             a matching about attribute. The actual uri can be whatever you like -->
+        <RDF:li>
+          <RDF:Description>
+            <em:version>0.1.7</em:version>
+            
+            <!-- One targetApplication for each application the add-on is compatible with -->
+            <em:targetApplication>
+              <RDF:Description>
+                <em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id>
+                <em:minVersion>3.5</em:minVersion>
+                <em:maxVersion>11.*</em:maxVersion>
+
+                <!-- This is where this version of the add-on will be downloaded from -->
+                <em:updateLink>http://html.nhncorp.com/a11y/app.xpi</em:updateLink>
+
+                <!-- A page describing what is new in this updated version -->
+                <em:updateInfoURL>http://html.nhncorp.com/a11y/</em:updateInfoURL>
+              </RDF:Description>
+            </em:targetApplication>
+          </RDF:Description>
+        </RDF:li>
+      </RDF:Seq>
+    </em:updates>
+    <em:signature>MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDuTT2Q2nrmM5jmVm6aa4FNp6qsGRjjWgG/gWfI9uyacofJqo1e0LwveOJwu0pyauoAiHgEeqEMOcYpllfX3KepbZalzWlZUG9E2EHuqbMHhpi25/fn033sgVBkQnU/w+l59zFYlXyAVpplqjCVSbO07fNzMsZ0O2xnpOVh09icQQIDAQAB</em:signature>
+  </RDF:Description>
+
+</RDF:RDF>

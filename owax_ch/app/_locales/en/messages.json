@@ -1,0 +1,253 @@
+{
+	"TargetPage": {
+		"message": "target pages",
+		"description": ""
+	},
+	"NoneTargetPage": {
+		"message": "none target pages",
+		"description": ""
+	},
+	"AltText": {
+		"message": "text alternatives",
+		"description": ""
+	},
+	"Undefined": {
+		"message": "undefined",
+		"description": ""
+	},
+	"ValidationFail": {
+		"message": "validation fail!",
+		"description": ""
+	},
+	"Loading": {
+		"message": "loading...",
+		"description": ""
+	},
+	"TableTitle": {
+		"message": "table title",
+		"description": ""
+	},
+	"None": {
+		"message": "none",
+		"description": ""
+	},
+	"TableStructure": {
+		"message": "table structure",
+		"description": ""
+	},
+	"HasThead": {
+		"message": "has thead(s)",
+		"description": ""
+	},
+	"HasTfoot": {
+		"message": "has tfoot(s)",
+		"description": ""
+	},
+	"HasTbody": {
+		"message": "has tbody(s)",
+		"description": ""
+	},
+	"NoThead": {
+		"message": "no thead",
+		"description": ""
+	},
+	"NoTfoot": {
+		"message": "no tfoot",
+		"description": ""
+	},
+	"NoTbody": {
+		"message": "no tbody",
+		"description": ""
+	},
+	"LevelAA": {
+		"message": "level AA",
+		"description": ""
+	},
+	"DocumentsForView": {
+		"message": "documents for view",
+		"description": ""
+	},
+	"ShortCut": {
+		"message": "shortcut",
+		"description": ""
+	},
+	"PageMainLang": {
+		"message": "language of page",
+		"description": ""
+	},
+	"NoMainLang": {
+		"message": "no language of page",
+		"description": ""
+	},
+	"Contrast": {
+		"message": "contrast",
+		"description": ""
+	},
+	"Foreground": {
+		"message": "foreground",
+		"description": ""
+	},
+	"SelectForegroundColor": {
+		"message": "pick color",
+		"description": ""
+	},
+	"Background": {
+		"message": "background",
+		"description": ""
+	},
+	"SelectBackgroundColor": {
+		"message": "pick color",
+		"description": ""
+	},
+	"Result": {
+		"message": "result",
+		"description": ""
+	},
+	"Test": {
+		"message": "test",
+		"description": ""
+	},
+	"KeyboardFocus": {
+		"message": "keyboard focus",
+		"description": ""
+	},
+	"Error": {
+		"message": "error",
+		"description": ""
+	},
+	"PageTitle": {
+		"message": "page title",
+		"description": ""
+	},
+	"NoPageTitle": {
+		"message": "no page title",
+		"description": ""
+	},
+	"UseFrame": {
+		"message": "use frame",
+		"description": ""
+	},
+	"NoSrc": {
+		"message": "no src",
+		"description": ""
+	},
+	"NoTitle": {
+		"message": "no title",
+		"description": ""
+	},
+	"BlockTitle": {
+		"message": "block title",
+		"description": ""
+	},
+	"SkipNavigation": {
+		"message": "skip navigation",
+		"description": ""
+	},
+	"NthLink": {
+		"message": "th link",
+		"description": ""
+	},
+	"Link": {
+		"message": "link",
+		"description": ""
+	},
+	"IsConnected": {
+		"message": "is connected",
+		"description": ""
+	},
+	"IsNotConnected": {
+		"message": "is not connected",
+		"description": ""
+	},
+	"LinkText": {
+		"message": "link text",
+		"description": ""
+	},
+	"NoText": {
+		"message": "no text",
+		"description": ""
+	},
+	"UnintendedFunction": {
+		"message": "unintended function",
+		"description": ""
+	},
+	"Label": {
+		"message": "label",
+		"description": ""
+	},
+
+	"NotApplicable": {
+		"message": "Not applicable",
+		"description": ""
+	},
+	"RequireConfirmation": {
+		"message": "Require confirmation",
+		"description": ""
+	},
+
+	"FoldAll": {
+		"message": "fold all",
+		"description": ""
+	},
+	"UnfoldAll": {
+		"message": "unfold all",
+		"description": ""
+	},
+
+	"Hidden": {
+		"message": "hidden",
+		"description": ""
+	},
+	"Preview": {
+		"message": "preview",
+		"description": ""
+	},
+	"Element": {
+		"message": "element",
+		"description": ""
+	},
+	"Contents": {
+		"message": "contents",
+		"description": ""
+	},
+	"CaptionContent": {
+		"message": "caption content",
+		"description": ""
+	},
+	"SummaryContent": {
+		"message": "summary content",
+		"description": ""
+	},
+	"Structure": {
+		"message": "structure",
+		"description": ""
+	},
+	"ErrorType": {
+		"message": "error type",
+		"description": ""
+	},
+	"Title": {
+		"message": "title",
+		"description": ""
+	},
+	"Event": {
+		"message": "event",
+		"description": ""
+	},
+	"TitleAttribute": {
+		"message": "title attribute",
+		"description": ""
+	},
+	"FormType": {
+		"message": "form type",
+		"description": ""
+	},
+	"LabelConnection": {
+		"message": "label connection",
+		"description": ""
+	},
+	"CannotCheckFrameset": {
+		"message": "Cannot check frameset page. You could move to page in frameset and try again.",
+		"description": ""
+	}
+}

@@ -1,0 +1,23 @@
+@namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
+
+#achecker-button
+{
+  list-style-image: url("chrome://achecker/skin/logo24.png");
+  -moz-image-region: rect(0 24px 24px 0px);
+}
+
+#colorSwatch {
+  width: 80px;
+  height: 25px;
+  border: 1px solid grey;
+  -moz-user-focus: normal;
+  -moz-appearance: none;
+}
+
+#colorSwatch:focus {
+  border: 1px solid black;
+}
+
+#colorSwatch {
+  font-size: 12px;
+}

@@ -1,0 +1,36 @@
+{
+	"name": "O-WAX",
+	"version": "1.0",
+	"description": "O-WAX(Open Web Accessibility eXtension) is a tool that can help diagnose and fix the accessibility problem.",
+	"browser_action": {
+		"default_icon": "logo_19.png",
+		"popup": "popup.html"
+	},
+	"default_locale": "en",
+	"icons": {
+		"128": "logo_128.png",
+		"16": "logo_16.png",
+		"19": "logo_19.png",
+		"48": "logo_48.png"
+	},
+	"background_page": "bg.html",
+	"options_page": "options.html",
+	"content_scripts": [ {
+		"all_frames": false,
+		"css": [ "achecker.css" ],
+		"js": [
+			"lib/rainbowColor.js",
+			"lib/colorInspector.js",
+			"lib/Section.js",
+			"lib/Sections.js",
+			"i18n.js",
+			"achecker.js"
+		],
+		"matches": [ "http://*/*", "https://*/*" ]
+	} ],
+	"permissions":[
+		"tabs",
+		"http://*/*",
+		"https://*/*"
+	]
+}
