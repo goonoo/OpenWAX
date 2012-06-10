@@ -1,4 +1,8 @@
 {
+	"Target": {
+		"message": "target",
+		"description": ""
+	},
 	"TargetPage": {
 		"message": "target pages",
 		"description": ""
@@ -151,6 +155,10 @@
 		"message": "link",
 		"description": ""
 	},
+	"Connected": {
+		"message": "connected",
+		"description": ""
+	},
 	"IsConnected": {
 		"message": "is connected",
 		"description": ""
@@ -173,6 +181,14 @@
 	},
 	"Label": {
 		"message": "label",
+		"description": ""
+	},
+	"No": {
+		"message": "No",
+		"description": ""
+	},
+	"ThLink": {
+		"message": "th link",
 		"description": ""
 	},
 
@@ -248,6 +264,51 @@
 	},
 	"CannotCheckFrameset": {
 		"message": "Cannot check frameset page. You could move to page in frameset and try again.",
+		"description": ""
+	},
+
+	"No1": {
+		"message": "Alternative text",
+		"description": ""
+	},
+	"No5": {
+		"message": "Contrast",
+		"description": ""
+	},
+	"No8": {
+		"message": "Focus order/visible",
+		"description": ""
+	},
+	"No12": {
+		"message": "Skip navigation",
+		"description": ""
+	},
+	"No13": {
+		"message": "Page titled, Frame titled, Headings",
+		"description": ""
+	},
+	"No14": {
+		"message": "Link purpose",
+		"description": ""
+	},
+	"No15": {
+		"message": "Language of page",
+		"description": ""
+	},
+	"No16": {
+		"message": "Unintended consequences",
+		"description": ""
+	},
+	"No18": {
+		"message": "Table",
+		"description": ""
+	},
+	"No19": {
+		"message": "Labels",
+		"description": ""
+	},
+	"No21": {
+		"message": "Parsing",
 		"description": ""
 	}
 }

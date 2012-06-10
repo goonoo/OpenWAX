@@ -194,6 +194,7 @@ achecker.Pajet.ListSection.prototype.getAsElement = function() {
 	var $title = doc.createElement('h2');
 	$title.textContent = this.title + " ("+ this.contents.length +")";
 	$title.className = 'folded';
+  /*
 	var $titleLink = doc.createElement('a');
 	$titleLink.setAttribute('target', '_blank');
 	$titleLink.setAttribute('href',
@@ -201,6 +202,7 @@ achecker.Pajet.ListSection.prototype.getAsElement = function() {
 				this.title.split(' ')[0] +'');
 	$titleLink.textContent = 'Guide';
 	$title.appendChild($titleLink);
+  */
 	$section.appendChild($title);
 
 	if($contentList.childNodes.length <= 0) {
@@ -216,9 +218,11 @@ achecker.Pajet.ListSection.prototype.getAsElement = function() {
 		var oldClassName = this.className;
 		this.className = oldClassName == 'folded' ? '' : 'folded';
 	}, false);
+  /*
 	$titleLink.addEventListener('click', function(e) {
 		e.stopPropagation();
 	}, false);
+  */
 	return $section;
 };
 
@@ -362,6 +366,7 @@ achecker.Pajet.TableSection.prototype.getAsElement = function() {
 	var $title = doc.createElement('h2');
 	$title.textContent = this.title + " ("+ this.contents.length +")";
 	$title.className = 'folded';
+  /*
 	var $titleLink = doc.createElement('a');
 	$titleLink.setAttribute('target', '_blank');
 	$titleLink.setAttribute('href',
@@ -369,6 +374,7 @@ achecker.Pajet.TableSection.prototype.getAsElement = function() {
 				this.title.split(' ')[0] +'');
 	$titleLink.textContent = 'Guide';
 	$title.appendChild($titleLink);
+  */
 	$section.appendChild($title);
 
 	if($tbody.childNodes.length <= 0) {
@@ -384,9 +390,11 @@ achecker.Pajet.TableSection.prototype.getAsElement = function() {
 		var oldClassName = this.className;
 		this.className = oldClassName == 'folded' ? '' : 'folded';
 	}, false);
+  /*
 	$titleLink.addEventListener('click', function(e) {
 		e.stopPropagation();
 	}, false);
+  */
 	return $section;
 };
 
@@ -409,6 +417,7 @@ achecker.Pajet.ToolSection.prototype.getAsElement = function() {
 	var $title = doc.createElement('h2');
 	$title.className = 'folded';
 	$title.textContent = this.title;
+  /*
 	var $titleLink = doc.createElement('a');
 	$titleLink.setAttribute('target', '_blank');
 	$titleLink.setAttribute('href',
@@ -416,6 +425,7 @@ achecker.Pajet.ToolSection.prototype.getAsElement = function() {
 				this.title.split(' ')[0] +'');
 	$titleLink.textContent = 'Guide';
 	$title.appendChild($titleLink);
+  */
 
 	var $content = doc.createElement('div');
 	if( typeof this.content == 'string')
@@ -430,9 +440,11 @@ achecker.Pajet.ToolSection.prototype.getAsElement = function() {
 		var oldClassName = this.className;
 		this.className = oldClassName == 'folded' ? '' : 'folded';
 	}, false);
+  /*
 	$titleLink.addEventListener('click', function(e) {
 		e.stopPropagation();
 	}, false);
+  */
 	return $section;
 };
 

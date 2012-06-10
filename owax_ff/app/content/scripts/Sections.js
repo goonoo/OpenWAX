@@ -350,7 +350,7 @@ achecker.Pajet.run = function(cwin, rdoc, isIncludeFrame, frameDocs, discardFram
 		sections: {
 			altText: new TableSection(
 				cwin, rdoc, 
-				'1.1.1 '+ achecker.i18n.get('AltText') +' (img)',
+				'1. '+ achecker.i18n.get('No1') +' (img)',
 				'input[type=image],img,area',
 				[
 					{label: achecker.i18n.get('Hidden'), width: 45},
@@ -452,7 +452,7 @@ achecker.Pajet.run = function(cwin, rdoc, isIncludeFrame, frameDocs, discardFram
 
 			altTextBG: new TableSection(
 				cwin, rdoc, 
-				'1.1.1 '+ achecker.i18n.get('AltText') +' (bg)',
+				'1. '+ achecker.i18n.get('No1') +' (bg)',
 				'body *',
 				[
 					{label: achecker.i18n.get('Hidden'), width: 45},
@@ -502,7 +502,7 @@ achecker.Pajet.run = function(cwin, rdoc, isIncludeFrame, frameDocs, discardFram
 
 			altTextEmbed: new TableSection(
 				cwin, rdoc, 
-				'1.1.1 '+ achecker.i18n.get('AltText') +' (object)',
+				'1. '+ achecker.i18n.get('No1') +' (object)',
 				'object,embed,video,audio,canvas,svg',
 				[
 					{label: achecker.i18n.get('Hidden'), width: 45},
@@ -536,208 +536,439 @@ achecker.Pajet.run = function(cwin, rdoc, isIncludeFrame, frameDocs, discardFram
 					return false;
 				}
 			),
-
-			validation: new ToolSection(
-				cwin, rdoc, 
-				'w3c_validation',
-				'2.2.1 W3C Validation',
+	
+			contrast: new ToolSection(
+				cwin, rdoc,
+				'contrast',
+				'5. '+ achecker.i18n.get('No5'),
 				function(win, rdoc) {
-					var filterValidationResult = function(res) {
-						var msgs = res.messages, newmsgs = [];
-						var filters = [
-							/^unterminated comment: .*/,
-							/^literal is missing closing delimiter.*/,
-							/^unknown declaration type .*/,
-							/^document type does not allow element .* here; missing one of .* start\-tag.*/,
-							/^end tag for .* omitted, but its declaration does not permit this.*/,
-							/^end tag for .* which is not finished.*/,
-							/^end tag for element .* which is not open.*/,
-							/^an attribute value must be a literal unless it contains only name characters.*/,
-							/^an attribute value literal can occur in an attribute specification list only after a VI delimiter.*/,
-							/^normalized length of attribute value literal must not exceed.*/,
-							/^syntax of attribute value does not conform to declared value.*/,
-							/^value of attribute .* must be a single token.*/,
-							/^value of attribute .* cannot be .*; must be one of .*/,
-							/^invalid comment declaration:.*/,
-							/^ID .* already defined.*/,
-							/^no document type declaration; will parse without validation.*/,
-							/^unclosed start-tag requires SHORTTAG YES.*/,
-							/^unclosed end-tag requires SHORTTAG YES.*/,
-							/^DTD did not contain element declaration for document type name.*/,
-							/^empty start-tag.*/,
-							/^empty end-tag.*/,
-							/^no document type declaration; implying .*/,
-							/^no system id specified.*/,
-							/^.* separator in comment declaration.*/,
-						];
-
-						for (var i=0; i<msgs.length; i++) {
-							if (msgs[i].type == 'error') {
-								for (var j=0; j<filters.length; j++) {
-									if (filters[j].test(msgs[i].message)) {
-										newmsgs.push(msgs[i]);
-										break;
-									};
-								};
-							};
-						};
-
-						res.messages = newmsgs;
-						return res;
-					};
-
-					var getResultDetailEl = function(messages, url) {
-						var $res = rdoc.createElement('div');
-						$res.className = 'validationResult'
-						var $errhead = rdoc.createElement('h3');
-						$errhead.textContent = 'Error';
-						$errhead.className = 'fail';
-						var $errul = rdoc.createElement('ul');
-						var $warninghead = rdoc.createElement('h3');
-						$warninghead.textContent = 'Warning';
-						$warninghead.className = 'warning';
-						var $warningul = rdoc.createElement('ul');
-						for (var i=0; i<messages.length; i++) {
-							var msg = messages[i];
-							var $li = rdoc.createElement('li');
-							var $msg = rdoc.createElement('div');
-							var $msga = rdoc.createElement('a');
-							$msga.textContent = msg.message;
-							$msga.setAttribute('href', 'javascript:;');
-							$msga.setAttribute('data-line', msg.lastLine);
-							$msga.addEventListener('click', function(e) {
-								e.preventDefault();
-								e.stopPropagation();
-								openDialog("chrome://global/content/viewSource.xul",
-						             "achecker_sourceView",
-						             "scrollbars,resizable,chrome,dialog=no",
-						             url,null,null,this.getAttribute('data-line'),false);
-							}, false);
-							$msg.appendChild($msga);
-							var $subinfo = rdoc.createElement('div');
-							$subinfo.className = 'subinfo';
-							$subinfo.textContent = msg.lastLine +' line, '+ msg.lastColumn +' column';
-							$li.appendChild($msg);
-							$li.appendChild($subinfo);
-							switch (msg.type) {
-								case 'error':
-									$errul.appendChild($li);
-									break;
-								case 'info':
-									$warningul.appendChild($li);
-									break;
-							};
-						};
-						$res.appendChild($errhead);
-						$res.appendChild($errul);
-						$res.appendChild($warninghead);
-						$res.appendChild($warningul);
+					if (!achecker.colorInspector) {
+						var $res = rdoc.createElement('p');
+						$res.className = 'comment';
+						$res.textContent = 'Not Supported.';
 						return $res;
 					};
 
-					var doValidation = function(url, doc) {
-						var sourceUrl = url;
-						var req = new XMLHttpRequest();   
-						req.onreadystatechange = function() {
-							if (req.readyState == 4) {
-								if (req.status == 200) {
-									// IT WORKS!
-									var html = req.responseText;
-									var req2 = new XMLHttpRequest();
-									var charset = html.indexOf('euc-kr')>0?'euc-kr':'utf-8';
-									req2.onreadystatechange = function() {
-										if (req2.readyState == 4) {
-											if (req2.status == 200) {
-												var res = filterValidationResult(JSON.parse(req2.responseText));
-												var el = rdoc.getElementById("w3c_validation");
-												var itemEls = el.querySelectorAll("li.validationItem");
-												var errcnt = 0;
-												for (var i=0; i<res.messages.length; i++) {
-													if (res.messages[i].type == 'error')
-														errcnt++;
-												};
-												for (var i=0; i<itemEls.length; i++) {
-													var urlEl = itemEls[i].getElementsByClassName("url")[0];
-													var errcntEl = itemEls[i].getElementsByClassName("errcnt")[0];
-													if (urlEl.textContent == url) {
-														//urlEl.setAttribute('href', 'validation_result.html?res='+ encodeURIComponent(req2.responseText));
-														errcntEl.textContent = errcnt +' Errors';
-														itemEls[i].className = errcnt > 0 ? 'fail' : 'pass';
-														var $res = getResultDetailEl(res.messages, url);
-														$res.style.display = 'none';
-														itemEls[i].appendChild($res);
-														itemEls[i].onclick = function() {
-															var $res = this.getElementsByTagName("div")[0];
-															$res.style.display = $res.style.display == 'none' ? 'block' : 'none';
-														};
-													};
-												};
-											}
-										};
-									};
-									req2.open("POST", "http://validator.w3.org/check", true);
+					var $ul = rdoc.createElement('ul');
+					$ul.className = 'contrast';
+					var $color1 = rdoc.createElement('li');
+					var $color2 = rdoc.createElement('li');
+					var $result = rdoc.createElement('li');
 
-									// Firefox < 4
-									if (typeof FormData == "undefined") {
-										req2.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-										req2.send('fragment='+ escape(html) +
-												'&doctype=Inline' +
-												'&output=json');
-									} else {
-										var formData = new FormData();
-										formData.append('fragment', html);
-										formData.append('doctype', 'Inline');
-										formData.append('output', 'json');
-										req2.send(formData);
-									};
-								} else {
-									alert(achecker.i18n.get('ValidationFail'));
-								};
-							};
-						};
-						req.open("GET",sourceUrl,true);
-						req.send(null);
+					$color1.className = 'color1';
+					var $color1_label = rdoc.createElement('span');
+					$color1_label.textContent = achecker.i18n.get('Foreground') +': ';
+					var $color1_color = rdoc.createElement('span');
+					$color1_color.className = 'color';
+					$color1_color.style.backgroundColor = '#000';
+					var $color1_val = rdoc.createElement('span');
+					$color1_val.className = 'val';
+					$color1_val.textContent = '#000000';
+					var $color1_btn = rdoc.createElement('button');
+					$color1_btn.textContent = achecker.i18n.get('SelectForegroundColor');
+					$color1.appendChild($color1_label);
+					$color1.appendChild($color1_color);
+					$color1.appendChild(rdoc.createTextNode(' '));
+					$color1.appendChild($color1_val);
+					$color1.appendChild(rdoc.createTextNode(' '));
+					$color1.appendChild($color1_btn);
+					$color1.onclick = function() {
+						achecker.showOverlay();
+						achecker.colorInspector.startInspect(function(color) {
+							achecker.hideOverlay();
+							$color1.getElementsByClassName('color')[0].style.backgroundColor = color;
+							$color1.getElementsByClassName('val')[0].textContent = color;
+							var contrastRatio = getContrastRatio(color, $color2.getElementsByClassName('val')[0].textContent);
+							if (contrastRatio >= 4.5)
+								$result.className = 'pass';
+							else if (contrastRatio >= 3)
+								$result.className = 'warning';
+							else
+								$result.className = 'fail';
+							$result.getElementsByClassName('result')[0].textContent = contrastRatio +':1';
+							$result.getElementsByClassName('resultText')[0].style.color = color;
+						});
 					};
 
-					var urls = [], docs = [];
-					if (win.location.href.substr(0,7) == 'http://' ||
-								win.location.href.substr(0,8) == 'https://') {
-						urls.push(win.location.href);
-						docs.push(win.document);
-					};
-					if (isIncludeFrame) {
-						for (var i=0, l=frameDocs.length; i<l; i++) {
-							var _url = frameDocs[i].src;
-							if (_url.substr(0,7) == 'http://' || _url.substr(0,8) == 'https://') {
-								urls.push(_url);
-								docs.push(frameDocs[i]);
-							};
-						};
+					$color2.className = 'color2';
+					var $color2_label = rdoc.createElement('span');
+					$color2_label.textContent = achecker.i18n.get('Background') +': ';
+					var $color2_color = rdoc.createElement('span');
+					$color2_color.className = 'color';
+					$color2_color.style.backgroundColor = '#FFF';
+					var $color2_val = rdoc.createElement('span');
+					$color2_val.className = 'val';
+					$color2_val.textContent = '#FFFFFF';
+					var $color2_btn = rdoc.createElement('button');
+					$color2_btn.textContent = achecker.i18n.get('SelectBackgroundColor');
+					$color2.appendChild($color2_label);
+					$color2.appendChild($color2_color);
+					$color2.appendChild(rdoc.createTextNode(' '));
+					$color2.appendChild($color2_val);
+					$color2.appendChild(rdoc.createTextNode(' '));
+					$color2.appendChild($color2_btn);
+					$color2.onclick = function() {
+						achecker.showOverlay();
+						achecker.colorInspector.startInspect(function(color) {
+							achecker.hideOverlay();
+							$color2.getElementsByClassName('color')[0].style.backgroundColor = color;
+							$color2.getElementsByClassName('val')[0].textContent = color;
+							var contrastRatio = getContrastRatio(color, $color1.getElementsByClassName('val')[0].textContent);
+							if (contrastRatio >= 4.5)
+								$result.className = 'pass';
+							else if (contrastRatio >= 3)
+								$result.className = 'warning';
+							else
+								$result.className = 'fail';
+							$result.getElementsByClassName('result')[0].textContent = contrastRatio +':1';
+							$result.getElementsByClassName('resultText')[0].style.backgroundColor = color;
+						});
 					};
 
-					var $output = rdoc.createElement('ul');
-					for (var i=0, l=urls.length; i<l; i++) {
-						doValidation(urls[i], docs[i]);
-						var $item = rdoc.createElement('li');
-						$item.className = 'validationItem';
-						var $_url = rdoc.createElement('span');
-						$_url.className = 'url';
-						$_url.textContent = urls[i];
-						var $_errcnt = rdoc.createElement('b');
-						$_errcnt.className = 'errcnt';
-						$_errcnt.textContent = achecker.i18n.get('Loading');
-						$item.appendChild($_url);
-						$item.appendChild(rdoc.createTextNode(': '));
-						$item.appendChild($_errcnt);
-						$output.appendChild($item);
-					};
-					return $output;
+					$result.className = 'pass';
+					var $result_label = rdoc.createElement('span');
+					$result_label.textContent = achecker.i18n.get('Result') +': ';
+					var $result_result = rdoc.createElement('span');
+					$result_result.className = 'result';
+					$result_result.textContent = '21:1';
+					var $result_resultText = rdoc.createElement('span');
+					$result_resultText.className = 'resultText';
+					$result_resultText.textContent = achecker.i18n.get('Test');
+					$result.appendChild($result_label);
+					$result.appendChild($result_result);
+					$result.appendChild(rdoc.createTextNode(' '));
+					$result.appendChild($result_resultText);
+
+					$ul.appendChild($color1);
+					$ul.appendChild($color2);
+					$ul.appendChild($result);
+
+					return $ul;
 				}
 			),
+
+			kbdFocus: new TableSection(
+				cwin, rdoc,
+				'8. '+ achecker.i18n.get('No8'),
+				'*',
+				[
+					{label: achecker.i18n.get('Hidden'), width: 45},
+					{label: achecker.i18n.get('ErrorType'), width: 65},
+					{label: achecker.i18n.get('Contents')},
+				],
+				isIncludeFrame,
+				frameDocs,
+				achecker.i18n.get('RequireConfirmation'),
+				function(doc, url) {
+					try {
+						var evtWrapper = this.wrappedJSObject ? this.wrappedJSObject : this;
+						var hasBlurEvent = false;
+						if (evtWrapper.onfocus && evtWrapper.onfocus.toString().indexOf('blur()') > -1)
+							hasBlurEvent = true;
+						else if (evtWrapper.onclick && evtWrapper.onclick.toString().indexOf('blur()') > -1)
+							hasBlurEvent = true;
+						var outlineWidth = this.style.getPropertyValue('outline-width');
+						var zeroOutlineWidth = outlineWidth == '0' || outlineWidth == '0pt' || outlineWidth == '0px';
 	
+						if (hasBlurEvent) {
+							return [
+								'',
+								'blur()',
+								getTextContent(this)
+							];
+						} else if (zeroOutlineWidth) {
+							return [
+								'',
+								'outline:0',
+								getTextContent(this)
+							];
+						} else {
+							return false;
+						};
+					} catch(e) {
+						return false;
+					};
+				},
+				function(doc, url) {
+					try {
+						var evtWrapper = this.wrappedJSObject ? this.wrappedJSObject : this;
+						var hasBlurEvent = evtWrapper.onfocus ?
+								evtWrapper.onfocus.toString().indexOf('blur()') > -1 : false;
+						var outlineWidth = this.style.getPropertyValue('outline-width');
+						var zeroOutlineWidth = outlineWidth == '0' || outlineWidth == '0pt' || outlineWidth == '0px';
+	
+						if (hasBlurEvent) {
+							return 'fail';
+						} else if (zeroOutlineWidth) {
+							return 'fail';
+						} else {
+							return 'pass';
+						};
+					} catch(e) {
+						return false;
+					};
+				}
+			),
+
+			skipNav: new TableSection(
+				cwin, rdoc,
+				'12. '+ achecker.i18n.get('No12'),
+				'a[href^="#"]',
+        [
+					{label: achecker.i18n.get('Hidden'), width: 45},
+					{label: achecker.i18n.get('No'), width: 65},
+					{label: achecker.i18n.get('Contents')},
+					{label: achecker.i18n.get('Connected'), width: 45},
+        ],
+				isIncludeFrame,
+				frameDocs, '-',
+				function(doc, url) {
+          if (cwin.document != doc)
+            return false;
+
+          var href = this.getAttribute('href');
+          var isConnectedLink = href == '#' ? false :
+              !!doc.getElementById(href.replace('#', ''));
+          var linkIdx;
+          for (var i=0, l=doc.getElementsByTagName('a').length; i<l; i++) {
+            if (doc.getElementsByTagName('a')[i] == this) {
+              linkIdx = i+1;
+              if (linkIdx > 20)
+                return false;
+
+              break;
+            };
+          };
+
+					return [
+            '',
+            linkIdx + achecker.i18n.get('ThLink'),
+            '('+ href +') '+ this.textContent,
+            (isConnectedLink ? 'O' : 'X')
+          ];
+				},
+				function(doc, url) {
+          var href = this.getAttribute('href');
+          var isConnectedLink = href == '#' ? false :
+              !!doc.getElementById(href.replace('#', ''));
+          return isConnectedLink ? 'pass' : 'fail';
+        }
+			),
+
+			pageTitle: new ListSection(
+				cwin, rdoc,
+				'13. '+ achecker.i18n.get('No13') +'(<title>)',
+				'title', null,
+				isIncludeFrame,
+				frameDocs, '-',
+				function(doc, url) {
+					var $res = rdoc.createElement('span');
+					var $val = rdoc.createElement('strong');
+					var val = this.textContent ? this.textContent : achecker.i18n.get('NoPageTitle');
+
+					$res.textContent = url +': ';
+					$val.textContent = val;
+					$res.appendChild($val);
+
+					return $res;
+				},
+				function() {
+					return this.textContent ? 'pass' : 'fail';
+				}
+			),
+
+			frame: new TableSection(
+				cwin, rdoc,
+				'13. '+ achecker.i18n.get('No13') +'(frame)',
+				'iframe',
+				[
+					{label: achecker.i18n.get('Hidden'), width: 45},
+					{label: achecker.i18n.get('Element'), width: 45},
+					{label: achecker.i18n.get('Title'), className: 'lt'},
+					{label: achecker.i18n.get('Contents')},
+				],
+				isIncludeFrame,
+				frameDocs, achecker.i18n.get('NotApplicable'),
+				function() {
+					var data = {
+						hidden: '',
+						el: '',
+						title: '',
+						url: ''
+					};
+					var src = this.getAttribute('src');
+					var title = this.getAttribute('title');
+					data.el = 'iframe';
+
+					if (src) {
+						var $a = rdoc.createElement('a');
+						$a.setAttribute('href', src);
+						$a.setAttribute('target', '_blank');
+						$a.textContent = src;
+						data.url = $a;
+					} else {
+						data.url = achecker.i18n.get('NoSrc');
+					};
+					data.title = title ? title : achecker.i18n.get('NoTitle');
+					return [
+						data.hidden,
+						data.el,
+						data.title,
+						data.url
+					];
+				},
+				function() {
+					var title = this.getAttribute('title');
+					return title ? 'pass' : 'fail';
+				}
+			),
+
+			blockTitle: new TableSection(
+				cwin, rdoc,
+				'13. '+ achecker.i18n.get('No13') +'(<h1>~<h6>)',
+				'h1,h2,h3,h4,h5,h6',
+				[
+					{label: achecker.i18n.get('Hidden'), width: 45},
+					{label: achecker.i18n.get('Element'), width: 45},
+					{label: achecker.i18n.get('Contents')},
+				],
+				isIncludeFrame,
+				frameDocs, achecker.i18n.get('RequireConfirmation'),
+				function() {
+					return [
+						'',
+						this.tagName.toLowerCase(),
+						getTextContent(this)
+					];
+				}
+			),
+
+			linkText: new TableSection(
+				cwin, rdoc,
+				'14. '+ achecker.i18n.get('No14'),
+				'a,area',
+				[
+					{label: achecker.i18n.get('Hidden'), width: 45},
+					{label: achecker.i18n.get('Element'), width: 45},
+					{label: achecker.i18n.get('Contents')},
+				],
+				isIncludeFrame,
+				frameDocs, achecker.i18n.get('NotApplicable'),
+				function() {
+					var text = getTextContent(this);
+					var title = this.getAttribute('title');
+
+					return [
+						'',
+						this.tagName.toLowerCase(),
+						(text ? text : '-') +
+							(title ? ' (title: '+ title +')' : '')
+					];
+				},
+				function() {
+					var text = getTextContent(this);
+
+					return text ? 'pass' : 'fail';
+				}
+			),
+
+			pageLang: new ListSection(
+				cwin, rdoc,
+				'15. '+ achecker.i18n.get('No15'),
+				'html', null,
+				isIncludeFrame,
+				frameDocs, '-',
+				function(doc, url) {
+					var isXhtml = this.getAttribute('xmlns');
+					var val = '';
+					var $res = rdoc.createElement('span');
+
+					if (isXhtml && this.getAttribute('xml:lang') && this.getAttribute('lang')) {
+						val = 'xml:lang=' + this.getAttribute('xml:lang') +', lang=' + this.getAttribute('lang');
+					} else if (isXhtml && this.getAttribute('xml:lang')) {
+						val = 'xml:lang=' + this.getAttribute('xml:lang');
+					} else if (isXhtml && this.getAttribute('lang')) {
+						val = 'xml:lang='+ achecker.i18n.get('None') +', lang=' + this.getAttribute('lang');
+					} else if (!isXhtml && this.getAttribute('lang')) {
+						val = 'lang=' + this.getAttribute('lang');
+					} else {
+						val = achecker.i18n.get('NoMainLang');
+					}
+					$res.textContent = url + ': ';
+					
+					var $val = rdoc.createElement('strong');
+					$val.textContent = val;
+					$res.appendChild($val);
+					return $res;
+				},
+				function(doc, url) {
+					var isXhtml = this.getAttribute('xmlns');
+	
+					if (isXhtml && this.getAttribute('xml:lang')) {
+						return 'pass';
+					} else if (isXhtml && this.getAttribute('lang')) {
+						return 'warning';
+					} else if (!isXhtml && this.getAttribute('lang')) {
+						return 'pass';
+					} else {
+						return 'fail';
+					}
+				}
+			),
+
+			unintendedFunction: new TableSection(
+				cwin, rdoc,
+				'16. '+ achecker.i18n.get('No16'),
+				'a,area,input,select,textarea',
+				[
+					{label: achecker.i18n.get('Hidden'), width: 45},
+					{label: achecker.i18n.get('Event'), width: 80},
+					{label: achecker.i18n.get('Contents'), className: 'lt'},
+					{label: achecker.i18n.get('TitleAttribute')}
+				],
+				isIncludeFrame,
+				frameDocs, achecker.i18n.get('RequireConfirmation'),
+				function(doc, url) {
+					var data = {
+						hidden: '',
+						event: '',
+						content: '',
+						title: ''
+					};
+					var evtWrapper = this.wrappedJSObject ? this.wrappedJSObject : this;
+					try {
+						var hasChangeEvent = !!evtWrapper.onchange;
+						var hasWindowOpenEvent = evtWrapper.onclick ?
+								evtWrapper.onclick.toString().indexOf('window.open') > -1 : false;
+					} catch(e) {
+						var hasChangeEvent = null;
+						var hasWindowOpenEvent = null;
+					};
+
+					
+					data.content = getTextContent(this);
+					data.title = this.getAttribute('title') ? this.getAttribute('title') : '-';
+
+					if (hasChangeEvent) {
+						data.event = 'change';
+					} else if (hasWindowOpenEvent) {
+						data.event = 'window.open';
+					} else {
+						return false;
+					};
+
+					return [
+						data.hidden,
+						data.event,
+						data.content,
+						data.title
+					];
+				}
+			),
+
 			tableTitle: new TableSection(
 				cwin, rdoc,
-				'2.3.1 '+ achecker.i18n.get('TableTitle'),
+				'18. '+ achecker.i18n.get('No18') +'(thead, tfoot)',
 				'table',
 				[
 					{label: achecker.i18n.get('Hidden'), width: 45},
@@ -792,7 +1023,7 @@ achecker.Pajet.run = function(cwin, rdoc, isIncludeFrame, frameDocs, discardFram
 
 			tableStructure: new TableSection(
 				cwin, rdoc,
-				'2.3.2, 2.3.3 '+ achecker.i18n.get('TableStructure'),
+				'18. '+ achecker.i18n.get('No18') +'(th)',
 				'table',
 				[
 					{label: achecker.i18n.get('Hidden'), width: 45},
@@ -986,433 +1217,9 @@ achecker.Pajet.run = function(cwin, rdoc, isIncludeFrame, frameDocs, discardFram
 				}
 			),
 	
-			documentsForView: new ListSection(
-				cwin, rdoc,
-				'2.6.1 ('+ achecker.i18n.get('LevelAA') +') '+ achecker.i18n.get('DocumentsForView'),
-				'[href$=".doc"],[href$=".ppt"],[href$=".hwp"]', null,
-				isIncludeFrame,
-				frameDocs, achecker.i18n.get('RequireConfirmation'),
-				function() {
-					return this.textContent;
-				}
-			),
-
-			sKey: new TableSection(
-				cwin, rdoc,
-				'2.7.2 ('+ achecker.i18n.get('LevelAA') +') '+ achecker.i18n.get('ShortCut'),
-				'[accesskey]',
-				[
-					{label: achecker.i18n.get('Hidden'), width: 45},
-					{label: achecker.i18n.get('ShortCut'), width: 45},
-					{label: achecker.i18n.get('Element'), width: 45},
-					{label: achecker.i18n.get('Contents')},
-				],
-				isIncludeFrame,
-				frameDocs, achecker.i18n.get('NotApplicable'),
-				function() {
-					var hidden = '';
-					return [
-						hidden,
-						this.getAttribute('accesskey'),
-						this.tagName.toLowerCase(),
-						this.textContent
-					];
-				},
-				function() {
-					var allowKeys = '~`!@#$%^&*()-_+[]{};:\'",.<>/?\\|1234567890BGIKWY';
-					var accesskey = this.getAttribute('accesskey').toUpperCase();
-
-					return allowKeys.indexOf(accesskey) > -1 ? 'pass' : 'fail';
-				}
-			),
-	
-			pageLang: new ListSection(
-				cwin, rdoc,
-				'3.1.1 '+ achecker.i18n.get('PageMainLang'),
-				'html', null,
-				isIncludeFrame,
-				frameDocs, '-',
-				function(doc, url) {
-					var isXhtml = this.getAttribute('xmlns');
-					var val = '';
-					var $res = rdoc.createElement('span');
-
-					if (isXhtml && this.getAttribute('xml:lang') && this.getAttribute('lang')) {
-						val = 'xml:lang=' + this.getAttribute('xml:lang') +', lang=' + this.getAttribute('lang');
-					} else if (isXhtml && this.getAttribute('xml:lang')) {
-						val = 'xml:lang=' + this.getAttribute('xml:lang');
-					} else if (isXhtml && this.getAttribute('lang')) {
-						val = 'xml:lang='+ achecker.i18n.get('None') +', lang=' + this.getAttribute('lang');
-					} else if (!isXhtml && this.getAttribute('lang')) {
-						val = 'lang=' + this.getAttribute('lang');
-					} else {
-						val = achecker.i18n.get('NoMainLang');
-					}
-					$res.textContent = url + ': ';
-					
-					var $val = rdoc.createElement('strong');
-					$val.textContent = val;
-					$res.appendChild($val);
-					return $res;
-				},
-				function(doc, url) {
-					var isXhtml = this.getAttribute('xmlns');
-	
-					if (isXhtml && this.getAttribute('xml:lang')) {
-						return 'pass';
-					} else if (isXhtml && this.getAttribute('lang')) {
-						return 'warning';
-					} else if (!isXhtml && this.getAttribute('lang')) {
-						return 'pass';
-					} else {
-						return 'fail';
-					}
-				}
-			),
-
-			contrast: new ToolSection(
-				cwin, rdoc,
-				'contrast',
-				'3.3.1 '+ achecker.i18n.get('Contrast'),
-				function(win, rdoc) {
-					if (!achecker.colorInspector) {
-						var $res = rdoc.createElement('p');
-						$res.className = 'comment';
-						$res.textContent = 'Not Supported.';
-						return $res;
-					};
-
-					var $ul = rdoc.createElement('ul');
-					$ul.className = 'contrast';
-					var $color1 = rdoc.createElement('li');
-					var $color2 = rdoc.createElement('li');
-					var $result = rdoc.createElement('li');
-
-					$color1.className = 'color1';
-					var $color1_label = rdoc.createElement('span');
-					$color1_label.textContent = achecker.i18n.get('Foreground') +': ';
-					var $color1_color = rdoc.createElement('span');
-					$color1_color.className = 'color';
-					$color1_color.style.backgroundColor = '#000';
-					var $color1_val = rdoc.createElement('span');
-					$color1_val.className = 'val';
-					$color1_val.textContent = '#000000';
-					var $color1_btn = rdoc.createElement('button');
-					$color1_btn.textContent = achecker.i18n.get('SelectForegroundColor');
-					$color1.appendChild($color1_label);
-					$color1.appendChild($color1_color);
-					$color1.appendChild(rdoc.createTextNode(' '));
-					$color1.appendChild($color1_val);
-					$color1.appendChild(rdoc.createTextNode(' '));
-					$color1.appendChild($color1_btn);
-					$color1.onclick = function() {
-						achecker.showOverlay();
-						achecker.colorInspector.startInspect(function(color) {
-							achecker.hideOverlay();
-							$color1.getElementsByClassName('color')[0].style.backgroundColor = color;
-							$color1.getElementsByClassName('val')[0].textContent = color;
-							var contrastRatio = getContrastRatio(color, $color2.getElementsByClassName('val')[0].textContent);
-							if (contrastRatio >= 4.5)
-								$result.className = 'pass';
-							else if (contrastRatio >= 3)
-								$result.className = 'warning';
-							else
-								$result.className = 'fail';
-							$result.getElementsByClassName('result')[0].textContent = contrastRatio +':1';
-							$result.getElementsByClassName('resultText')[0].style.color = color;
-						});
-					};
-
-					$color2.className = 'color2';
-					var $color2_label = rdoc.createElement('span');
-					$color2_label.textContent = achecker.i18n.get('Background') +': ';
-					var $color2_color = rdoc.createElement('span');
-					$color2_color.className = 'color';
-					$color2_color.style.backgroundColor = '#FFF';
-					var $color2_val = rdoc.createElement('span');
-					$color2_val.className = 'val';
-					$color2_val.textContent = '#FFFFFF';
-					var $color2_btn = rdoc.createElement('button');
-					$color2_btn.textContent = achecker.i18n.get('SelectBackgroundColor');
-					$color2.appendChild($color2_label);
-					$color2.appendChild($color2_color);
-					$color2.appendChild(rdoc.createTextNode(' '));
-					$color2.appendChild($color2_val);
-					$color2.appendChild(rdoc.createTextNode(' '));
-					$color2.appendChild($color2_btn);
-					$color2.onclick = function() {
-						achecker.showOverlay();
-						achecker.colorInspector.startInspect(function(color) {
-							achecker.hideOverlay();
-							$color2.getElementsByClassName('color')[0].style.backgroundColor = color;
-							$color2.getElementsByClassName('val')[0].textContent = color;
-							var contrastRatio = getContrastRatio(color, $color1.getElementsByClassName('val')[0].textContent);
-							if (contrastRatio >= 4.5)
-								$result.className = 'pass';
-							else if (contrastRatio >= 3)
-								$result.className = 'warning';
-							else
-								$result.className = 'fail';
-							$result.getElementsByClassName('result')[0].textContent = contrastRatio +':1';
-							$result.getElementsByClassName('resultText')[0].style.backgroundColor = color;
-						});
-					};
-
-					$result.className = 'pass';
-					var $result_label = rdoc.createElement('span');
-					$result_label.textContent = achecker.i18n.get('Result') +': ';
-					var $result_result = rdoc.createElement('span');
-					$result_result.className = 'result';
-					$result_result.textContent = '21:1';
-					var $result_resultText = rdoc.createElement('span');
-					$result_resultText.className = 'resultText';
-					$result_resultText.textContent = achecker.i18n.get('Test');
-					$result.appendChild($result_label);
-					$result.appendChild($result_result);
-					$result.appendChild(rdoc.createTextNode(' '));
-					$result.appendChild($result_resultText);
-
-					$ul.appendChild($color1);
-					$ul.appendChild($color2);
-					$ul.appendChild($result);
-
-					return $ul;
-				}
-			),
-
-			kbdFocus: new TableSection(
-				cwin, rdoc,
-				'6.3.1 '+ achecker.i18n.get('KeyboardFocus'),
-				'*',
-				[
-					{label: achecker.i18n.get('Hidden'), width: 45},
-					{label: achecker.i18n.get('ErrorType'), width: 65},
-					{label: achecker.i18n.get('Contents')},
-				],
-				isIncludeFrame,
-				frameDocs,
-				achecker.i18n.get('RequireConfirmation'),
-				function(doc, url) {
-					try {
-						var evtWrapper = this.wrappedJSObject ? this.wrappedJSObject : this;
-						var hasBlurEvent = false;
-						if (evtWrapper.onfocus && evtWrapper.onfocus.toString().indexOf('blur()') > -1)
-							hasBlurEvent = true;
-						else if (evtWrapper.onclick && evtWrapper.onclick.toString().indexOf('blur()') > -1)
-							hasBlurEvent = true;
-						var outlineWidth = this.style.getPropertyValue('outline-width');
-						var zeroOutlineWidth = outlineWidth == '0' || outlineWidth == '0pt' || outlineWidth == '0px';
-	
-						if (hasBlurEvent) {
-							return [
-								'',
-								'blur()',
-								getTextContent(this)
-							];
-						} else if (zeroOutlineWidth) {
-							return [
-								'',
-								'outline:0',
-								getTextContent(this)
-							];
-						} else {
-							return false;
-						};
-					} catch(e) {
-						return false;
-					};
-				},
-				function(doc, url) {
-					try {
-						var evtWrapper = this.wrappedJSObject ? this.wrappedJSObject : this;
-						var hasBlurEvent = evtWrapper.onfocus ?
-								evtWrapper.onfocus.toString().indexOf('blur()') > -1 : false;
-						var outlineWidth = this.style.getPropertyValue('outline-width');
-						var zeroOutlineWidth = outlineWidth == '0' || outlineWidth == '0pt' || outlineWidth == '0px';
-	
-						if (hasBlurEvent) {
-							return 'fail';
-						} else if (zeroOutlineWidth) {
-							return 'fail';
-						} else {
-							return 'pass';
-						};
-					} catch(e) {
-						return false;
-					};
-				}
-			),
-
-			pageTitle: new ListSection(
-				cwin, rdoc,
-				'7.1.1 '+ achecker.i18n.get('PageTitle'),
-				'title', null,
-				isIncludeFrame,
-				frameDocs, '-',
-				function(doc, url) {
-					var $res = rdoc.createElement('span');
-					var $val = rdoc.createElement('strong');
-					var val = this.textContent ? this.textContent : achecker.i18n.get('NoPageTitle');
-
-					$res.textContent = url +': ';
-					$val.textContent = val;
-					$res.appendChild($val);
-
-					return $res;
-				},
-				function() {
-					return this.textContent ? 'pass' : 'fail';
-				}
-			),
-
-			frame: new TableSection(
-				cwin, rdoc,
-				'7.1.2 '+ achecker.i18n.get('UseFrame'),
-				'iframe',
-				[
-					{label: achecker.i18n.get('Hidden'), width: 45},
-					{label: achecker.i18n.get('Element'), width: 45},
-					{label: achecker.i18n.get('Title'), className: 'lt'},
-					{label: achecker.i18n.get('Contents')},
-				],
-				isIncludeFrame,
-				frameDocs, achecker.i18n.get('NotApplicable'),
-				function() {
-					var data = {
-						hidden: '',
-						el: '',
-						title: '',
-						url: ''
-					};
-					var src = this.getAttribute('src');
-					var title = this.getAttribute('title');
-					data.el = 'iframe';
-
-					if (src) {
-						var $a = rdoc.createElement('a');
-						$a.setAttribute('href', src);
-						$a.setAttribute('target', '_blank');
-						$a.textContent = src;
-						data.url = $a;
-					} else {
-						data.url = achecker.i18n.get('NoSrc');
-					};
-					data.title = title ? title : achecker.i18n.get('NoTitle');
-					return [
-						data.hidden,
-						data.el,
-						data.title,
-						data.url
-					];
-				},
-				function() {
-					var title = this.getAttribute('title');
-					return title ? 'pass' : 'fail';
-				}
-			),
-
-			blockTitle: new TableSection(
-				cwin, rdoc,
-				'7.1.3 '+ achecker.i18n.get('BlockTitle'),
-				'h1,h2,h3,h4,h5,h6',
-				[
-					{label: achecker.i18n.get('Hidden'), width: 45},
-					{label: achecker.i18n.get('Element'), width: 45},
-					{label: achecker.i18n.get('Contents')},
-				],
-				isIncludeFrame,
-				frameDocs, achecker.i18n.get('RequireConfirmation'),
-				function() {
-					return [
-						'',
-						this.tagName.toLowerCase(),
-						getTextContent(this)
-					];
-				}
-			),
-
-			linkText: new TableSection(
-				cwin, rdoc,
-				'7.3.1 '+ achecker.i18n.get('LinkText'),
-				'a,area',
-				[
-					{label: achecker.i18n.get('Hidden'), width: 45},
-					{label: achecker.i18n.get('Element'), width: 45},
-					{label: achecker.i18n.get('Contents')},
-				],
-				isIncludeFrame,
-				frameDocs, achecker.i18n.get('NotApplicable'),
-				function() {
-					var text = getTextContent(this);
-					var title = this.getAttribute('title');
-
-					return [
-						'',
-						this.tagName.toLowerCase(),
-						(text ? text : '-') +
-							(title ? ' (title: '+ title +')' : '')
-					];
-				},
-				function() {
-					var text = getTextContent(this);
-
-					return text ? 'pass' : 'fail';
-				}
-			),
-
-			unintendedFunction: new TableSection(
-				cwin, rdoc,
-				'8.1.1 '+ achecker.i18n.get('UnintendedFunction'),
-				'a,area,input,select,textarea',
-				[
-					{label: achecker.i18n.get('Hidden'), width: 45},
-					{label: achecker.i18n.get('Event'), width: 80},
-					{label: achecker.i18n.get('Contents'), className: 'lt'},
-					{label: achecker.i18n.get('TitleAttribute')}
-				],
-				isIncludeFrame,
-				frameDocs, achecker.i18n.get('RequireConfirmation'),
-				function(doc, url) {
-					var data = {
-						hidden: '',
-						event: '',
-						content: '',
-						title: ''
-					};
-					var evtWrapper = this.wrappedJSObject ? this.wrappedJSObject : this;
-					try {
-						var hasChangeEvent = !!evtWrapper.onchange;
-						var hasWindowOpenEvent = evtWrapper.onclick ?
-								evtWrapper.onclick.toString().indexOf('window.open') > -1 : false;
-					} catch(e) {
-						var hasChangeEvent = null;
-						var hasWindowOpenEvent = null;
-					};
-
-					
-					data.content = getTextContent(this);
-					data.title = this.getAttribute('title') ? this.getAttribute('title') : '-';
-
-					if (hasChangeEvent) {
-						data.event = 'change';
-					} else if (hasWindowOpenEvent) {
-						data.event = 'window.open';
-					} else {
-						return false;
-					};
-
-					return [
-						data.hidden,
-						data.event,
-						data.content,
-						data.title
-					];
-				}
-			),
-
 			label: new TableSection(
 				cwin, rdoc,
-				'8.2.1 '+ achecker.i18n.get('Label'),
+				'19. '+ achecker.i18n.get('No19'),
 				'input,textarea,select',
 				[
 					{label: achecker.i18n.get('Hidden'), width: 45},
@@ -1511,6 +1318,204 @@ achecker.Pajet.run = function(cwin, rdoc, isIncludeFrame, frameDocs, discardFram
 						return 'fail';
 					}
 					return 'fail';
+				}
+			),
+
+			validation: new ToolSection(
+				cwin, rdoc, 
+				'w3c_validation',
+				'21. '+ achecker.i18n.get('No21'),
+				function(win, rdoc) {
+					var filterValidationResult = function(res) {
+						var msgs = res.messages, newmsgs = [];
+						var filters = [
+//							/^unterminated comment: .*/,
+//							/^literal is missing closing delimiter.*/,
+//							/^unknown declaration type .*/,
+							/^document type does not allow element .* here; missing one of .* start\-tag.*/,
+//							/^end tag for .* omitted, but its declaration does not permit this.*/,
+							/^end tag for .* which is not finished.*/,
+							/^end tag for element .* which is not open.*/,
+//							/^an attribute value must be a literal unless it contains only name characters.*/,
+//							/^an attribute value literal can occur in an attribute specification list only after a VI delimiter.*/,
+//							/^normalized length of attribute value literal must not exceed.*/,
+//							/^syntax of attribute value does not conform to declared value.*/,
+//							/^value of attribute .* must be a single token.*/,
+//							/^value of attribute .* cannot be .*; must be one of .*/,
+//							/^invalid comment declaration:.*/,
+							/^ID .* already defined.*/,
+//							/^no document type declaration; will parse without validation.*/,
+							/^unclosed start-tag requires SHORTTAG YES.*/,
+							/^unclosed end-tag requires SHORTTAG YES.*/,
+//							/^DTD did not contain element declaration for document type name.*/,
+							/^empty start-tag.*/,
+							/^empty end-tag.*/,
+//							/^no document type declaration; implying .*/,
+//							/^no system id specified.*/,
+//							/^.* separator in comment declaration.*/,
+						];
+
+						for (var i=0; i<msgs.length; i++) {
+							if (msgs[i].type == 'error') {
+								for (var j=0; j<filters.length; j++) {
+									if (filters[j].test(msgs[i].message)) {
+										newmsgs.push(msgs[i]);
+										break;
+									};
+								};
+							};
+						};
+
+						res.messages = newmsgs;
+						return res;
+					};
+
+					var getResultDetailEl = function(messages, url) {
+						var $res = rdoc.createElement('div');
+						$res.className = 'validationResult'
+						var $errhead = rdoc.createElement('h3');
+						$errhead.textContent = 'Error';
+						$errhead.className = 'fail';
+						var $errul = rdoc.createElement('ul');
+						var $warninghead = rdoc.createElement('h3');
+						$warninghead.textContent = 'Warning';
+						$warninghead.className = 'warning';
+						var $warningul = rdoc.createElement('ul');
+						for (var i=0; i<messages.length; i++) {
+							var msg = messages[i];
+							var $li = rdoc.createElement('li');
+							var $msg = rdoc.createElement('div');
+							var $msga = rdoc.createElement('a');
+							$msga.textContent = msg.message;
+							$msga.setAttribute('href', 'javascript:;');
+							$msga.setAttribute('data-line', msg.lastLine);
+							$msga.addEventListener('click', function(e) {
+								e.preventDefault();
+								e.stopPropagation();
+								openDialog("chrome://global/content/viewSource.xul",
+						             "achecker_sourceView",
+						             "scrollbars,resizable,chrome,dialog=no",
+						             url,null,null,this.getAttribute('data-line'),false);
+							}, false);
+							$msg.appendChild($msga);
+							var $subinfo = rdoc.createElement('div');
+							$subinfo.className = 'subinfo';
+							$subinfo.textContent = msg.lastLine +' line, '+ msg.lastColumn +' column';
+							$li.appendChild($msg);
+							$li.appendChild($subinfo);
+							switch (msg.type) {
+								case 'error':
+									$errul.appendChild($li);
+									break;
+								case 'info':
+									$warningul.appendChild($li);
+									break;
+							};
+						};
+						$res.appendChild($errhead);
+						$res.appendChild($errul);
+						$res.appendChild($warninghead);
+						$res.appendChild($warningul);
+						return $res;
+					};
+
+					var doValidation = function(url, doc) {
+						var sourceUrl = url;
+						var req = new XMLHttpRequest();   
+						req.onreadystatechange = function() {
+							if (req.readyState == 4) {
+								if (req.status == 200) {
+									// IT WORKS!
+									var html = req.responseText;
+									var req2 = new XMLHttpRequest();
+									var charset = html.indexOf('euc-kr')>0?'euc-kr':'utf-8';
+									req2.onreadystatechange = function() {
+										if (req2.readyState == 4) {
+											if (req2.status == 200) {
+												var res = filterValidationResult(JSON.parse(req2.responseText));
+												var el = rdoc.getElementById("w3c_validation");
+												var itemEls = el.querySelectorAll("li.validationItem");
+												var errcnt = 0;
+												for (var i=0; i<res.messages.length; i++) {
+													if (res.messages[i].type == 'error')
+														errcnt++;
+												};
+												for (var i=0; i<itemEls.length; i++) {
+													var urlEl = itemEls[i].getElementsByClassName("url")[0];
+													var errcntEl = itemEls[i].getElementsByClassName("errcnt")[0];
+													if (urlEl.textContent == url) {
+														//urlEl.setAttribute('href', 'validation_result.html?res='+ encodeURIComponent(req2.responseText));
+														errcntEl.textContent = errcnt +' Errors';
+														itemEls[i].className = errcnt > 0 ? 'fail' : 'pass';
+														var $res = getResultDetailEl(res.messages, url);
+														$res.style.display = 'none';
+														itemEls[i].appendChild($res);
+														itemEls[i].onclick = function() {
+															var $res = this.getElementsByTagName("div")[0];
+															$res.style.display = $res.style.display == 'none' ? 'block' : 'none';
+														};
+													};
+												};
+											}
+										};
+									};
+									req2.open("POST", "http://validator.w3.org/check", true);
+
+									// Firefox < 4
+									if (typeof FormData == "undefined") {
+										req2.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+										req2.send('fragment='+ escape(html) +
+												'&doctype=Inline' +
+												'&output=json');
+									} else {
+										var formData = new FormData();
+										formData.append('fragment', html);
+										formData.append('doctype', 'Inline');
+										formData.append('output', 'json');
+										req2.send(formData);
+									};
+								} else {
+									alert(achecker.i18n.get('ValidationFail'));
+								};
+							};
+						};
+						req.open("GET",sourceUrl,true);
+						req.send(null);
+					};
+
+					var urls = [], docs = [];
+					if (win.location.href.substr(0,7) == 'http://' ||
+								win.location.href.substr(0,8) == 'https://') {
+						urls.push(win.location.href);
+						docs.push(win.document);
+					};
+					if (isIncludeFrame) {
+						for (var i=0, l=frameDocs.length; i<l; i++) {
+							var _url = frameDocs[i].src;
+							if (_url.substr(0,7) == 'http://' || _url.substr(0,8) == 'https://') {
+								urls.push(_url);
+								docs.push(frameDocs[i]);
+							};
+						};
+					};
+
+					var $output = rdoc.createElement('ul');
+					for (var i=0, l=urls.length; i<l; i++) {
+						doValidation(urls[i], docs[i]);
+						var $item = rdoc.createElement('li');
+						$item.className = 'validationItem';
+						var $_url = rdoc.createElement('span');
+						$_url.className = 'url';
+						$_url.textContent = urls[i];
+						var $_errcnt = rdoc.createElement('b');
+						$_errcnt.className = 'errcnt';
+						$_errcnt.textContent = achecker.i18n.get('Loading');
+						$item.appendChild($_url);
+						$item.appendChild(rdoc.createTextNode(': '));
+						$item.appendChild($_errcnt);
+						$output.appendChild($item);
+					};
+					return $output;
 				}
 			),
 		}
