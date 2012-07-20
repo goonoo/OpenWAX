@@ -2,8 +2,8 @@
 
 #achecker-button
 {
-  list-style-image: url("chrome://achecker/skin/logo24.png");
-  -moz-image-region: rect(0 24px 24px 0px);
+  list-style-image: url("chrome://achecker/skin/logo16.png");
+  -moz-image-region: rect(0 16px 16px 0px);
 }
 
 #colorSwatch {

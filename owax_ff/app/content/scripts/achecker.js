@@ -37,15 +37,15 @@
 /**
  * achecker namespace.
  */
-if (typeof achecker == "undefined") {
+if (typeof achecker === "undefined") {
   var achecker = {};
-};
+}
 
 var achecker = {
 	init: function() {
 		if (achecker.preferences.getPref("firstUse") === true) {
 			achecker.initFirstTimeUser();
-		};
+		}
 	},
 	
 	initFirstTimeUser: function() {
@@ -60,8 +60,8 @@ var achecker = {
 		var set;
 
 		if(curSet.indexOf(toolButtonId) == -1) {
-			if (curSet.indexOf("urlbar-container") != -1)
-				set = curSet.replace(/urlbar-container/, toolButtonId+ ",urlbar-container");
+			if (curSet.indexOf("search-container") != -1)
+				set = curSet.replace(/search-container/, "search-container,"+ toolButtonId);
 			else  // at the end
 				set = firefoxnav.currentSet + ","+ toolButtonId;
 	
@@ -72,7 +72,7 @@ var achecker = {
 				BrowserToolboxCustomizeDone(true);
 			}
 			catch(e) {}
-		};
+		}
 	},
 	
 	toggleChecker: function() {
@@ -96,8 +96,8 @@ var achecker = {
 
 				if (frame.window.frames.length) {
 					frameDocs = frameDocs.concat(getFrameDocs(frame.window));
-				};
-			};
+				}
+			}
 
 			return frameDocs;
 		};
@@ -112,7 +112,7 @@ var achecker = {
 		rdoc.body.appendChild(pajetHeader);
 		for (var i in pajetSections) {
 			rdoc.body.appendChild(pajetSections[i].getAsElement());
-		};
+		}
 	},
 
 	/* get elements from result.html */
@@ -136,7 +136,7 @@ var achecker = {
 		if (achecker.currentDoc().getElementById("_acheckeroverlay")) {
 			achecker.currentDoc().getElementById("_acheckeroverlay").style.display = "block";
 			return;
-		};
+		}
 
 		var $overlay = achecker.currentDoc().createElement('div');
 		$overlay.id = '_acheckeroverlay';
@@ -155,7 +155,7 @@ var achecker = {
 	hideOverlay: function() {
 		if (achecker.currentDoc().getElementById("_acheckeroverlay")) {
 			achecker.currentDoc().getElementById("_acheckeroverlay").style.display = "none";
-		};
+		}
 	},
 
 	$: function(id) {
@@ -197,7 +197,7 @@ achecker.preferences = {
 
 			default:
 				return null;
-		};
+		}
 	}
 };
 
