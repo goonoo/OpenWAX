@@ -201,4 +201,4 @@ achecker.preferences = {
 	}
 };
 
-achecker.preferences.SERVICE_COMPONENT.QueryInterface(Components.interfaces.nsIPrefBranch2);
+achecker.preferences.SERVICE_COMPONENT.QueryInterface(Components.interfaces.nsIPrefBranch);
