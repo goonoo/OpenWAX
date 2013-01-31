@@ -1,6 +1,7 @@
 {
+  "manifest_version": 2,
 	"name": "OpenWAX",
-	"version": "1.0",
+	"version": "1.3",
 	"description": "OpenWAX(Open Web Accessibility eXtension) is a tool that can help diagnose and fix the accessibility problem.",
 	"browser_action": {
 		"default_icon": "logo_19.png",
@@ -13,8 +14,12 @@
 		"19": "logo_19.png",
 		"48": "logo_48.png"
 	},
-	"background_page": "bg.html",
+	"background": {
+    "scripts": ["bg.js"],
+    "persistent": false
+  },
 	"options_page": "options.html",
+  "content_security_policy": "script-src 'self'; object-src 'self'",
 	"content_scripts": [ {
 		"all_frames": false,
 		"css": [ "achecker.css" ],

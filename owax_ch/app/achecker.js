@@ -99,7 +99,7 @@ var execute = function(isIncludeFrame) {
 	}
 };
 
-chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
+chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
 	if(request.action == 'execute_with_frames') {
 		var res = execute(true);
 	} else if(request.action == 'execute_without_frames') {

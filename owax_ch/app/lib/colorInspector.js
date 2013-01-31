@@ -63,7 +63,7 @@ achecker.colorInspector = {
 
 		var pageX = e.clientX + window.scrollX;
 		var pageY = e.clientY + window.scrollY;
-		chrome.extension.sendRequest({
+		chrome.extension.sendMessage({
 			capture:achecker.colorInspector.doCapture,
 			x:e.clientX,
 			y:e.clientY,
@@ -99,7 +99,7 @@ achecker.colorInspector = {
 	},
 	onMouseUp: function(e) {
 		e.stopPropagation(); e.preventDefault();
-		chrome.extension.sendRequest({
+		chrome.extension.sendMessage({
 			capture:achecker.colorInspector.doCapture,
 			x:e.clientX,
 			y:e.clientY,

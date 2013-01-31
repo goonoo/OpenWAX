@@ -1,7 +1,3 @@
-<!DOCTYPE html>
-<html>
-<head>
-<script>
 var ctx = document.createElement('canvas'), img = new Image();
 ctx.width = '101'; ctx.height = '101'; ctx = ctx.getContext('2d');
 var cPRange = 1;
@@ -51,7 +47,3 @@ function pickColor2(request) {
 	chrome.tabs.executeScript(null, {code: request.next +'(\'rgb('+pixel[0]+','+pixel[1]+','+pixel[2]+')\')'});
 	request.callback(pixel);
 };
-
-</script>
-</head>
-</html>
