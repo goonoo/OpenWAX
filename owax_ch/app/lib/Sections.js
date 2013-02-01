@@ -264,18 +264,15 @@ achecker.Pajet.run = function(cwin, rdoc, isIncludeFrame, frameDocs, discardFram
       $div.className = 'pajetFrames';
 
       var $fold = rdoc.createElement('div');
-      var $foldLabel = rdoc.createElement('span');
       var $foldBtn = rdoc.createElement('button');
       var i;
 
-      $fold.className = 'foldcontrol';
-      $foldLabel.className = 'all';
-      $foldLabel.textContent = 'All';
+      $fold.className = 'toggleAll';
       $foldBtn.className = 'unfold';
       $foldBtn.setAttribute('data-folded', 'folded');
       $foldBtn.title = achecker.i18n.get('FoldAll');
       $foldBtn.setAttribute('type', 'button');
-      $foldBtn.textContent = 'Unfold';
+      $foldBtn.textContent = 'Toggle All';
       $foldBtn.onclick = function() {
         var $headings = rdoc.querySelectorAll('.pajetSection h2,.pajetFrames h2');
         var foldedClass = this.getAttribute('data-folded') == 'folded' ? '' : 'folded';
@@ -287,15 +284,12 @@ achecker.Pajet.run = function(cwin, rdoc, isIncludeFrame, frameDocs, discardFram
         if (foldedClass) {
           this.className = 'unfold';
           this.title = achecker.i18n.get('UnfoldAll');
-          this.textContent = 'Unfold';
         } else {
           this.className = 'fold';
           this.title = achecker.i18n.get('FoldAll');
-          this.textContent = 'Fold';
         }
         this.setAttribute('data-folded', foldedClass);
       };
-      $fold.appendChild($foldLabel);
       $fold.appendChild($foldBtn);
       $div.appendChild($fold);
 
@@ -799,7 +793,7 @@ achecker.Pajet.run = function(cwin, rdoc, isIncludeFrame, frameDocs, discardFram
           {label: achecker.i18n.get('Hidden'), width: 45},
           {label: achecker.i18n.get('Element'), width: 45},
           {label: achecker.i18n.get('Title'), className: 'lt'},
-          {label: achecker.i18n.get('Contents')}
+          {label: achecker.i18n.get('Contents'), maxWidth: 200}
         ],
         isIncludeFrame,
         frameDocs, achecker.i18n.get('NotApplicable'),

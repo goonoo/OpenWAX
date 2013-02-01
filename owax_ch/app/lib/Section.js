@@ -286,6 +286,8 @@ achecker.Pajet.TableSection.prototype.getAsElement = function() {
 		$theadTh.textContent = this.colInfo[i].label;
 		if (this.colInfo[i].width)
 			$theadTh.style.width = this.colInfo[i].width +'px';
+		if (this.colInfo[i].maxWidth)
+			$theadTh.style.maxWidth = this.colInfo[i].maxWidth +'px';
 		if (this.colInfo[i].className)
 			$theadTh.className = this.colInfo[i].className;
 		$theadTr.appendChild($theadTh);
