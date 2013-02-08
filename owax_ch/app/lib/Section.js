@@ -192,8 +192,11 @@ achecker.Pajet.ListSection.prototype.getAsElement = function() {
 	var $section = doc.createElement('div');
 	$section.className = 'pajetSection';
 	var $title = doc.createElement('h2');
-	$title.textContent = this.title + " ("+ this.contents.length +")";
+	var $count = doc.createElement('span');
+	$title.textContent = this.title + " ";
 	$title.className = 'folded';
+  $count.textContent = "("+ this.contents.length +")";
+  $title.appendChild($count);
   /*
 	var $titleLink = doc.createElement('a');
 	$titleLink.setAttribute('target', '_blank');
@@ -286,6 +289,8 @@ achecker.Pajet.TableSection.prototype.getAsElement = function() {
 		$theadTh.textContent = this.colInfo[i].label;
 		if (this.colInfo[i].width)
 			$theadTh.style.width = this.colInfo[i].width +'px';
+		if (this.colInfo[i].minWidth)
+			$theadTh.style.minWidth = this.colInfo[i].minWidth +'px';
 		if (this.colInfo[i].maxWidth)
 			$theadTh.style.maxWidth = this.colInfo[i].maxWidth +'px';
 		if (this.colInfo[i].className)
@@ -366,8 +371,11 @@ achecker.Pajet.TableSection.prototype.getAsElement = function() {
 	var $section = doc.createElement('div');
 	$section.className = 'pajetSection';
 	var $title = doc.createElement('h2');
-	$title.textContent = this.title + " ("+ this.contents.length +")";
+	var $count = doc.createElement('span');
+	$title.textContent = this.title + " ";
 	$title.className = 'folded';
+  $count.textContent = "("+ this.contents.length +")";
+  $title.appendChild($count);
   /*
 	var $titleLink = doc.createElement('a');
 	$titleLink.setAttribute('target', '_blank');

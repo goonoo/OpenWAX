@@ -25,9 +25,10 @@ html.achecker-included {
 #achecker-result a:visited{color:#669}
 #achecker-result .blind{overflow:hidden;position:absolute;top:0;left:0;width:0;height:0;font-size:0;line-height:0}
 /* CheckList Title */
-#achecker-result h2{position:relative;margin:0;padding:.5em 2em .5em .5em;color:#fff;font-weight:normal;font-size:14px;background:#444;box-shadow:0 -5px 10px rgba(0,0,0,0.2) inset;border-bottom:solid 1px #999;cursor:pointer}
-#achecker-result h2:hover{background:#555}
+#achecker-result h2{-webkit-transition:200ms background-color linear;position:relative;margin:0;padding:.5em 2em .5em .5em;color:#fff;font-weight:normal;font-size:14px;background:#444;box-shadow:0 -5px 10px rgba(0,0,0,0.2) inset;border-bottom:solid 1px #999;cursor:pointer}
+#achecker-result h2:hover{background:#666}
 #achecker-result h2.folded+*{display:none}
+#achecker-result h2 span{color:#ff9}
 #achecker-result .pajetSection h2 a{position:absolute;top:50%;right:2%;width:44px;padding:3px 1px 3px 0;margin-top:-10px;border-radius:3px;border:1px solid #1e2627;background:#2d3639;box-shadow:1px 1px 1px rgba(255,255,255,0.1) inset,-1px -1px 1px rgba(255,255,255,0.1) inset;font-weight:700;font-size:11px;font-family:verdana;cursor:pointer;color:#bac7c2;letter-spacing:-1px;text-decoration:none;text-align:center;text-shadow:0 1px 0 #000}
 #achecker-result .pajetSection h2 a:hover{border-color:#2e3a3b;background:#445256;text-decoration:none;color:#eef5f3}
 

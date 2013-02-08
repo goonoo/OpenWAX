@@ -792,7 +792,7 @@ achecker.Pajet.run = function(cwin, rdoc, isIncludeFrame, frameDocs, discardFram
         [
           {label: achecker.i18n.get('Hidden'), width: 45},
           {label: achecker.i18n.get('Element'), width: 45},
-          {label: achecker.i18n.get('Title'), className: 'lt'},
+          {label: achecker.i18n.get('Title'), minWidth: 50, className: 'lt'},
           {label: achecker.i18n.get('Contents'), maxWidth: 200}
         ],
         isIncludeFrame,
