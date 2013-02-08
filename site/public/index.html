@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <title>OpenWAX</title>
+  <link rel="stylesheet" href="c/s.css" />
+</head>
+<body>
+
+<header role="banner" id="top">
+  <h1>OpenWAX</h1>
+  <p>OpenWAX(Open Web Accessibility eXtension)는 웹 페이지의 접근성 진단을 쉽게 할 수 있도록 제작된 도구입니다.</p>
+  <div class="img"><img alt="screenshot of OpenWAX" src="i/app.png" /></div>
+</header>
+
+<nav role="navigation">
+  <ul>
+    <li><a href="#download">download</a></li>
+    <li><a href="#guide">guide</a></li>
+    <li><a href="#comments">comments</a></li>
+    <li class="fb">
+      <div class="fb-like" data-href="http://openwax.com" data-send="false" data-layout="button_count" data-width="150" data-show-faces="false" data-colorscheme="dark"></div>
+      <div id="fb-root"></div>
+      <script>(function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
+        fjs.parentNode.insertBefore(js, fjs);
+      }(document, 'script', 'facebook-jssdk'));</script>
+    </li>
+  </ul>
+</nav>
+
+<div id="body">
+  <section id="download">
+    <h1>Download</h1>
+    <p>OpenWAX(Open Web Accessibility eXtension)는 웹 페이지의 접근성 진단을 쉽게 할 수 있도록 제작된 도구입니다.</p>
+    <p>사용하시는 브라우저에 맞는 OpenWAX를 설치 후 진단을 원하는 웹 페이지에 접속 후 OpenWAX를 실행하세요!</p>
+    <ul>
+      <li><a href="https://addons.mozilla.org/ko/firefox/addon/openwax/" target="_blank">파이어폭스용 OpenWAX</a></li>
+      <li><a href="https://chrome.google.com/webstore/detail/openwax/bfahpbmaknaeohgdklfbobogpdngngoe?hl=ko" target="_blank">구글크롬용 OpenWAX</a></li>
+    </ul>
+  </section>
+
+  <section id="guide">
+    <h1>Guide</h1>
+    <h2 id="guide_exec">OpenWAX 실행</h2>
+    <p>접근성 진단을 원하는 사이트에 접속 후 툴바에서 OpenWAX 아이콘을 클릭하여 OpenWAX를 실행합니다. 간단하죠?</p>
+    <figure>
+      <img alt="" src="i/guide/0.png" />
+      <figcaption>Google Chrome에서 실행하려면</figcaption>
+    </figure>
+    <figure>
+      <img alt="" src="i/guide/0-1.png" />
+      <figcaption>Firefox에서 실행하려면</figcaption>
+    </figure>
+    <h2 id="guide_pages">대상 페이지</h2>
+    <p>이제부터는 OpenWAX 실행결과에서 표시되는 항목들에 대한 설명입니다.</p>
+    <p>대상 페이지는 OpenWAX가 검사를 수행한 페이지를 표시합니다. 페이지 안에 프레임이 들어있다면 OpenWAX의 옵션에 따라 대상 페이지가 될 수도, 그렇지 않을 수도 있습니다.</p>
+    <h2 id="guide_exclude_pages">비대상 페이지</h2>
+    <p>페이지 안에 들어있는 프레임 중에 대상 페이지가 되지 못한 페이지들입니다.</p>
+    <p>Google Chrome에서는 현재 애석하게도 페이지와 도메인이 다른 프레임은 검사를 수행할 수 없습니다. 항상 비대상 페이지에 표시되죠.</p>
+    <h2 id="guide_common">1~21번까지의 접근성 지표</h2>
+    <p>1~21번까지의 접근성 지표에는 접근성 검사 수행 결과가 표시됩니다.</p>
+    <p>빨간 배경색이 표시되는 항목은 대부분 접근성 오류입니다.</p>
+    <figure>
+      <img alt="" src="i/guide/0-2.png" />
+      <figcaption>앗, 빨간 배경! 오류인가봐요.</figcaption>
+    </figure>
+    <p>노란 배경색이 표시되는 항목은 접근성 오류가 의심되는 항목입니다.</p>
+    <figure>
+      <img alt="" src="i/guide/0-3.png" />
+      <figcaption>음, 노란 배경! 오류인지 생각해봐야겠군요.</figcaption>
+    </figure>
+    <p>&quot;숨김&quot; 셀에는 CSS로 <code>display: none;</code> 선언되어 화면에 표시되지 않는 요소가 &quot;Hidden&quot;이라고 표시됩니다. 개발자가 자바스크립트 등을 이용하여 특정 동작을 수행할때만 화면에 표시하고 있는지도 모르죠.</p>
+    <p>항목을 한번 클릭해보실래요? 당신이 Google Chrome을 사용한다면 그 항목에 해당하는 요소에 초점을 맞춰줄거에요. 숨어있는 요소라면 초점이 맞춰지지 않으니 참고하세요. 당신이 Firefox를 사용한다면 Firebug를 설치하신 후에 항목을 클릭해보세요. 그 항목에 해당하는 요소에 초점을 맞춰줌과 동시에 Firebug의 요소 검사 기능을 수행하여 Firebug 창에 표시해줄거에요. 아주 유용하다고 자부할만한 기능이에요. Firebug와 함께라면 숨어있는 요소의 위치도 쉽게 파악할 수 있답니다.</p>
+
+    <h2 id="guide_alt_img">1. 적절한 대체 텍스트 (img)</h2>
+    <p><code>&lt;img&gt;</code>, <code>&lt;area&gt;</code>, <code>&lt;input type=&quot;image&quot;&gt;</code> 요소의 <code>alt</code> 속성을 표시합니다. </p>
+    <h2 id="guide_alt_bg">1. 적절한 대체 텍스트 (bg)</h2>
+    <p>CSS Background image가 지정된 요소의 텍스트 콘텐츠를 표시합니다. 이 지표에서는 의미를 갖고 있는 배경 이미지를 찾아서 그 의미가 텍스트 콘텐츠로도 제공되고 있는지를 확인하면 됩니다. 텍스트 콘텐츠가 근처의 요소에 제공되고 있을지도 모르니 오류라고 생각하기 전에 잘 찾아보시는 게 좋아요. 의미없는 이미지는 그냥 지나치세요!</p>
+    <h2 id="guide_alt_object">1. 적절한 대체 텍스트 (object)</h2>
+    <p>이 지표에서는 페이지에 사용된 <code>&lt;object&gt;</code>, <code>&lt;embed&gt;</code>, <code>&lt;video&gt;</code>, <code>&lt;audio&gt;</code>, <code>&lt;canvas&gt;</code>, <code>&lt;svg&gt;</code> 요소를 표시합니다. 그냥 표시만 할뿐이니 표시된 요소의 대체 콘텐츠가 잘 제공되었는지, 키보드로는 잘 작동하는지 살펴보세요.</p>
+    <h2 id="guide_contrast">5. 텍스트 콘텐츠의 명도 대비</h2>
+    <p>전경색과 배경색을 선택하면 명도 대비를 표시해주는 지표입니다. 전경색과 배경색에 따라 결과란에 명도 대비값이 표시됩니다.</p>
+    <p>Google Chrome용 명도 대비 도구는 페이지를 100%보다 크게 혹은 작게 확대 혹은 축소 했을 경우 색 선택이 원하는대로 잘 되지 않는 문제가 있어요. 빨리 해결하고 싶은 문제에요. 이 문제를 해결하여 github에 pull request를 해주신다면 제가 커피라도 대접해드릴게요!</p>
+    <h2 id="guide_focus">8. 초점 이동</h2>
+    <p>이 지표에서는 키보드 초점이 표시되지 않는 형태로 제작된 코드를 일부 찾아줍니다. <code>blur()</code> 함수를 호출하여 초점을 사라지게 만든 경우라든지, CSS의 <code>outline</code> 속성을 0으로 설정한 경우에 해당됩니다.</p>
+    <p>이 지표는 확실히 문제가 있는 경우만 진단하니 별 문제가 나오지 않았더라도 페이지에 초점 이동 문제가 있을 가능성은 남아있어요.</p>
+    <h2 id="guide_skip_nav">12. 건너뛰기 링크</h2>
+    <p>페이지에 사용된 최초 10개의 해시 링크를 표시합니다. 건너뛰기 링크가 여러개 제공될 수 있으니 넉넉하게 10개를 표시하는거에요. 여기서는 첫 항목부터 건너뛰기 링크가 나오는지, 건너뛰기 링크가 1번째 링크부터 시작하는지 확인하시면 되요. 건너뛰기 링크는 페이지의 시작점에 있어야 하니 1번째 링크여야 하니까요.</p>
+    <p>건너뛰기 링크가 제대로 제공된 것 같다면 그 다음엔 키보드로도 초점이 가는지 직접 페이지에 테스트를 해보시면 끝나겠죠?</p>
+    <h2 id="guide_title">13. 제목 제공(&lt;title&gt;)</h2>
+    <h2 id="guide_frame_title">13. 제목 제공(frame)</h2>
+    <h2 id="guide_heading">13. 제목 제공(&lt;h1&gt;~&lt;h6&gt;)</h2>
+    <h2 id="guide_linktexts">14. 적절한 링크 텍스트</h2>
+    <h2 id="guide_lang">15. 기본 언어 표시</h2>
+    <h2 id="guide_demand">16. 사용자 요구에 따른 실행</h2>
+    <h2 id="guide_thead_tfoot">18. 표의 구성(thead, tfoot)</h2>
+    <h2 id="guide_th">18. 표의 구성(th)</h2>
+    <h2 id="guide_label">19. 레이블 제공</h2>
+    <h2 id="guide_validation">21. 마크업 오류 방지</h2>
+  </section>
+
+  <section id="comments">
+    <h1>Comments</h1>
+    <div id="affogato">
+    </div>
+  </section>
+</div>
+
+<footer role="contentinfo">
+  <p>&copy; 2013 by <a href="http://miya.pe.kr">mctenshi</a>, some rights reserved.</p>
+</footer>
+
+<a href="#top" id="tothetop">△ Top</a>
+<a href="https://github.com/mctenshi/OpenWAX"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script> 
+<script>
+$(function () {
+  var fixNav = false;
+  $(window).on('scroll', function (e) {
+    if (window.scrollY > 260 && fixNav === false) {
+      $('body').addClass('fix_nav');
+      fixNav = true;
+    } else if (window.scrollY < 260 && fixNav === true) {
+      $('body').removeClass('fix_nav');
+      fixNav = false;
+    }
+  });
+});
+</script>
+
+<script src="//comments.skplanetx.com/script/plugin.js"></script> 
+<script type="text/javascript"> 
+SKP.commentsPlugin({ 
+  op_app_key: 'c979bd4b-d527-366d-b780-1c5ac37479d7' ,
+  target_id: 'affogato', 
+  page_id: 'openwax'
+}); 
+</script>
+
+</body>
+</html>
