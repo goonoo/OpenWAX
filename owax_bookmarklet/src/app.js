@@ -99,8 +99,11 @@
 
   var execute = function (isIncludeFrame) {
     if (!document.getElementById("achecker-css")) {
-      document.getElementsByTagName("head")[0].innerHTML +=
-          '<link rel="stylesheet" id="achecker-css" href="http://openwax.miya.pe.kr/c/bookmarklet.css" />';
+      var css = document.createElement("link");
+      css.rel = "stylesheet";
+      css.id = "achecker-css";
+      css.href = "http://openwax.miya.pe.kr/c/bookmarklet.css";
+      document.getElementsByTagName("head")[0].appendChild(css);
     }
 
     if (document.getElementById("achecker-result")) {
