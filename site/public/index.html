@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <title>OpenWAX</title>
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
   <link rel="stylesheet" href="c/s.css" />
 </head>
 <body>
@@ -169,10 +170,12 @@
 $(function () {
   var fixNav = false;
   $(window).on('scroll', function (e) {
-    if (window.scrollY > 260 && fixNav === false) {
+    var y = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement ||
+          document.body.parentNode || document.body).scrollTop;
+    if (y > 260 && fixNav === false) {
       $('body').addClass('fix_nav');
       fixNav = true;
-    } else if (window.scrollY < 260 && fixNav === true) {
+    } else if (y < 260 && fixNav === true) {
       $('body').removeClass('fix_nav');
       fixNav = false;
     }
