@@ -1,0 +1,1 @@
+../../../owax_bookmarklet/dist/built.js

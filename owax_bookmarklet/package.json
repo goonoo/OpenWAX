@@ -1,0 +1,11 @@
+{
+  "name": "openwax-bookmarklet",
+  "version": "0.1.5",
+  "author": "mctenshi <mctenshi@gmail.com>",
+  "private": true,
+  "dependencies": {
+    "grunt": "latest",
+    "grunt-json": "latest",
+    "uglify-js": "1"
+  }
+}

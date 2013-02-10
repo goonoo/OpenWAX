@@ -1,3 +1,6 @@
+.DS_Store
+node_modules
 owax_ff/firebug-1.9.0
 owax_ff/web-developer
+owax_bookmarklet/dist
 *.swp
