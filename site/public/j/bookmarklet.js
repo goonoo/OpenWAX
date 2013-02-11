@@ -1,1 +1,1 @@
-../../../owax_bookmarklet/dist/built.js
+../../../owax_bookmarklet/dist/built.min.js
