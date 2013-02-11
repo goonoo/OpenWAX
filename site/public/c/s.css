@@ -13,6 +13,7 @@ figure {
   margin: 1em 40px;
 }
 figure img {
+  max-width: 100%;
   -webkit-box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
   -moz-box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
