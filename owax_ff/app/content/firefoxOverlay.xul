@@ -42,6 +42,7 @@
 	<script type="application/x-javascript" src="chrome://achecker/content/scripts/achecker.js"/>
 	<script type="application/x-javascript" src="chrome://achecker/content/scripts/Section.js"/>
 	<script type="application/x-javascript" src="chrome://achecker/content/scripts/Sections.js"/>
+	<script type="application/x-javascript" src="chrome://achecker/content/scripts/Score.js"/>
 	<script type="application/x-javascript" src="chrome://achecker/content/scripts/i18n.js"/>
 	<script type="application/x-javascript" src="chrome://achecker/content/scripts/colorInspector.js"/>
 	<script type="application/x-javascript" src="chrome://achecker/content/scripts/rainbowColor.js"/>

@@ -1,0 +1,11 @@
+{
+  "name": "openwax-chrome",
+  "version": "0.1.7",
+  "author": "mctenshi <mctenshi@gmail.com>",
+  "private": true,
+  "dependencies": {
+    "grunt": "latest",
+    "grunt-jslint": "latest",
+    "grunt-exec": "latest"
+  }
+}

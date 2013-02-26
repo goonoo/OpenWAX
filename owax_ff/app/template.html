@@ -4,6 +4,8 @@
 <meta charset="utf-8">
 <title>OpenWAX Template</title>
 <style type="text/css">
+body {overflow-y:scroll}
+
 /* Reset */
 #achecker-result,
 #achecker-result *{float:none;margin:0;padding:0;width:auto;height:auto;border:none;color:#000;background:transparent;font:12px/1.2 'Helvetica Neue',Helvetica,arial,'나눔고딕',NanumGothic}
@@ -13,9 +15,17 @@
 #achecker-result a:visited{color:#669}
 #achecker-result .blind{overflow:hidden;position:absolute;top:0;left:0;width:0;height:0;font-size:0;line-height:0}
 /* CheckList Title */
-#achecker-result h2{position:relative;margin:0;padding:.5em 2em .5em .5em;color:#fff;font-weight:normal;font-size:14px;background:#444;box-shadow:0 -5px 10px rgba(0,0,0,0.2) inset;border-bottom:solid 1px #999;cursor:pointer}
-#achecker-result h2:hover{background:#555}
+#achecker-result h2{-moz-transition:200ms background-color linear;position:relative;margin:0;padding:.5em 2em .5em .5em;color:#fff;font-weight:normal;font-size:14px;background:#444;box-shadow:0 -5px 10px rgba(0,0,0,0.2) inset;border-bottom:solid 1px #999;cursor:pointer}
+#achecker-result h2:hover{background:#666}
 #achecker-result h2.folded+*{display:none}
+#achecker-result h2 span{color:#ff9}
+#achecker-result .pajetScore h2{cursor:default;padding:.2em 0 .1em;text-align:center}
+#achecker-result .pajetScore.perfect h2{background:#00d}
+#achecker-result .pajetScore.good h2{background:#099}
+#achecker-result .pajetScore.bad h2{background:#990}
+#achecker-result .pajetScore.fail h2{background:#d00}
+#achecker-result .pajetScore h2 i{display:inline;color:#ccc;font-size:20px}
+#achecker-result .pajetScore h2 strong{display:inline;font-size:25px;font-weight:bold;color:#fff}
 #achecker-result .pajetSection h2 a{position:absolute;top:50%;right:2%;width:44px;padding:3px 1px 3px 0;margin-top:-10px;border-radius:3px;border:1px solid #1e2627;background:#2d3639;box-shadow:1px 1px 1px rgba(255,255,255,0.1) inset,-1px -1px 1px rgba(255,255,255,0.1) inset;font-weight:700;font-size:11px;font-family:verdana;cursor:pointer;color:#bac7c2;letter-spacing:-1px;text-decoration:none;text-align:center;text-shadow:0 1px 0 #000}
 #achecker-result .pajetSection h2 a:hover{border-color:#2e3a3b;background:#445256;text-decoration:none;color:#eef5f3}
 
@@ -30,23 +40,29 @@
 #achecker-result th:last-child,
 #achecker-result td:last-child,
 #achecker-result .lt{padding-left:5px;text-align:left}
-#achecker-result tr:hover td{background:#bfde6d;background:-moz-linear-gradient(top,#fff 0%,#f6f6f6 30%,#e1e1e1 100%);background:-webkit-gradient(linear,0 0,0 100%,color-stop(0%,#fff),color-stop(30%,#f6f6f6),color-stop(100%,#e1e1e1));color:#000;text-shadow:1px 1px 1px rgba(255,255,255,0.7)}
+#achecker-result tr:hover td{background:#bfde6d;background:-moz-linear-gradient(top,#fff 0%,#f6f6f6 30%,#e1e1e1 100%);color:#000;text-shadow:1px 1px 1px rgba(255,255,255,0.7)}
 #achecker-result tr.warning td{background:-moz-linear-gradient(top,#fcfcdd 0%,#ffffaa 100%);
-background:-webkit-gradient(linear,0 0,0 100%,color-stop(0%,#fcfcdd),color-stop(100%,#ffffaa))}
-#achecker-result tr.fail td{background-image:-moz-linear-gradient(top,#fceaea 0%,#fda6a6 100%);
+background:-webkit-gradient(,inear,0 0,0 100%,color-stop(0%,#fcfcdd),color-stop(100%,#ffffaa))}
+#achecker-result tr.warning td:first-child {background:#ffa url(http://openwax.miya.pe.kr/i/warning.png) no-repeat 5px 3px;background:url(http://openwax.miya.pe.kr/i/warning.png) no-repeat 5px 3px,-moz-linear-gradient(top,#fcfcdd 0%,#ffffaa 100%);
+background:url(http://openwax.miya.pe.kr/i/warning.png) no-repeat 5px 3px,-webkit-gradient(linear,0 0,0 100%,color-stop(0%,#fcfcdd),color-stop(100%,#ffffaa))}
+#achecker-result tr.fail td{background:#fda6a6;background-image:-moz-linear-gradient(top,#fceaea 0%,#fda6a6 100%);
 background-image:-webkit-gradient(linear,0 0,0 100%,color-stop(0%,#fceaea),color-stop(100%,#fda6a6))}
+#achecker-result tr.fail td:first-child {background:#fda6a6 url(http://openwax.miya.pe.kr/i/error.png) no-repeat 5px 3px;background:url(http://openwax.miya.pe.kr/i/error.png) no-repeat 5px 3px,-moz-linear-gradient(top,#fceaea 0%,#fda6a6 100%);
+background:url(http://openwax.miya.pe.kr/i/error.png) no-repeat 5px 3px,-webkit-gradient(linear,0 0,0 100%,color-stop(0%,#fceaea),color-stop(100%,#fda6a6))}
 #achecker-result tr.hidden_el td,
 #achecker-result tr.hidden_el td li{color:#999}
 #achecker-result tr.blind_el td:first-child:before{content:'Blind'}
 #achecker-result tr.hidden_el td:first-child:before{content:'Hidden'}
 /* Result - List Type */
 #achecker-result ul{margin:0;padding:0;list-style:none}
-#achecker-result li{display:block;padding:5px 15px;background:#fff;border-top:1px solid #ddd;color:#333;text-decoration:none}
+#achecker-result li{display:block;padding:5px 15px;background:#fff;border-top:1px solid #ddd;color:#333;text-decoration:none;word-break:break-all}
 #achecker-result li:first-child{border-top:none}
-#achecker-result li:hover{background:#bfde6d;background:-moz-linear-gradient(top,#fff 0%,#f6f6f6 30%,#e1e1e1 100%);background:-webkit-gradient(linear,0 0,0 100%,color-stop(0%,#fff),color-stop(30%,#f6f6f6),color-stop(100%,#e1e1e1));color:#000;text-shadow:1px 1px 1px rgba(255,255,255,0.7)}
+#achecker-result li:hover{background:#bfde6d;background:-moz-linear-gradient(top,#fff 0%,#f6f6f6 30%,#e1e1e1 100%);color:#000;text-shadow:1px 1px 1px rgba(255,255,255,0.7)}
 #achecker-result li:hover>div{text-shadow:none}
-#achecker-result li.warning{background:-moz-linear-gradient(top,#fcfcdd 0%,#ffffaa 100%);background:-webkit-gradient(linear,0 0,0 100%,color-stop(0%,#fcfcdd),color-stop(100%,#ffffaa))}
-#achecker-result li.fail{background-image:-moz-linear-gradient(top,#fceaea 0%,#fda6a6 100%);background-image:-webkit-gradient(linear,0 0,0 100%,color-stop(0%,#fceaea),color-stop(100%,#fda6a6))}
+#achecker-result li.warning{background:#ffa url(http://openwax.miya.pe.kr/i/warning.png) no-repeat 5px 3px;background:url(http://openwax.miya.pe.kr/i/warning.png) no-repeat 5px 3px,-moz-linear-gradient(top,#fcfcdd 0%,#ffffaa 100%);
+background:url(http://openwax.miya.pe.kr/i/warning.png) no-repeat 5px 3px,-webkit-gradient(linear,0 0,0 100%,color-stop(0%,#fcfcdd),color-stop(100%,#ffffaa))}
+#achecker-result li.fail {background:#fda6a6 url(http://openwax.miya.pe.kr/i/error.png) no-repeat 5px 3px;background:url(http://openwax.miya.pe.kr/i/error.png) no-repeat 5px 3px,-moz-linear-gradient(top,#fceaea 0%,#fda6a6 100%);
+background:url(http://openwax.miya.pe.kr/i/error.png) no-repeat 5px 3px,-webkit-gradient(linear,0 0,0 100%,color-stop(0%,#fceaea),color-stop(100%,#fda6a6))}
 /* Inner Contents */
 #achecker-result .tb_str{padding:0 !important}
 #achecker-result .tb_str th:first-child{width:45px}
@@ -68,15 +84,19 @@ background-image:-webkit-gradient(linear,0 0,0 100%,color-stop(0%,#fceaea),color
 
 /* Toggle All */
 #achecker-result .toggleAll{position:fixed;z-index:10;top:-7px;right:20px;width:68px;margin-right:-4px;padding:2px;border-radius:0 0 2px 2px;background:#aa9;box-shadow:1px 1px 0 #272727;text-align:center;opacity:.8;}
-#achecker-result .toggleAll:hover{-webkit-transition:150ms linear;opacity:1;top:-4px}
+#achecker-result .toggleAll:hover{-moz-transition:150ms linear;opacity:1;top:-4px}
 #achecker-result .toggleAll button{display:block;width:68px;padding:7px 1px 3px 0;margin-bottom:0;border-radius:2px;border:1px solid #1e2627;background:#2d3639;box-shadow:1px 1px 1px rgba(255,255,255,0.1) inset,-1px -1px 1px rgba(255,255,255,0.1) inset;font-weight:700;font-size:12px;font-family:verdana;cursor:pointer;color:#bac7c2;letter-spacing:-1px;text-align:center;text-decoration:none;text-shadow:0 1px 0 #000;line-height:1}
 #achecker-result .toggleAll button:hover{border-color:#2e3a3b;background:#445256;text-decoration:none;color:#eef5f3}
+
+#achecker-placeholder { padding:10px; font-size:120%; }
+
 </style>
 </head>
 <body id="achecker-result">
 <div class="toggleAll">
   <button type="button">Toggle All</button>
 </div>
+<div class="pajetScore good"><h2><i>WAX Score: </i><strong>95</strong></h2></div>
 <div class="pajetFrames">
 	<h2>대상 페이지</h2>
 	<ul>

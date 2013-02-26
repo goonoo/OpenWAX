@@ -33,10 +33,13 @@
  * the terms of any one of the MPL, the GPL or the LGPL.
  *
  * ***** END LICENSE BLOCK ***** */
-(function() {
+/*global achecker */
+(function (document) {
+  "use strict";
+
 	achecker.i18n = {
-		get: function(val) {
+		get: function (val) {
 			return document.getElementById("achecker-properties").getString(val);
 		}
 	};
-})();
+}(this.document));

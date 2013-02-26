@@ -1,0 +1,11 @@
+{
+  "browser": true,
+  "expr": true,
+  "es5": true,
+  "white": true,
+  "indent": 2,
+  "curly": true,
+  "strict": true,
+  "laxcomma": true,
+  "undef": true
+}

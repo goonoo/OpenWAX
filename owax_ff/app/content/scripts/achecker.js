@@ -34,171 +34,176 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-/**
- * achecker namespace.
- */
-if (typeof achecker === "undefined") {
-  var achecker = {};
-}
+/*global Components */
+(function (global, document) {
+  "use strict";
 
-var achecker = {
-	init: function() {
-		if (achecker.preferences.getPref("firstUse") === true) {
-			achecker.initFirstTimeUser();
-		}
-	},
-	
-	initFirstTimeUser: function() {
-		achecker.attachToolbarButton();
-		achecker.preferences.setPref("firstUse", false);
-	},
+  var achecker = global.achecker = {
+    init: function () {
+      if (achecker.preferences.getPref("firstUse") === true) {
+        achecker.initFirstTimeUser();
+      }
+    },
 
-	attachToolbarButton: function() {
-		var toolButtonId = "achecker-button";
-		var firefoxnav = document.getElementById("nav-bar");
-		var curSet = firefoxnav.currentSet;
-		var set;
+    initFirstTimeUser: function () {
+      achecker.attachToolbarButton();
+      achecker.preferences.setPref("firstUse", false);
+    },
 
-		if(curSet.indexOf(toolButtonId) == -1) {
-			if (curSet.indexOf("search-container") != -1)
-				set = curSet.replace(/search-container/, "search-container,"+ toolButtonId);
-			else  // at the end
-				set = firefoxnav.currentSet + ","+ toolButtonId;
-	
-			firefoxnav.setAttribute("currentset", set);
-			firefoxnav.currentSet = set;
-			document.persist("nav-bar", "currentset");
-			try {
-				BrowserToolboxCustomizeDone(true);
-			}
-			catch(e) {}
-		}
-	},
-	
-	toggleChecker: function() {
-		toggleSidebar('achecker-viewsidebar');
-	},
-	
-	checkCurrentPage: function(isIncludeFrame) {
-		var cwin = achecker.currentWin();
-		var rdoc = achecker.resultDoc();
-		var getFrameDocs = function(win) {
-			if (!win.frames)
-				return;
+    attachToolbarButton: function () {
+      var toolButtonId = "achecker-button";
+      var firefoxnav = document.getElementById("nav-bar");
+      var curSet = firefoxnav.currentSet;
+      var set;
 
-			var frameDocs = [];
-			for (var i=0, l=win.frames.length; i<l; i++) {
-				var frame = win.frames[i];
-				frameDocs.push({
-					src: frame.location.href,
-					doc: frame.window.document
-				});
+      if (curSet.indexOf(toolButtonId) === -1) {
+        if (curSet.indexOf("search-container") !== -1) {
+          set = curSet.replace(/search-container/, "search-container," + toolButtonId);
+        } else {  // at the end
+          set = firefoxnav.currentSet + "," + toolButtonId;
+        }
 
-				if (frame.window.frames.length) {
-					frameDocs = frameDocs.concat(getFrameDocs(frame.window));
-				}
-			}
+        firefoxnav.setAttribute("currentset", set);
+        firefoxnav.currentSet = set;
+        document.persist("nav-bar", "currentset");
+        try {
+          global.BrowserToolboxCustomizeDone(true);
+        } catch (e) {}
+      }
+    },
 
-			return frameDocs;
-		};
-		
-		
+    toggleChecker: function () {
+      global.toggleSidebar('achecker-viewsidebar');
+    },
 
-		var pajetResult = achecker.Pajet.run(cwin, rdoc, isIncludeFrame, getFrameDocs(cwin));
-		var pajetHeader = pajetResult.header;
-		var pajetSections = pajetResult.sections;
+    checkCurrentPage: function (isIncludeFrame) {
+      var cwin = achecker.currentWin();
+      var rdoc = achecker.resultDoc();
+      var i;
+      var getFrameDocs = function (win) {
+        if (!win.frames) {
+          return;
+        }
 
-		rdoc.body.textContent = '';
-		rdoc.body.appendChild(pajetHeader);
-		for (var i in pajetSections) {
-			rdoc.body.appendChild(pajetSections[i].getAsElement());
-		}
-	},
+        var frameDocs = [], i, l;
 
-	/* get elements from result.html */
-	resultDoc: function() {
-		return document.getElementById("sidebar").contentDocument.getElementById("resultframe").contentDocument;
-	},
+        for (i = 0, l = win.frames.length; i < l; i++) {
+          var frame = win.frames[i];
+          frameDocs.push({
+            src: frame.location.href,
+            doc: frame.window.document
+          });
 
-	resultWin: function() {
-		return document.getElementById("sidebar").contentDocument.getElementById("resultframe").contentWindow;
-	},
+          if (frame.window.frames.length) {
+            frameDocs = frameDocs.concat(getFrameDocs(frame.window));
+          }
+        }
 
-	currentDoc: function() {
-		return parent.gBrowser.selectedBrowser.contentDocument;
-	},
+        return frameDocs;
+      };
 
-	currentWin: function() {
-		return parent.gBrowser.selectedBrowser.contentWindow;
-	},
-	
-	showOverlay: function() {
-		if (achecker.currentDoc().getElementById("_acheckeroverlay")) {
-			achecker.currentDoc().getElementById("_acheckeroverlay").style.display = "block";
-			return;
-		}
 
-		var $overlay = achecker.currentDoc().createElement('div');
-		$overlay.id = '_acheckeroverlay';
-		$overlay.style.display = 'block';
-		$overlay.style.zIndex = '99999999';
-		$overlay.style.position = 'fixed';
-		$overlay.style.top = '0';
-		$overlay.style.right = '0';
-		$overlay.style.bottom = '0';
-		$overlay.style.left = '0';
-		$overlay.style.backgroundColor = '#fff';
-		$overlay.style.opacity = '0.01';
-		achecker.currentDoc().body.appendChild($overlay);
-	},
-	
-	hideOverlay: function() {
-		if (achecker.currentDoc().getElementById("_acheckeroverlay")) {
-			achecker.currentDoc().getElementById("_acheckeroverlay").style.display = "none";
-		}
-	},
 
-	$: function(id) {
-		return document.getElementById(id);
-	}
-};
+      var pajetResult = achecker.Pajet.run(cwin, rdoc, isIncludeFrame, getFrameDocs(cwin));
+      var pajetHeader = pajetResult.header;
+      var pajetSections = pajetResult.sections;
+      var pajetScore = achecker.Pajet.scoreAsElement(pajetSections);
 
-achecker.preferences = {
-	SERVICE_COMPONENT: Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefService).getBranch("extensions.achecker."),
+      rdoc.body.textContent = '';
+      rdoc.body.appendChild(pajetScore);
+      rdoc.body.appendChild(pajetHeader);
+      for (i in pajetSections) {
+        if (pajetSections.hasOwnProperty(i)) {
+          rdoc.body.appendChild(pajetSections[i].getAsElement());
+        }
+      }
+    },
 
-	getPref: function(key) {
-		var type = this.SERVICE_COMPONENT.getPrefType(key);
-		switch (type) {
-			case this.SERVICE_COMPONENT.PREF_BOOL:
-				return this.SERVICE_COMPONENT.getBoolPref(key);
+    /* get elements from result.html */
+    resultDoc: function () {
+      return document.getElementById("sidebar").contentDocument.getElementById("resultframe").contentDocument;
+    },
 
-			case this.SERVICE_COMPONENT.PREF_STRING:
-				return this.SERVICE_COMPONENT.getCharPref(key);
+    resultWin: function () {
+      return document.getElementById("sidebar").contentDocument.getElementById("resultframe").contentWindow;
+    },
 
-			case this.SERVICE_COMPONENT.PREF_INT:
-				return this.SERVICE_COMPONENT.getIntPref(key);
+    currentDoc: function () {
+      return global.parent.gBrowser.selectedBrowser.contentDocument;
+    },
 
-			default:
-				return null;
-		}
-	},
+    currentWin: function () {
+      return global.parent.gBrowser.selectedBrowser.contentWindow;
+    },
 
-	setPref: function(key,value) {
-		var type = this.SERVICE_COMPONENT.getPrefType(key);
-		switch (type) {
-			case this.SERVICE_COMPONENT.PREF_STRING:
-				return this.SERVICE_COMPONENT.setCharPref(key,value);
+    showOverlay: function () {
+      if (achecker.currentDoc().getElementById("_acheckeroverlay")) {
+        achecker.currentDoc().getElementById("_acheckeroverlay").style.display = "block";
+        return;
+      }
 
-			case this.SERVICE_COMPONENT.PREF_INT:
-				return this.SERVICE_COMPONENT.setIntPref(key,value);
+      var $overlay = achecker.currentDoc().createElement('div');
+      $overlay.id = '_acheckeroverlay';
+      $overlay.style.display = 'block';
+      $overlay.style.zIndex = '99999999';
+      $overlay.style.position = 'fixed';
+      $overlay.style.top = '0';
+      $overlay.style.right = '0';
+      $overlay.style.bottom = '0';
+      $overlay.style.left = '0';
+      $overlay.style.backgroundColor = '#fff';
+      $overlay.style.opacity = '0.01';
+      achecker.currentDoc().body.appendChild($overlay);
+    },
 
-			case this.SERVICE_COMPONENT.PREF_BOOL:
-				return this.SERVICE_COMPONENT.setBoolPref(key,value);
+    hideOverlay: function () {
+      if (achecker.currentDoc().getElementById("_acheckeroverlay")) {
+        achecker.currentDoc().getElementById("_acheckeroverlay").style.display = "none";
+      }
+    },
 
-			default:
-				return null;
-		}
-	}
-};
+    $: function (id) {
+      return document.getElementById(id);
+    }
+  };
 
-achecker.preferences.SERVICE_COMPONENT.QueryInterface(Components.interfaces.nsIPrefBranch);
+  achecker.preferences = {
+    SERVICE_COMPONENT: Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefService).getBranch("extensions.achecker."),
+
+    getPref: function (key) {
+      var type = this.SERVICE_COMPONENT.getPrefType(key);
+      switch (type) {
+      case this.SERVICE_COMPONENT.PREF_BOOL:
+        return this.SERVICE_COMPONENT.getBoolPref(key);
+
+      case this.SERVICE_COMPONENT.PREF_STRING:
+        return this.SERVICE_COMPONENT.getCharPref(key);
+
+      case this.SERVICE_COMPONENT.PREF_INT:
+        return this.SERVICE_COMPONENT.getIntPref(key);
+
+      default:
+        return null;
+      }
+    },
+
+    setPref: function (key, value) {
+      var type = this.SERVICE_COMPONENT.getPrefType(key);
+      switch (type) {
+      case this.SERVICE_COMPONENT.PREF_STRING:
+        return this.SERVICE_COMPONENT.setCharPref(key, value);
+
+      case this.SERVICE_COMPONENT.PREF_INT:
+        return this.SERVICE_COMPONENT.setIntPref(key, value);
+
+      case this.SERVICE_COMPONENT.PREF_BOOL:
+        return this.SERVICE_COMPONENT.setBoolPref(key, value);
+
+      default:
+        return null;
+      }
+    }
+  };
+
+  achecker.preferences.SERVICE_COMPONENT.QueryInterface(Components.interfaces.nsIPrefBranch);
+}(this, this.document));

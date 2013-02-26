@@ -33,11 +33,17 @@
  * the terms of any one of the MPL, the GPL or the LGPL.
  *
  * ***** END LICENSE BLOCK ***** */
-(function() {
-achecker = window.achecker || {};
-achecker.i18n = {
-	get: function(val) {
-		return achecker_locale.messages[val].message || '';
-	}
-};
-})();
+
+/*jslint browser: true */
+/*global achecker_locale */
+
+(function (global) {
+  "use strict";
+
+  var achecker = global.achecker || {};
+  achecker.i18n = {
+    get: function (val) {
+      return achecker_locale.messages[val].message || '';
+    }
+  };
+}(window));
