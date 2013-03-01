@@ -83,7 +83,7 @@
     var res = g.achecker.Pajet.run(cwin, rdoc, isIncludeFrame, frameDocs, discardFrameUrls);
     var header = res.header;
     var sections = res.sections;
-    var score = g.achecker.Pajet.scoreAsElement(sections);
+    var score = g.achecker.Pajet.scoreAsElement(rdoc, sections);
 
     resultEl.appendChild(score);
     resultEl.appendChild(header);

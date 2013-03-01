@@ -38,19 +38,17 @@
   "use strict";
 
   var sectionWeights = {
-    "altText": 25,
-    "altTextBG": 5,
+    "altText": 30,
     "kbdFocus": 10,
-    "skipNav": 10,
     "frame": 10,
     "linkText": 10,
     "pageLang": 10,
     "unintendedFunction": 10,
-    "label": 10
+    "label": 20
   };
 
   var getLevel = function (score) {
-    if (score === 100) {
+    if (score >= 95) {
       return "perfect";
     } else if (score > 80) {
       return "good";
@@ -79,22 +77,23 @@
 
     return score;
   };
-  g.achecker.Pajet.scoreAsElement = function (pajetSections) {
+  g.achecker.Pajet.scoreAsElement = function (rdoc, pajetSections) {
     var score = g.achecker.Pajet.score(pajetSections);
-    var rdoc = g.document;
     var $div = rdoc.createElement('div');
     $div.className = 'pajetScore ' + getLevel(score);
 
     var $title = rdoc.createElement('h2');
-    var $label = rdoc.createElement('i');
+    var $label = rdoc.createElement('a');
+    $label.setAttribute('href', 'http://openwax.miya.pe.kr/#guide_score');
+    $label.setAttribute('target', '_blank');
     $label.innerText = "WAX Score: ";
     $label.textContent = "WAX Score: ";
     var $score = rdoc.createElement('strong');
     $score.innerText = score;
     $score.textContent = score;
 
+    $label.appendChild($score);
     $title.appendChild($label);
-    $title.appendChild($score);
     $div.appendChild($title);
 
     return $div;

@@ -107,7 +107,7 @@
       var pajetResult = achecker.Pajet.run(cwin, rdoc, isIncludeFrame, getFrameDocs(cwin));
       var pajetHeader = pajetResult.header;
       var pajetSections = pajetResult.sections;
-      var pajetScore = achecker.Pajet.scoreAsElement(pajetSections);
+      var pajetScore = achecker.Pajet.scoreAsElement(rdoc, pajetSections);
 
       rdoc.body.textContent = '';
       rdoc.body.appendChild(pajetScore);

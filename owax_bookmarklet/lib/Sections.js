@@ -1024,7 +1024,7 @@ labelLoop:
           cwin,
           rdoc,
           '16. ' + achecker.i18n.get('No16'),
-          'a,area,input,select,textarea',
+          'a,area,input,button',
           [ {label: achecker.i18n.get('Hidden'), width: 45},
             {label: achecker.i18n.get('Event'), width: 80},
             {label: achecker.i18n.get('Contents'), className: 'lt'},
@@ -1045,20 +1045,22 @@ labelLoop:
             var hasWindowOpenEvent;
 
             try {
-              hasChangeEvent = !!evtWrapper.onchange;
               hasWindowOpenEvent = evtWrapper.onclick ?
                   evtWrapper.onclick.toString().indexOf('window.open') > -1 : false;
             } catch (e) {
-              hasChangeEvent = null;
               hasWindowOpenEvent = null;
             }
 
             data.content = getTextContent(this);
-            data.title = this.getAttribute('title') || '-';
+            if (this.getAttribute('title')) {
+              data.title = this.getAttribute('title');
+            } else if (this.getAttribute('target') === '_blank') {
+              data.title = 'target="_blank"';
+            } else {
+              data.title = '-';
+            }
 
-            if (hasChangeEvent) {
-              data.event = 'change';
-            } else if (hasWindowOpenEvent) {
+            if (hasWindowOpenEvent) {
               data.event = 'window.open';
             } else {
               return false;
@@ -1072,7 +1074,13 @@ labelLoop:
             ];
           },
           function () {
-            return this.getAttribute('title') ? 'warning' : 'fail';
+            if (this.getAttribute('title')) {
+              return 'warning';
+            }
+            if (this.getAttribute('target') === '_blank') {
+              return 'pass';
+            }
+            return 'fail';
           }
         ),
 

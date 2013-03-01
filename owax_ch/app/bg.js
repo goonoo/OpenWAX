@@ -1,4 +1,4 @@
-/*jslint browser: true */
+/*jshint browser: true */
 /*global chrome */
 (function () {
   "use strict";
@@ -18,9 +18,7 @@
 
       var isIncludeFrame = window.localStorage.isIncludeFrame !== 'false';
       chrome.tabs.sendMessage(tab.id, {
-        action: 'execute_' + (isIncludeFrame
-          ? 'with_frames'
-          : 'without_frames')
+        action: 'execute_' + (isIncludeFrame ? 'with_frames' : 'without_frames')
       }, function (enabled) {
       });
     });

@@ -34,6 +34,616 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+(function (g) {
+  "use strict";
+
+  var addEvent = function (obj, type, fn) {
+    if (obj.addEventListener) {
+      obj.addEventListener(type, fn, false);
+    } else if (obj.attachEvent) {
+      obj["e" + type + fn] = fn;
+      obj[type + fn] = function () {
+        obj["e" + type + fn](g.event);
+      };
+      obj.attachEvent("on" + type, obj[type + fn]);
+    }
+  };
+  var getStyle = function (el, style) {
+    if (el.currentStyle) {
+      return el.currentStyle.style;
+    }
+    return g.getComputedStyle(el, null).style;
+  };
+  var toggleFoldedClass = function (el) {
+    el.className = el.className === 'folded' ? '' : 'folded';
+
+    // fix bug: IE8 won't reflow when set data-* attribute
+    if (document && document.all) {
+      document.body.className = document.body.getAttribute("className");
+    }
+  };
+
+  var Xpath = {};
+
+  // ********************************************************************************************* //
+  // XPATH
+
+  /**
+   * Gets an XPath for an element which describes its hierarchical location.
+   */
+  Xpath.getElementXPath = function (element) {
+    if (element && element.id) {
+      return '//*[@id="' + element.id + '"]';
+    }
+    return Xpath.getElementTreeXPath(element);
+  };
+
+  Xpath.getElementTreeXPath = function (element) {
+    var paths = [];
+    var DOCUMENT_TYPE_NODE = 10;
+    var sibling;
+
+    // Use nodeName (instead of localName) so namespace prefix is included (if any).
+    for (element; element && element.nodeType === 1; element = element.parentNode) {
+      var index = 0;
+      for (sibling = element.previousSibling; sibling; sibling = sibling.previousSibling) {
+        // Ignore document type declaration.
+        if (sibling.nodeType !== DOCUMENT_TYPE_NODE && sibling.nodeName === element.nodeName) {
+          ++index;
+        }
+      }
+
+      var tagName = element.nodeName.toLowerCase();
+      var pathIndex = (index ? "[" + (index + 1) + "]" : "");
+      paths.splice(0, 0, tagName + pathIndex);
+    }
+
+    return paths.length ? "/" + paths.join("/") : null;
+  };
+
+  g.achecker = g.achecker || {};
+  g.achecker.Pajet = g.achecker.Pajet || {};
+  g.achecker.Pajet.Section = function () {
+    throw 'not implemented';
+  };
+  g.achecker.Pajet.Section.prototype = {
+    getAsElement : function () {
+      throw 'not implemented';
+    }
+  };
+
+  g.achecker.Pajet.isElHidden = function (el) {
+    if (el && el.tagName && (el.tagName === 'TITLE' || el.tagName === 'BODY' || el.tagName === 'HTML')) {
+      return false;
+    }
+    do {
+      if (el.tagName && getStyle(el, 'display') === 'none') {
+        return true;
+      }
+      el = el.parentNode;
+    } while (el);
+    return false;
+  };
+  g.achecker.Pajet.isElBlind = function (el) {
+    var hasClass = function (className, needle) {
+      var classes = className.split(' '), i;
+      for (i = 0; i < classes.length; i++) {
+        if (classes[i] === needle) {
+          return true;
+        }
+      }
+      return false;
+    };
+    do {
+      if (el.className && hasClass(el.className, 'blind')) {
+        return true;
+      }
+      el = el.parentNode;
+    } while (el);
+    return false;
+  };
+
+  g.achecker.Pajet.ListSection = g.achecker.Pajet.Section;
+  g.achecker.Pajet.ListSection = function (cwin, rdoc, title, targetSelector,
+      limit, isIncludeFrame, frameDocs, emptyMessage,
+      content, validStatus, eventHandlers) {
+    var this_ = this;
+    this.cwin = cwin;
+    this.rdoc = rdoc;
+    this.title = title;
+    this.emptyMessage = emptyMessage;
+    this.contents = this._getContents(cwin, isIncludeFrame, frameDocs,
+        targetSelector, content, validStatus, eventHandlers, limit);
+  };
+  g.achecker.Pajet.ListSection.prototype._getContentsFromDocument = function (doc, url,
+      targetSelector, content, validStatus, eventHandlers, limit) {
+    if (!limit) {
+      limit = 99999;
+    }
+
+    var $target = doc.querySelectorAll(targetSelector);
+    var contents = [], i;
+
+    for (i = 0; i < $target.length; i++) {
+      if (limit <= 0) {
+        break;
+      }
+
+      var $el = $target[i];
+      var _content = typeof content === 'function' ? content.apply($el, [doc, url]) : content;
+      if (_content !== false) {
+        contents.push({
+          el: $el,
+          doc: $el.ownerDocument,
+          validStatus: typeof validStatus === 'function' ? validStatus.apply($el, [doc, url]) : (typeof validStatus === 'string' ? validStatus : ''),
+          content: typeof content === 'function' ? content.apply($el, [doc, url]) : content,
+          eventHandlers: eventHandlers
+        });
+        limit--;
+      }
+    }
+    return contents;
+  };
+  g.achecker.Pajet.ListSection.prototype._getContents = function (win, isIncludeFrame,
+      frameDocs, targetSelector, content, validStatus,
+      eventHandlers, limit) {
+    if (!limit) {
+      limit = 99999;
+    }
+    var contents = this._getContentsFromDocument(win.document, win.location.href,
+      targetSelector, content, validStatus, eventHandlers, limit), i, l;
+
+    limit -= contents.length;
+    if (isIncludeFrame && limit > 0) {
+      for (i = 0, l = frameDocs.length; i < l; i++) {
+        if (limit <= 0) {
+          break;
+        }
+
+        var _contents = this._getContentsFromDocument(
+          frameDocs[i].doc,
+          frameDocs[i].src,
+          targetSelector,
+          content,
+          validStatus,
+          eventHandlers,
+          limit
+        );
+        contents = contents.concat(_contents);
+        limit -= _contents.length;
+      }
+    }
+    return contents;
+  };
+  g.achecker.Pajet.ListSection.prototype.getAsElement = function () {
+    var this_ = this;
+    var doc = this.rdoc;
+    var $contentList = doc.createElement("ul"), i;
+    var onClickItem = function (e) {
+      if (parent.Firebug) {
+        parent.Firebug.Inspector.clearAllHighlights();
+      }
+
+      var $targetEl = this['data-el'];
+      var isHidden = g.achecker.Pajet.isElHidden($targetEl);
+      if ($targetEl.tagName === 'TITLE') {
+        while ($targetEl) {
+          if ($targetEl.tagName === 'HTML') {
+            break;
+          }
+          $targetEl = $targetEl.parentNode;
+        }
+      }
+
+      if (!isHidden) {
+        var oldTabindex = $targetEl.getAttribute('tabindex');
+        $targetEl.setAttribute('tabindex', 0);
+        $targetEl.focus();
+        if (oldTabindex === null) {
+          $targetEl.removeAttribute('tabindex');
+        } else {
+          $targetEl.setAttribute('tabindex', oldTabindex);
+        }
+      }
+      if (parent.Firebug && $targetEl) {
+        parent.Firebug.Inspector.inspectFromContextMenu($targetEl);
+        // compatible with firebug 1.9.x
+        parent.Firebug.Inspector.highlightObject($targetEl, parent.Firebug.currentContext);
+      } else if (g.console && g.console.log && $targetEl) {
+        g.console.log('OpenWAX Info: ', Xpath.getElementXPath($targetEl));
+      }
+    };
+
+    for (i = 0; i < this.contents.length; i++) {
+      var info = this.contents[i];
+      var hiddenClass = g.achecker.Pajet.isElHidden(info.el) ? ' hidden_el' : '';
+      var blindClass = g.achecker.Pajet.isElBlind(info.el) ? ' blind_el' : '';
+      var $item = doc.createElement('li');
+      var key;
+
+      $item.className = info.validStatus + ' ' + hiddenClass + ' ' + blindClass;
+      if (typeof info.content === 'string') {
+        $item.innerText = info.content;
+        $item.textContent = info.content;
+      } else {
+        $item.appendChild(info.content);
+      }
+      $item['data-el'] = info.el;
+      if (info.eventHandlers) {
+        for (key in info.eventHandlers) {
+          if (info.eventHandlers.hasOwnProperty(key)) {
+            addEvent($item, key, info.eventHandlers[key]);
+          }
+        }
+      }
+      addEvent($item, 'click', onClickItem);
+      $contentList.appendChild($item);
+    }
+
+    var $section = doc.createElement('div');
+    $section.className = 'pajetSection';
+    var $title = doc.createElement('h2');
+    var $count = doc.createElement('span');
+    $title.innerText = this.title + " ";
+    $title.textContent = this.title + " ";
+    $title.className = '';
+    $count.innerText = "(" + this.contents.length + ")";
+    $count.textContent = "(" + this.contents.length + ")";
+    $title.appendChild($count);
+    /*
+    var $titleLink = doc.createElement('a');
+    $titleLink.setAttribute('target', '_blank');
+    $titleLink.setAttribute('href',
+        'http://html.nhncorp.com/a11y/guide.php?no='+
+          this.title.split(' ')[0] + '');
+    $titleLink.innerText = 'Guide';
+    $titleLink.textContent = 'Guide';
+    $title.appendChild($titleLink);
+    */
+    $section.appendChild($title);
+
+    if ($contentList.childNodes.length <= 0) {
+      var $emptyItem = doc.createElement('p');
+      $emptyItem.className = 'comment';
+      $emptyItem.innerText = this.emptyMessage;
+      $emptyItem.textContent = this.emptyMessage;
+      $section.appendChild($emptyItem);
+    } else {
+      $section.appendChild($contentList);
+    }
+
+    addEvent($title, 'click', function (e) {
+      toggleFoldedClass(this);
+    });
+    /*
+    addEvent($titleLink, 'click', function (e) {
+      e.stopPropagation();
+    });
+    */
+    return $section;
+  };
+  g.achecker.Pajet.ListSection.prototype.getScore = function () {
+    var count = this.contents.length,
+        pass = 0;
+
+    for (var i = 0; i < count; i++) {
+      if (this.contents[i].validStatus !== 'fail') {
+        pass++;
+      }
+    }
+
+    return {
+      all: count,
+      pass: pass
+    };
+  };
+
+  g.achecker.Pajet.TableSection = g.achecker.Pajet.Section;
+  g.achecker.Pajet.TableSection = function (cwin, rdoc, title, targetSelector,
+      colInfo, isIncludeFrame, frameDocs, emptyMessage,
+      content, validStatus, eventHandlers) {
+    var this_ = this;
+    this.cwin = cwin;
+    this.rdoc = rdoc;
+    this.title = title;
+    this.colInfo = colInfo;
+    this.emptyMessage = emptyMessage;
+    this.contents = this._getContents(cwin, isIncludeFrame, frameDocs,
+        targetSelector, content, validStatus, eventHandlers);
+  };
+  g.achecker.Pajet.TableSection.prototype._getContentsFromDocument = function (doc, url,
+      targetSelector, content, validStatus, eventHandlers) {
+    var $target = doc.querySelectorAll(targetSelector);
+    var contents = [], i;
+
+    for (i = 0; i < $target.length; i++) {
+      var $el = $target[i];
+      var _content = typeof content === 'function' ? content.apply($el, [doc, url]) : content;
+      if (_content !== false) {
+        contents.push({
+          el: $el,
+          doc: $el.ownerDocument,
+          validStatus: typeof validStatus === 'function' ? validStatus.apply($el, [doc, url]) : (typeof validStatus === 'string' ? validStatus : ''),
+          content: typeof content === 'function' ? content.apply($el, [doc, url]) : content,
+          eventHandlers: eventHandlers
+        });
+      }
+    }
+    return contents;
+  };
+  g.achecker.Pajet.TableSection.prototype._getContents = function (win, isIncludeFrame,
+      frameDocs, targetSelector, content, validStatus,
+      eventHandlers) {
+    var contents = this._getContentsFromDocument(win.document, win.location.href,
+      targetSelector, content, validStatus, eventHandlers), i, l;
+
+    if (isIncludeFrame) {
+      for (i = 0, l = frameDocs.length; i < l; i++) {
+        var _contents = this._getContentsFromDocument(frameDocs[i].doc, frameDocs[i].src,
+          targetSelector, content, validStatus, eventHandlers);
+        contents = contents.concat(_contents);
+      }
+    }
+    return contents;
+  };
+  g.achecker.Pajet.TableSection.prototype.getAsElement = function () {
+    var this_ = this;
+    var doc = this.rdoc;
+    var $table = doc.createElement('table');
+    var $thead = doc.createElement('thead');
+    var $theadTr = doc.createElement('tr');
+    var i;
+    var onClickTr = function (e) {
+      if (parent.Firebug) {
+        parent.Firebug.Inspector.clearAllHighlights();
+      }
+
+      var $targetEl = this['data-el'];
+      var isHidden = g.achecker.Pajet.isElHidden($targetEl);
+      if ($targetEl.tagName === 'TITLE') {
+        while ($targetEl) {
+          if ($targetEl.tagName === 'HTML') {
+            break;
+          }
+          $targetEl = $targetEl.parentNode;
+        }
+      }
+
+      if (!isHidden) {
+        var oldTabindex = $targetEl.getAttribute('tabindex');
+        $targetEl.setAttribute('tabindex', 0);
+        $targetEl.focus();
+        if (oldTabindex === null) {
+          $targetEl.removeAttribute('tabindex');
+        } else {
+          $targetEl.setAttribute('tabindex', oldTabindex);
+        }
+      }
+      if (parent.Firebug && $targetEl) {
+        parent.Firebug.Inspector.inspectFromContextMenu($targetEl);
+        // compatible with firebug 1.9.x
+        parent.Firebug.Inspector.highlightObject($targetEl, parent.Firebug.currentContext);
+      } else if (g.console && g.console.log && $targetEl) {
+        g.console.log('OpenWAX Info: ', Xpath.getElementXPath($targetEl));
+      }
+    };
+
+    for (i = 0; i < this.colInfo.length; i++) {
+      var $theadTh = doc.createElement('th');
+      $theadTh.setAttribute('scope', 'col');
+      $theadTh.innerText = this.colInfo[i].label;
+      $theadTh.textContent = this.colInfo[i].label;
+      if (this.colInfo[i].width) {
+        $theadTh.style.width = this.colInfo[i].width + 'px';
+      }
+      if (this.colInfo[i].minWidth) {
+        $theadTh.style.minWidth = this.colInfo[i].minWidth + 'px';
+      }
+      if (this.colInfo[i].maxWidth) {
+        $theadTh.style.maxWidth = this.colInfo[i].maxWidth + 'px';
+      }
+      if (this.colInfo[i].className) {
+        $theadTh.className = this.colInfo[i].className;
+      }
+      $theadTr.appendChild($theadTh);
+    }
+    $thead.appendChild($theadTr);
+    $table.appendChild($thead);
+
+    var $tbody = doc.createElement('tbody');
+    for (i = 0; i < this.contents.length; i++) {
+      var info = this.contents[i];
+      var hiddenClass = g.achecker.Pajet.isElHidden(info.el) ? ' hidden_el' : '';
+      var blindClass = g.achecker.Pajet.isElBlind(info.el) ? ' blind_el' : '';
+      var $tr = doc.createElement('tr');
+      var j, key;
+
+      $tr.className = info.validStatus + ' ' + hiddenClass + ' ' + blindClass;
+      for (j in info.content) {
+        if (info.content.hasOwnProperty(j)) {
+          var _content = info.content[j];
+          var $td = doc.createElement('td');
+          if (typeof _content === 'string') {
+            $td.innerText = _content;
+            $td.textContent = _content;
+            $td.innerHTML = (_content
+                  .replace(/</g, '&lt;')
+                  .replace(/>/g, '&gt;')
+                )
+                .replace(/\[__\[/g, '<span style="color:#777!important;text-decoration:line-through">')
+                .replace(/\]__\]/g, '</span>');
+          } else {
+            $td.appendChild(_content);
+          }
+          if (this.colInfo[j].className) {
+            $td.className = this.colInfo[j].className;
+          }
+          $tr.appendChild($td);
+        }
+      }
+      $tr['data-el'] = info.el;
+      if (info.eventHandlers) {
+        for (key in info.eventHandlers) {
+          if (info.eventHandlers.hasOwnProperty(key)) {
+            addEvent($tr, key, info.eventHandlers[key]);
+          }
+        }
+      }
+      addEvent($tr, 'click', onClickTr);
+      $tbody.appendChild($tr);
+      $table.appendChild($tbody);
+    }
+
+    var $section = doc.createElement('div');
+    $section.className = 'pajetSection';
+    var $title = doc.createElement('h2');
+    var $count = doc.createElement('span');
+    $title.innerText = this.title + " ";
+    $title.textContent = this.title + " ";
+    $title.className = '';
+    $count.innerText = "(" + this.contents.length + ")";
+    $count.textContent = "(" + this.contents.length + ")";
+    $title.appendChild($count);
+    /*
+    var $titleLink = doc.createElement('a');
+    $titleLink.setAttribute('target', '_blank');
+    $titleLink.setAttribute('href',
+        'http://html.nhncorp.com/a11y/guide.php?no='+
+          this.title.split(' ')[0] + '');
+    $titleLink.innerText = 'Guide';
+    $titleLink.textContent = 'Guide';
+    $title.appendChild($titleLink);
+    */
+    $section.appendChild($title);
+
+    if ($tbody.childNodes.length <= 0) {
+      var $emptyItem = doc.createElement('p');
+      $emptyItem.className = 'comment';
+      $emptyItem.innerText = this.emptyMessage;
+      $emptyItem.textContent = this.emptyMessage;
+      $section.appendChild($emptyItem);
+    } else {
+      $section.appendChild($table);
+    }
+
+    addEvent($title, 'click', function (e) {
+      toggleFoldedClass(this);
+    });
+    /*
+    addEvent($titleLink, 'click', function (e) {
+      e.stopPropagation();
+    });
+    */
+    return $section;
+  };
+  g.achecker.Pajet.TableSection.prototype.getScore = function () {
+    var count = this.contents.length,
+        pass = 0;
+
+    for (var i = 0; i < count; i++) {
+      if (this.contents[i].validStatus !== 'fail') {
+        pass++;
+      }
+    }
+
+    return {
+      all: count,
+      pass: pass
+    };
+  };
+
+  g.achecker.Pajet.ToolSection = function (cwin, rdoc, id, title, content, eventHandlers) {
+    var this_ = this;
+    this.cwin = cwin;
+    this.rdoc = rdoc;
+    this.id = id;
+    this.title = title;
+    this.content = typeof content === 'function' ? content.apply(this, [this.cwin, this.rdoc]) : content;
+    this.eventHandlers = eventHandlers;
+  };
+  g.achecker.Pajet.ToolSection.prototype.getAsElement = function () {
+    var doc = this.rdoc;
+
+    var $section = doc.createElement('div');
+    $section.id = this.id;
+    $section.className = 'pajetSection';
+    var $title = doc.createElement('h2');
+    $title.className = '';
+    $title.innerText = this.title;
+    $title.textContent = this.title;
+    /*
+    var $titleLink = doc.createElement('a');
+    $titleLink.setAttribute('target', '_blank');
+    $titleLink.setAttribute('href',
+        'http://html.nhncorp.com/a11y/guide.php?no='+
+          this.title.split(' ')[0] + '');
+    $titleLink.innerText = 'Guide';
+    $titleLink.textContent = 'Guide';
+    $title.appendChild($titleLink);
+    */
+
+    var $content = doc.createElement('div');
+    if (typeof this.content === 'string') {
+      $content.innerText = this.content;
+      $content.textContent = this.content;
+    } else {
+      $content.appendChild(this.content);
+    }
+    $section.appendChild($title);
+    $section.appendChild($content);
+
+    $title.setAttribute('tabindex', 0);
+    addEvent($title, 'click', function (e) {
+      toggleFoldedClass(this);
+    });
+    /*
+    addEvent($titleLink, 'click', function (e) {
+      e.stopPropagation();
+    });
+    */
+    return $section;
+  };
+  g.achecker.Pajet.ToolSection.prototype.getScore = function () {
+    return null;
+  };
+}(window));
+
+/* ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is N-WAX(NHN Web Accessibility eXtension).
+ *
+ * The Initial Developer of the Original Code is
+ * Goonoo Kim (NHN).
+ * Portions created by the Initial Developer are Copyright (C) 2011
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the GPL or the LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK ***** */
+
 /*jslint browser: true */
 /*global chrome, Components, openDialog, XMLHttpRequest, FormData */
 
@@ -1707,3 +2317,597 @@ labelLoop:
     };
   };
 }(window, window.document));
+
+/* ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is N-WAX(NHN Web Accessibility eXtension).
+ *
+ * The Initial Developer of the Original Code is
+ * Goonoo Kim (http://miya.pe.kr).
+ * Portions created by the Initial Developer are Copyright (C) 2011
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the GPL or the LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK ***** */
+
+(function (g) {
+  "use strict";
+
+  var sectionWeights = {
+    "altText": 30,
+    "kbdFocus": 10,
+    "frame": 10,
+    "linkText": 10,
+    "pageLang": 10,
+    "unintendedFunction": 10,
+    "label": 20
+  };
+
+  var getLevel = function (score) {
+    if (score >= 95) {
+      return "perfect";
+    } else if (score > 80) {
+      return "good";
+    } else if (score > 60) {
+      return "bad";
+    } else {
+      return "fail";
+    }
+  };
+
+  g.achecker = g.achecker || {};
+  g.achecker.Pajet = g.achecker.Pajet || {};
+  g.achecker.Pajet.score = function (pajetSections) {
+    var score = 0, info;
+
+    for (var key in sectionWeights) {
+      if (sectionWeights.hasOwnProperty(key)) {
+        info = pajetSections[key] ? pajetSections[key].getScore() : null;
+        if (info && info.all > 0) {
+          score += parseInt(info.pass / info.all * sectionWeights[key] * 10, 10) / 10;
+        } else {
+          score += parseInt(sectionWeights[key], 10);
+        }
+      }
+    }
+
+    return score;
+  };
+  g.achecker.Pajet.scoreAsElement = function (rdoc, pajetSections) {
+    var score = g.achecker.Pajet.score(pajetSections);
+    var $div = rdoc.createElement('div');
+    $div.className = 'pajetScore ' + getLevel(score);
+
+    var $title = rdoc.createElement('h2');
+    var $label = rdoc.createElement('a');
+    $label.setAttribute('href', 'http://openwax.miya.pe.kr/#guide_score');
+    $label.setAttribute('target', '_blank');
+    $label.innerText = "WAX Score: ";
+    $label.textContent = "WAX Score: ";
+    var $score = rdoc.createElement('strong');
+    $score.innerText = score;
+    $score.textContent = score;
+
+    $label.appendChild($score);
+    $title.appendChild($label);
+    $div.appendChild($title);
+
+    return $div;
+  };
+}(window));
+
+var achecker_locale={};
+achecker_locale["messages"] = {
+	"Target": {
+		"message": "대상",
+		"description": ""
+	},
+	"TargetPage": {
+		"message": "대상 페이지",
+		"description": ""
+	},
+	"NoneTargetPage": {
+		"message": "비대상 페이지",
+		"description": ""
+	},
+	"AltText": {
+		"message": "대체 텍스트",
+		"description": ""
+	},
+	"Undefined": {
+		"message": "미정의",
+		"description": ""
+	},
+	"ValidationFail": {
+		"message": "유효성 검사 오류 발생!",
+		"description": ""
+	},
+	"Loading": {
+		"message": "로딩중...",
+		"description": ""
+	},
+	"TableTitle": {
+		"message": "표 제목",
+		"description": ""
+	},
+	"None": {
+		"message": "없음",
+		"description": ""
+	},
+	"TableStructure": {
+		"message": "표 구조화",
+		"description": ""
+	},
+	"HasThead": {
+		"message": "thead있음",
+		"description": ""
+	},
+	"HasTfoot": {
+		"message": "tfoot있음",
+		"description": ""
+	},
+	"HasTbody": {
+		"message": "tbody있음",
+		"description": ""
+	},
+	"NoThead": {
+		"message": "thead없음",
+		"description": ""
+	},
+	"NoTfoot": {
+		"message": "tfoot없음",
+		"description": ""
+	},
+	"NoTbody": {
+		"message": "tbody없음",
+		"description": ""
+	},
+	"LevelAA": {
+		"message": "레벨AA",
+		"description": ""
+	},
+	"DocumentsForView": {
+		"message": "단순 열람 문서 형식",
+		"description": ""
+	},
+	"ShortCut": {
+		"message": "단축키",
+		"description": ""
+	},
+	"PageMainLang": {
+		"message": "주언어 명시",
+		"description": ""
+	},
+	"NoMainLang": {
+		"message": "주언어 없음",
+		"description": ""
+	},
+	"Contrast": {
+		"message": "명도 대비",
+		"description": ""
+	},
+	"Foreground": {
+		"message": "전경",
+		"description": ""
+	},
+	"SelectForegroundColor": {
+		"message": "전경색 선택",
+		"description": ""
+	},
+	"Background": {
+		"message": "배경",
+		"description": ""
+	},
+	"SelectBackgroundColor": {
+		"message": "배경색 선택",
+		"description": ""
+	},
+	"Result": {
+		"message": "결과",
+		"description": ""
+	},
+	"Test": {
+		"message": "테스트",
+		"description": ""
+	},
+	"KeyboardFocus": {
+		"message": "키보드 포커스",
+		"description": ""
+	},
+	"Error": {
+		"message": "오류",
+		"description": ""
+	},
+	"PageTitle": {
+		"message": "페이지 제목",
+		"description": ""
+	},
+	"NoPageTitle": {
+		"message": "페이지 제목 없음",
+		"description": ""
+	},
+	"UseFrame": {
+		"message": "프레임 사용",
+		"description": ""
+	},
+	"NoSrc": {
+		"message": "src 없음",
+		"description": ""
+	},
+	"NoTitle": {
+		"message": "title 없음",
+		"description": ""
+	},
+	"BlockTitle": {
+		"message": "콘텐츠 블록 제목",
+		"description": ""
+	},
+	"SkipNavigation": {
+		"message": "건너뛰기 링크",
+		"description": ""
+	},
+	"NthLink": {
+		"message": "번째 링크",
+		"description": ""
+	},
+	"Link": {
+		"message": "링크",
+		"description": ""
+	},
+	"Connected": {
+		"message": "연결",
+		"description": ""
+	},
+	"IsConnected": {
+		"message": "연결됨",
+		"description": ""
+	},
+	"IsNotConnected": {
+		"message": "연결되지 않음",
+		"description": ""
+	},
+	"LinkText": {
+		"message": "링크 텍스트",
+		"description": ""
+	},
+	"NoText": {
+		"message": "텍스트 없음",
+		"description": ""
+	},
+	"UnintendedFunction": {
+		"message": "의도하지 않은 기능",
+		"description": ""
+	},
+	"Label": {
+		"message": "레이블",
+		"description": ""
+	},
+	"No": {
+		"message": "번호",
+		"description": ""
+	},
+	"ThLink": {
+		"message": "번째 링크",
+		"description": ""
+	},
+
+	"NotApplicable": {
+		"message": "해당없음",
+		"description": ""
+	},
+	"RequireConfirmation": {
+		"message": "직접 확인 필요",
+		"description": ""
+	},
+
+	"FoldAll": {
+		"message": "전체 접기",
+		"description": ""
+	},
+	"UnfoldAll": {
+		"message": "전체 펼치기",
+		"description": ""
+	},
+
+	"Hidden": {
+		"message": "숨김",
+		"description": ""
+	},
+	"Preview": {
+		"message": "미리보기",
+		"description": ""
+	},
+	"Element": {
+		"message": "요소",
+		"description": ""
+	},
+	"Contents": {
+		"message": "내용",
+		"description": ""
+	},
+	"CaptionContent": {
+		"message": "Caption 내용",
+		"description": ""
+	},
+	"SummaryContent": {
+		"message": "Summary 내용",
+		"description": ""
+	},
+	"Structure": {
+		"message": "구조",
+		"description": ""
+	},
+	"ErrorType": {
+		"message": "오류 유형",
+		"description": ""
+	},
+	"Title": {
+		"message": "제목",
+		"description": ""
+	},
+	"Event": {
+		"message": "이벤트",
+		"description": ""
+	},
+	"TitleAttribute": {
+		"message": "title 속성값",
+		"description": ""
+	},
+	"FormType": {
+		"message": "폼 유형",
+		"description": ""
+	},
+	"LabelConnection": {
+		"message": "label 연결",
+		"description": ""
+	},
+	"CannotCheckFrameset": {
+		"message": "프레임셋 페이지는 검사할 수 없습니다. 프레임셋에 포함된 URL로 이동하여 재시도하실 수 있습니다.",
+		"description": ""
+	},
+
+	"No1": {
+		"message": "적절한 대체 텍스트",
+		"description": ""
+	},
+	"No5": {
+		"message": "텍스트 콘텐츠의 명도 대비",
+		"description": ""
+	},
+	"No8": {
+		"message": "초점 이동",
+		"description": ""
+	},
+	"No12": {
+		"message": "건너뛰기 링크",
+		"description": ""
+	},
+	"No13": {
+		"message": "제목 제공",
+		"description": ""
+	},
+	"No14": {
+		"message": "적절한 링크 텍스트",
+		"description": ""
+	},
+	"No15": {
+		"message": "기본 언어 표시",
+		"description": ""
+	},
+	"No16": {
+		"message": "사용자 요구에 따른 실행",
+		"description": ""
+	},
+	"No18": {
+		"message": "표의 구성",
+		"description": ""
+	},
+	"No19": {
+		"message": "레이블 제공",
+		"description": ""
+	},
+	"No21": {
+		"message": "마크업 오류 방지",
+		"description": ""
+	}
+}
+;
+
+/* ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is N-WAX(NHN Web Accessibility eXtension).
+ *
+ * The Initial Developer of the Original Code is
+ * Goonoo Kim (NHN).
+ * Portions created by the Initial Developer are Copyright (C) 2011
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the GPL or the LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK ***** */
+
+/*jslint browser: true */
+/*global achecker_locale */
+
+(function (global) {
+  "use strict";
+
+  var achecker = global.achecker || {};
+  achecker.i18n = {
+    get: function (val) {
+      return achecker_locale.messages[val].message || '';
+    }
+  };
+}(window));
+
+/*jslint browser: true */
+/*global achecker */
+(function (g) {
+  "use strict";
+
+  g.achecker = g.achecker || {};
+  g.achecker.showOverlay = function () {
+    if (document.getElementById("_acheckeroverlay")) {
+      document.getElementById("_acheckeroverlay").style.display = "block";
+      return;
+    }
+
+    var $overlay = document.createElement('div');
+    $overlay.id = '_acheckeroverlay';
+    $overlay.style.display = 'block';
+    $overlay.style.zIndex = '99999999';
+    $overlay.style.position = 'fixed';
+    $overlay.style.top = '0';
+    $overlay.style.right = '0';
+    $overlay.style.bottom = '0';
+    $overlay.style.left = '400px';
+    $overlay.style.backgroundColor = '#fff';
+    $overlay.style.opacity = '0.01';
+    document.body.appendChild($overlay);
+  };
+  g.achecker.hideOverlay = function () {
+    if (document.getElementById("_acheckeroverlay")) {
+      document.getElementById("_acheckeroverlay").style.display = "none";
+    }
+  };
+
+  var isLoading = false;
+
+  var runAchecker = function (isIncludeFrame) {
+    var frameDocs = [];
+    var discardFrameUrls = [];
+    var i, l;
+
+    if (isIncludeFrame) {
+      for (i = 0, l = document.getElementsByTagName("iframe").length; i < l; i++) {
+        var f = document.getElementsByTagName("iframe")[i];
+        if (f.src && f.contentDocument) {
+          frameDocs.push({
+            src: f.src,
+            doc: f.contentDocument
+          });
+        } else if (f.src) {
+          discardFrameUrls.push(f.src);
+        }
+      }
+    }
+
+    var cwin = window;
+    var rdoc = document;
+
+    if (!frameDocs.length && !cwin.document.documentElement) {
+      return {
+        err: true,
+        message: 'You cannot check this page.'
+      };
+    }
+    if (cwin.document.getElementsByTagName("frameset").length > 0) {
+      var frames = cwin.document.getElementsByTagName("frame"),
+        frameUrls = [];
+      var msg = '<ul>';
+      for (i = 0, l = frames.length; i < l; i++) {
+        if (frames[i].src.indexOf('http') > -1) {
+          msg += '<li><a href="' + frames[i].src + '" target="_blank"">' + frames[i].src + '</a></li>';
+        }
+      }
+      msg += '</ul>';
+
+      return {
+        err: true,
+        message: '<p>' + g.achecker.i18n.get("CannotCheckFrameset") + '</p>' + msg
+      };
+    }
+
+    var resultEl = rdoc.createElement("div");
+    resultEl.id = "achecker-result";
+    rdoc.documentElement.className += " achecker-included";
+
+    var res = g.achecker.Pajet.run(cwin, rdoc, isIncludeFrame, frameDocs, discardFrameUrls);
+    var header = res.header;
+    var sections = res.sections;
+    var score = g.achecker.Pajet.scoreAsElement(rdoc, sections);
+
+    resultEl.appendChild(score);
+    resultEl.appendChild(header);
+    for (i in sections) {
+      if (sections.hasOwnProperty(i)) {
+        resultEl.appendChild(sections[i].getAsElement());
+      }
+    }
+
+
+    rdoc.body.appendChild(resultEl);
+    return {
+      err: false
+    };
+  };
+
+  var execute = function (isIncludeFrame) {
+    if (!document.getElementById("achecker-css")) {
+      var css = document.createElement("link");
+      css.rel = "stylesheet";
+      css.id = "achecker-css";
+      css.href = "http://openwax.miya.pe.kr/c/bookmarklet.css";
+      document.getElementsByTagName("head")[0].appendChild(css);
+    }
+
+    if (document.getElementById("achecker-result")) {
+      document.body.removeChild(document.getElementById("achecker-result"));
+      document.documentElement.className = document.documentElement.className.replace(/ achecker\-included/, '');
+      return {
+        err: false
+      };
+    }
+    var res = runAchecker(isIncludeFrame);
+    return res;
+  };
+
+  execute();
+}(window));

@@ -1,11 +1,11 @@
 {
   "name": "openwax-firefox",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "author": "mctenshi <mctenshi@gmail.com>",
   "private": true,
   "dependencies": {
     "grunt": "latest",
-    "grunt-jslint": "latest",
+    "grunt-contrib-jshint": "latest",
     "grunt-exec": "latest"
   }
 }

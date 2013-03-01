@@ -1,6 +1,6 @@
 {
   "name": "openwax-bookmarklet",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "author": "mctenshi <mctenshi@gmail.com>",
   "private": true,
   "dependencies": {
