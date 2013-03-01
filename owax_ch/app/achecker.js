@@ -80,7 +80,7 @@
     var res = achecker.Pajet.run(cwin, rdoc, isIncludeFrame, frameDocs, discardFrameUrls);
     var header = res.header;
     var sections = res.sections;
-    var score = achecker.Pajet.scoreAsElement(rdoc, sections);
+    var score = achecker.Pajet.scoreAsElement(cwin, rdoc, sections);
 
     resultEl.appendChild(score);
     resultEl.appendChild(header);

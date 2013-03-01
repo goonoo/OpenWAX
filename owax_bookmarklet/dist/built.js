@@ -2379,6 +2379,18 @@ labelLoop:
     }
   };
 
+  var canonicalUrl = function (win) {
+    var linkEls = win.document.getElementsByTagName("link");
+    var i, l = linkEls.length;
+    for (i = 0; i < l; i++) {
+      if (linkEls[i].getAttribute("rel") === "canonical" &&
+          linkEls[i].getAttribute("href")) {
+        return linkEls[i].getAttribute("href");
+      }
+    }
+    return win.location.href;
+  };
+
   g.achecker = g.achecker || {};
   g.achecker.Pajet = g.achecker.Pajet || {};
   g.achecker.Pajet.score = function (pajetSections) {
@@ -2397,7 +2409,7 @@ labelLoop:
 
     return score;
   };
-  g.achecker.Pajet.scoreAsElement = function (rdoc, pajetSections) {
+  g.achecker.Pajet.scoreAsElement = function (cwin, rdoc, pajetSections) {
     var score = g.achecker.Pajet.score(pajetSections);
     var $div = rdoc.createElement('div');
     $div.className = 'pajetScore ' + getLevel(score);
@@ -2411,10 +2423,16 @@ labelLoop:
     var $score = rdoc.createElement('strong');
     $score.innerText = score;
     $score.textContent = score;
+    var $logger = rdoc.createElement('img');
+    $logger.setAttribute('src', 'http://openwax.miya.pe.kr/log?' +
+        'url=' + encodeURIComponent(canonicalUrl(cwin)) + '&' +
+        'title=' + encodeURIComponent(rdoc.title) + '&' +
+        'score=' + score + '&');
 
     $label.appendChild($score);
     $title.appendChild($label);
     $div.appendChild($title);
+    $div.appendChild($logger);
 
     return $div;
   };
@@ -2872,7 +2890,7 @@ achecker_locale["messages"] = {
     var res = g.achecker.Pajet.run(cwin, rdoc, isIncludeFrame, frameDocs, discardFrameUrls);
     var header = res.header;
     var sections = res.sections;
-    var score = g.achecker.Pajet.scoreAsElement(rdoc, sections);
+    var score = g.achecker.Pajet.scoreAsElement(cwin, rdoc, sections);
 
     resultEl.appendChild(score);
     resultEl.appendChild(header);

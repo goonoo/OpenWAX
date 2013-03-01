@@ -1,0 +1,15 @@
+{
+  "name": "openwax-node",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+  },
+  "dependencies": {
+    "express": "latest",
+    "mongoose": "latest",
+    "step": "latest",
+    "ejs-locals": "latest"
+  },
+  "devDependencies": {
+  }
+}
