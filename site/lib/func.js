@@ -21,11 +21,9 @@ Date.prototype.hstr = function (format) {
       .replace('s', s.toString().length === 1 ? '0' + s : s);
 };
 
-Date.prototype.humantime = function (diffMS) {
-  diffMS = diffMS || 0;
-
+Date.prototype.humantime = function (lang) {
   var time = this.valueOf() / 1000,
-    now = (new Date().valueOf() - diffMS) / 1000,
+    now = new Date().valueOf() / 1000,
     m = this.getMonth() + 1,
     d = this.getDate(),
     h = this.getHours(),
@@ -35,15 +33,49 @@ Date.prototype.humantime = function (diffMS) {
     hours;
 
   if (time + 60 > now) {
-    return '방금';
+    switch (lang) {
+    case "ko":
+    case "ko-KR":
+      return '방금';
+
+    default:
+      return 'just now';
+    }
   }
   if (time + 60 * 60 > now) {
     minutes = parseInt((now - time) / 60, 10);
-    return minutes === 1 ? '1분전' : minutes + '분전';
+    switch (lang) {
+    case "ko":
+    case "ko-KR":
+      return minutes + '분전';
+
+    default:
+      return minutes === 1 ? 'm ago' : minutes + 'm ago';
+    }
   }
   if (time + 60 * 60 * 24 > now) {
     hours = parseInt((now - time) / (60 * 60), 10);
-    return hours === 1 ? '1시간전' : hours + '시간전';
+    switch (lang) {
+    case "ko":
+    case "ko-KR":
+      return hours + '시간전';
+
+    default:
+      return hours === 1 ? '1 hour ago' : hours + ' hours ago';
+    }
   }
-  return this.hstr('Y-m-d');
+  switch (lang) {
+  case "ko":
+  case "ko-KR":
+    return this.hstr('Y-m-d');
+
+  default:
+    return this.hstr('n/j/Y');
+  }
+};
+
+String.prototype.h = function () {	
+	return this.replace(/\&/g, "&amp;")
+             .replace(/</g, "&lt;")
+             .replace(/>/g, "&gt;");
 };

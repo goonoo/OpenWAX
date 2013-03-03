@@ -5,6 +5,8 @@
   "scripts": {
   },
   "dependencies": {
+    "locale": "latest",
+    "i18n-2": "https://github.com/maurousuga/i18n-node-2/tarball/master",
     "express": "latest",
     "mongoose": "latest",
     "step": "latest",

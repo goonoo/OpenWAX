@@ -322,27 +322,33 @@ figcaption {
   [role=navigation] {
     max-width: 850px;
   }
+  [role=navigation] .comments {
+    visibility: hidden;
+  }
 
   .fix_nav #tothetop {
     left: 780px;
   }
 
-  #comments h1 {
-    display: none;
-  }
-
-  #affogato {
+  #comments {
     position: fixed;
     top: 0;
     right: 0;
     bottom: 0;
     left: 850px;
-    padding: 0 10px;
     box-shadow: 0 0 5px rgba(0,0,0,.2);
     background: #fff;
     overflow-y: auto;
   }
+  #comments h1 {
+    display: none;
+  }
 
+  #affogato {
+    padding: 0 10px;
+  }
+
+  #skp_comment_form,
   #skp_indicator {
     display: none !important;
   }

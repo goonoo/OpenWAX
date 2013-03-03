@@ -4,22 +4,22 @@
   <meta charset="utf-8" />
   <title><%= title ? title + ' | ' : '' %>OpenWAX</title>
   <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
-  <link rel="stylesheet" href="c/s.css?1" />
+  <link rel="stylesheet" href="c/s.css?2" />
 </head>
 <body>
 
 <div id="wrap">
   <header role="banner" id="top">
     <h1><a href="/">OpenWAX <span class="version">v1.8</span></a></h1>
-    <p>OpenWAX(Open Web Accessibility eXtension)는 웹 페이지의 접근성 진단을 쉽게 할 수 있도록 제작된 도구입니다.</p>
+    <p><%= __("OpenWAX is a tool that can help diagnose and fix the accessibility problem") %></p>
     <div class="img"><img alt="screenshot of OpenWAX" src="i/app.png" /></div>
   </header>
 
   <nav role="navigation">
     <ul>
-      <li><a href="#download">download</a></li>
-      <li><a href="#guide">guide</a></li>
-      <li><a href="#comments">comments</a></li>
+      <li class="download"><a href="/#download"><%= __('Download') %></a></li>
+      <li class="guide"><a href="/#guide"><%= __('Guide') %></a></li>
+      <li class="comments"><a href="#comments"><%= __('Comments') %></a></li>
       <li class="fb">
         <div class="fb-like" data-href="http://openwax.miya.pe.kr" data-send="false" data-layout="button_count"
           data-width="150" data-show-faces="false" data-colorscheme="dark"></div>
@@ -37,9 +37,9 @@
 
   <form role="search" action="/search">
     <fieldset>
-      <legend>WAX Score 검색</legend>
-      <input type="search" name="q" title="사이트 URL" placeholder="URL로 WAX Score를 검색해보세요." />
-      <button type="submit">검색</button>
+      <legend><%= __('Search WAX Score') %></legend>
+      <input type="search" name="q" title="<%= __('Site URL') %>" placeholder="<%= __('Search WAX Scores with URL') %>" />
+      <button type="submit"><%= __('Search') %></button>
     </fieldset>
   </form>
 
@@ -47,9 +47,8 @@
     <%- body %>
 
     <section id="comments">
-      <h1>Comments</h1>
-      <div id="affogato">
-      </div>
+      <h1><%= __('Comments') %></h1>
+      <div id="affogato"></div>
     </section>
   </div>
 
@@ -84,7 +83,8 @@ $(function () {
 SKP.commentsPlugin({ 
   op_app_key: 'c979bd4b-d527-366d-b780-1c5ac37479d7' ,
   target_id: 'affogato', 
-  page_id: 'openwax'
+  page_id: 'openwax',
+  is_responsive: true
 }); 
 </script>
 

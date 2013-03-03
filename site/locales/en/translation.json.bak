@@ -1,0 +1,96 @@
+{
+  "OpenWAX is a tool that can help diagnose and fix the accessibility problem": "OpenWAX(Open Web Accessibility eXtension) is a tool that can help diagnose and fix the accessibility problem.",
+  "Search": "Search!",
+  "Download": "Download",
+  "Guide": "Guide",
+  "Comments": "Comments",
+  "Search WAX Score": "Search WAX Score",
+  "Search WAX Scores with URL": "Search WAX Scores with URL",
+  "Site URL": "Site URL",
+
+  "search": {
+    "WAX Score of SITE": "WAX Score of <mark>__site__</mark>",
+    "No result with SITE": "아직 <mark>__site__</mark>에 해당하는 OpenWAX 수행결과가 없습니다.",
+    "Redirect SITE and run": "<a href='__site_with_http__' target='_blank'>__site__로 이동</a>하여 직접 OpenWAX 검사를 수행해보세요! ;)",
+    "Do search": "검색해보세요.",
+    "Input URL to check WAX Score": "사이트의 URL을 입력하여 평균 WAX Score 및 검색 결과 목록을 확인해보세요!"
+  },
+
+  "main": {
+    "Recent WAX Scores": "최근 WAX Score",
+
+    "Download": "다운로드",
+    "OpenWAX is a tool that can help diagnose and fix the accessibility problem": "OpenWAX(Open Web Accessibility eXtension)는 웹 페이지의 접근성 진단을 쉽게 할 수 있도록 제작된 도구입니다.",
+    "Install OpenWAX on your browser": "사용하시는 브라우저에 맞는 OpenWAX를 설치 후 진단을 원하는 웹 페이지에 접속 후 OpenWAX를 실행하세요!",
+    "OpenWAX for Firefox": "파이어폭스용 OpenWAX",
+    "OpenWAX for Google Chrome": "구글크롬용 OpenWAX",
+    "OpenWAX Bookmarklet": "OpenWAX 북마클릿",
+    "Add bookmarklet": "링크 우클릭 후 북마크로 추가하거나 드래그하여 북마크바에 놓으면 사용할 수 있습니다.",
+
+    "Guide": "가이드",
+    "Execute OpenWAX": "OpenWAX 실행",
+    "Simple guide": "접근성 진단을 원하는 사이트에 접속 후 툴바에서 OpenWAX 아이콘을 클릭하여 OpenWAX를 실행합니다. 간단하죠?",
+    "to run in Google Chrome": "구글 크롬에서 실행하려면",
+    "to run in Firefox": "파이어폭스에서 실행하려면",
+    "to run via Bookmarklet": "북마클릿으로 실행하려면",
+    "Bookmarklet run order": "(1. 북마클릿 링크를 북마크에 추가한 후, 2. 원하는 페이지에서 북마크 실행!)",
+
+    "WAX Score instruction": "OpenWAX가 제공하는 접근성 점수입니다. WAX Score는 기계적으로 검사할 수 있는 접근성 관련 항목들을 100점 만점으로 수치화하여 표시합니다.",
+    "WAX Score figure caption": "WAX Score: 100과 같이 OpenWAX 검사결과 상단에 WAX Score가 표시됩니다.",
+    "You know what WAX Score means": "WAX Score가 100점이라고 정말로 접근성을 100%로 지킨건 아니라는 건 알고계시죠? 바보 이미지에 '천재'라고 대체 텍스트를 달아도 기계적으로는 대체 텍스트를 일단 달았으니 접근성을 준수한 것으로 판단하니까요. 물론 대체 텍스트를 달았다는 것 자체가 접근성을 준수했을 가능성이 높으므로 WAX Score는 충분히 의미를 가진답니다.",
+    "WAX Score detail belows": "아래는 WAX Score의 점수 구성에 대한 설명입니다.",
+    "score": {
+      "AltText": "대체 텍스트(30점)",
+      "AltTextDesc": "전체 이미지 대비 대체 텍스트가 제공된 이미지를 10점 만점으로 환산합니다. 이미지가 사용되지 않았다면 30점입니다.",
+      "KbdFocus": "키보드 포커스(10점)",
+      "KbdFocusDesc": "<code>onfocus</code> 이벤트에 <code>blur()</code> 함수를 실행하여 키보드 포커스를 없애는 경우, CSS의 <code>outline</code> 속성이 0으로 설정된 경우가 있으면 0점, 그런 경우가 없으면 10점입니다.",
+      "FrameTitle": "프레임 제목(10점)",
+      "FrameTitleDesc": "페이지에 프레임이 제공되었다면 프레임에 제목(<code>title</code> 속성)이 제공된 비율을 10점 만점으로 환산합니다. 프레임이 제공되지 않았다면 10점입니다.",
+      "LinkText": "링크 텍스트(10점)",
+      "LinkTextDesc": "전체 링크 대비 링크 텍스트가 제공된 링크를 10점 만점으로 환산합니다. 링크가 사용되지 않았다면 10점입니다.",
+      "Lang": "기본 언어(10점)",
+      "LangDesc": "페이지에 기본 언어가 명시되었는지를 점수로 환산합니다. 프레임을 포함하여 검사하는 경우 기본 언어가 명시된 비율로 점수가 계산됩니다.",
+      "Unintended": "의도하지 않은 실행(10점)",
+      "UnintendedDesc": "<code>onclick</code> 이벤트에 <code>window.open</code>이 포함된 경우 새 창 알림(<code>title</code> 속성, <code>target=&quot;_blank&quot;</code>)이 제공된 비율을 10점 만점으로 환산합니다. <code>window.open</code>이 포함된 <code>onclick</code> 이벤트가 없다면 10점입니다.",
+      "Label": "레이블(20점)",
+      "LabelDesc": "전체 폼 서식 대비 레이블이 제공된 폼 서식의 비율을 20점 만점으로 환산합니다. 폼 서식이 사용되지 않았다면 20점입니다."
+    },
+
+    "Target Pages": "대상 페이지",
+    "Target Pages are": "이제부터는 OpenWAX 실행결과에서 표시되는 항목들에 대한 설명입니다.",
+    "Target Pages includes": "대상 페이지는 OpenWAX가 검사를 수행한 페이지를 표시합니다. 페이지 안에 프레임이 들어있다면 OpenWAX의 옵션에 따라 대상 페이지가 될 수도, 그렇지 않을 수도 있습니다.",
+
+    "None Target Pages": "비대상 페이지",
+    "None Target Pages are": "페이지 안에 들어있는 프레임 중에 대상 페이지가 되지 못한 페이지들입니다.",
+    "None Target Pages in Google Chrome": "Google Chrome에서는 현재 애석하게도 페이지와 도메인이 다른 프레임은 검사를 수행할 수 없습니다. 항상 비대상 페이지에 표시되죠.",
+    "None Target Pages in Bookmarklet": "북마클릿에서는 당연하게도 Google Chrome처럼 페이지와 도메인이 다른 프레임은 검사를 수행할 수 없습니다. 왜 이런 제약이 생기는지 알고싶으시면 <a href='http://en.wikipedia.org/wiki/Same_origin_policy'>Same origin policy(동일 출처 정책)</a>을 참고하세요.",
+
+    "All guides": "1~21번까지의 접근성 지표",
+    "All guides includes": "1~21번까지의 접근성 지표에는 접근성 검사 수행 결과가 표시됩니다.",
+    "What error is": "<img src='i/error.png' alt='X'> 표시 빨간 배경색(이하 오류항목)이 표시되는 항목은 대부분 접근성 오류입니다.",
+    "Red background indicates error": "앗, 빨간 배경! 오류인가봐요.",
+    "What warning is": "<img src='i/warning.png' alt='!'> 표시 노란 배경색(이하 의심항목)이 표시되는 항목은 접근성 오류가 의심되는 항목입니다.",
+    "Yellow background indicates warning": "음, 노란 배경! 오류인지 생각해봐야겠군요.",
+    "How hidden element display": "&quot;숨김&quot; 셀에는 CSS로 <code>display: none;</code> 선언되어 화면에 표시되지 않는 요소가 &quot;Hidden&quot;이라고 표시됩니다. 개발자가 자바스크립트 등을 이용하여 특정 동작을 수행할때만 화면에 표시하고 있는지도 모르죠.",
+    "How hidden alt text display": "결과 항목에서 가끔 취소선이 그어진 텍스트를 보실 수가 있는데요. 이런 텍스트는 <code>display: none</code>이 부여되어 웹 페이지에서 존재하지 않도록 해놓은 텍스트에요. 이는 웹 브라우저는 물론이고 스크린리더 같은 보조기기에서도 대부분 접근이 불가능하니 참고하세요!",
+    "Click on result item": "항목을 한번 클릭해보실래요? 당신이 Google Chrome이나 북마클릿을 사용한다면 그 항목에 해당하는 요소에 초점을 맞춰줄거에요. 브라우저의 개발자 도구의 콘솔창을 활성화하신 상태라면 요소의 위치를 <a href='http://ko.wikipedia.org/wiki/XPath'>XPath</a>로 표시합니다. 숨어있는 요소라면 초점이 맞춰지지 않으니 참고하세요. 당신이 Firefox를 사용한다면 Firebug를 설치하신 후에 항목을 클릭해보세요. 그 항목에 해당하는 요소에 초점을 맞춰줌과 동시에 Firebug의 요소 검사 기능을 수행하여 Firebug 창에 표시해줄거에요. 아주 유용하다고 자부할만한 기능이에요. Firebug와 함께라면 숨어있는 요소의 위치도 쉽게 파악할 수 있답니다.",
+    "OpenWAX plus Firebug": "OpenWAX + Firebug라면? 우와!",
+
+    "guides": {
+      "No1": "적절한 대체 텍스트",
+      "No5": "텍스트 콘텐츠의 명도 대비",
+      "No8": "초점 이동",
+      "No12": "건너뛰기 링크",
+      "No13": "제목 제공",
+      "No14": "적절한 링크 텍스트",
+      "No15": "기본 언어 표시",
+      "No16": "사용자 요구에 따른 실행",
+      "No18": "표의 구성",
+      "No19": "레이블 제공",
+      "No21": "마크업 오류 방지"
+    },
+
+    "License": "저작권",
+    "OpenWAX is on MIT License": "OpenWAX는 <a href='http://opensource.org/licenses/MIT'>MIT License</a>를 따릅니다."
+  }
+}

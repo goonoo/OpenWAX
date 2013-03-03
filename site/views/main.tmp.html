@@ -1,0 +1,161 @@
+<% layout('layout.html') -%>
+
+<section id="recent">
+  <h1><%= t('main.Recent WAX Scores') %></h1>
+  <ul>
+    <% for (var i = 0; i < scores.length; i++) { %>
+      <li><a href="<%= scores[i].url %>"><%= scores[i].title %></a>: <b><%= scores[i].score %></b> (<%= scores[i].updated_at.humantime(i18n.lng()) %>)<br />
+        <span class="addr"><%= scores[i].url %></span></li>
+    <% } %>
+  </ul>
+</section>
+
+<section id="download">
+  <h1><%= t('main.Download') %></h1>
+  <p><%= t('main.OpenWAX is a tool that can help diagnose and fix the accessibility problem') %></p>
+  <p><%= t('main.Install OpenWAX on your browser') %></p>
+  <ul>
+    <li><a href="https://addons.mozilla.org/ko/firefox/addon/openwax/" target="_blank"><%= t('main.OpenWAX for Firefox') %></a></li>
+    <li><a href="https://chrome.google.com/webstore/detail/openwax/bfahpbmaknaeohgdklfbobogpdngngoe?hl=ko" target="_blank"><%= t('main.OpenWAX for Google Chrome') %></a></li>
+    <li><a href="javascript:(function(d){__a=d.createElement('script');__a.src='http://openwax.miya.pe.kr/j/bookmarklet.js?t=' + Math.random();d.body.appendChild(__a);})(document);"><%= t('main.OpenWAX Bookmarklet') %></a> - <%= t('main.Add bookmarklet') %></li>
+  </ul>
+</section>
+
+<section id="guide">
+  <h1><%= t('main.Guide') %></h1>
+  <h2 id="guide_exec"><%= t('main.Execute OpenWAX') %></h2>
+  <p><%= t('main.Simple guide') %></p>
+  <figure>
+    <img alt="" src="i/guide/0.png" />
+    <figcaption><%= t('main.to run in Google Chrome') %></figcaption>
+  </figure>
+  <figure>
+    <img alt="" src="i/guide/0-1.png" />
+    <figcaption><%= t('main.to run in Firefox') %></figcaption>
+  </figure>
+  <figure>
+    <img alt="" src="i/guide/0-4.png" />
+    <figcaption><%= t('main.to run via Bookmarklet') %> (<%= t('main.Bookmarklet run order') %>)</figcaption>
+  </figure>
+  <h2 id="guide_score">WAX Score</h2>
+  <p><%= t('main.WAX Score instruction') %></p>
+  <figure>
+    <img alt="" src="i/guide/score100.png" />
+    <figcaption><%= t('main.WAX Score figure caption') %></figcaption>
+  </figure>
+  <p><%= t('main.You know what WAX Score means') %></p>
+  <p><%= t('main.WAX Score detail belows') %></p>
+  <ul>
+    <li><b><%= t('main.score.AltText') %></b>: <%- t('main.score.AltTextDesc') %></li>
+    <li><b><%= t('main.score.KbdFocus') %></b>: <%- t('main.score.KbdFocusDesc') %></li>
+    <li><b><%= t('main.score.FrameTitle') %></b>: <%- t('main.score.FrameTitleDesc') %></li>
+    <li><b><%= t('main.score.LinkText') %></b>: <%- t('main.score.LinkTextDesc') %></li>
+    <li><b><%= t('main.score.Lang') %></b>: <%- t('main.score.LangDesc') %></li>
+    <li><b><%= t('main.score.Unintended') %></b>: <%- t('main.score.UnintendedDesc') %></li>
+    <li><b><%= t('main.score.Label') %></b>: <%- t('main.score.LabelDesc') %></li>
+  </ul>
+  <h2 id="guide_pages"><%= t('main.Target Pages') %></h2>
+  <p><%= t('main.Target Pages are') %></p>
+  <p><%= t('main.Target Pages includes') %></p>
+  <h2 id="guide_exclude_pages"><%= t('main.None Target Pages') %></h2>
+  <p><%= t('main.None Target Pages are') %></p>
+  <p><%= t('main.None Target Pages in Google Chrome') %></p>
+  <p><%= t('main.None Target Pages in Bookmarklet') %></p>
+  <h2 id="guide_common"><%= t('main.All guides') %></h2>
+  <p><%= t('main.All guides includes') %></p>
+  <p><%- t('main.What error is') %></p>
+  <figure>
+    <img alt="" src="i/guide/0-2.png" />
+    <figcaption><%= t('main.Red background indicates error') %></figcaption>
+  </figure>
+  <p><%- t('main.What warning is') %></p>
+  <figure>
+    <img alt="" src="i/guide/0-3.png" />
+    <figcaption><%= t('main.Yellow background indicates warning') %></figcaption>
+  </figure>
+  <p><%- t('main.How hidden element display') %></p></p>
+  <p><%- t('main.How hidden alt text display') %></p></p>
+  <p><%- t('main.Click on result item') %></p>
+  <figure>
+    <img alt="" src="i/guide/0-5.png" />
+    <figcaption><%- t('main.OpenWAX plus Firebug') %></figcaption>
+  </figure>
+
+  <h2 id="guide_alt_img">1. 적절한 대체 텍스트 (img)</h2>
+  <p><code>&lt;img&gt;</code>, <code>&lt;area&gt;</code>, <code>&lt;input type=&quot;image&quot;&gt;</code> 요소의 <code>alt</code> 속성을 표시합니다. <code>alt</code> 속성이 빈 값으로 선언된 경우에는 내용을 <code>alt=""</code>으로, <code>alt</code> 속성이 빠진 경우에는 내용을 <code>alt 미정의</code>로 표시합니다.</p>
+  <h2 id="guide_alt_bg">1. 적절한 대체 텍스트 (bg)</h2>
+  <p>CSS Background image가 지정된 요소의 텍스트 콘텐츠를 표시합니다. 이 지표에서는 의미를 갖고 있는 배경 이미지를 찾아서 그 의미가 텍스트 콘텐츠로도 제공되고 있는지를 확인하면 됩니다. 텍스트 콘텐츠가 근처의 요소에 제공되고 있을지도 모르니 오류라고 생각하기 전에 잘 찾아보시는 게 좋아요. 의미없는 이미지는 그냥 지나치세요!</p>
+  <h2 id="guide_alt_object">1. 적절한 대체 텍스트 (object)</h2>
+  <p>이 지표에서는 페이지에 사용된 <code>&lt;object&gt;</code>, <code>&lt;embed&gt;</code>, <code>&lt;video&gt;</code>, <code>&lt;audio&gt;</code>, <code>&lt;canvas&gt;</code>, <code>&lt;svg&gt;</code> 요소를 표시합니다. 그냥 표시만 할뿐이니 표시된 요소의 대체 콘텐츠가 잘 제공되었는지, 키보드로는 잘 작동하는지 살펴보세요.</p>
+  <h2 id="guide_contrast">5. 텍스트 콘텐츠의 명도 대비</h2>
+  <p>전경색과 배경색을 선택하면 명도 대비를 표시해주는 지표입니다. 전경색과 배경색에 따라 결과란에 명도 대비값이 표시됩니다.</p>
+  <p>Google Chrome용 명도 대비 도구는 페이지를 100%보다 크게 혹은 작게 확대 혹은 축소 했을 경우 색 선택이 원하는대로 잘 되지 않는 문제가 있어요. 빨리 해결하고 싶은 문제에요. 이 문제를 해결하여 github에 pull request를 해주신다면 제가 커피라도 대접해드릴게요!</p>
+  <p>북마클릿에서는 작동하지 않습니다. ㅠㅠ</p>
+  <h2 id="guide_focus">8. 초점 이동</h2>
+  <p>이 지표에서는 키보드 초점이 표시되지 않는 형태로 제작된 코드를 일부 찾아줍니다. <code>blur()</code> 함수를 호출하여 초점을 사라지게 만든 경우라든지, CSS의 <code>outline</code> 속성을 0으로 설정한 경우에 해당됩니다.</p>
+  <p>이 지표는 확실히 문제가 있는 경우만 진단하니 별 문제가 나오지 않았더라도 페이지에 초점 이동 문제가 있을 가능성은 남아있어요.</p>
+  <h2 id="guide_skip_nav">12. 건너뛰기 링크</h2>
+  <p>페이지에 사용된 최초 10개의 해시 링크를 표시합니다. 건너뛰기 링크가 여러개 제공될 수 있으니 넉넉하게 10개를 표시하는거에요. 여기서는 첫 항목부터 건너뛰기 링크가 나오는지, 건너뛰기 링크가 1번째 링크부터 시작하는지 확인하시면 되요. 건너뛰기 링크는 페이지의 시작점에 있어야 하니 1번째 링크여야 하니까요.</p>
+  <p>건너뛰기 링크가 제대로 제공된 것 같다면 그 다음엔 키보드로도 초점이 가는지 직접 페이지에 테스트를 해보시면 끝나겠죠?</p>
+  <h2 id="guide_title">13. 제목 제공(&lt;title&gt;)</h2>
+  <p>모든 대상 페이지에 사용된 제목(<code>&lt;title&gt;</code>)을 표시합니다.</p>
+  <p>제목이 제공되지 않았거나 특수문자가 반복된 경우 오류항목으로 표시됩니다.</p>
+  <h2 id="guide_frame_title">13. 제목 제공(frame)</h2>
+  <p>대상 페이지에 포함된 모든 프레임(<code>&lt;frame&gt;</code>, <code>&lt;iframe&gt;</code>)의 title 속성을 표시합니다.</p>
+  <p>프레임 제목이 제공되지 않은 경우 오류항목으로 표시됩니다.</p>
+  <h2 id="guide_heading">13. 제목 제공(&lt;h1&gt;~&lt;h6&gt;)</h2>
+  <p>모든 대상 페이지에 사용된 헤딩 태그(<code>&lt;h1&gt;</code> ~ <code>&lt;h6&gt;</code>)를 표시합니다.</p>
+  <h2 id="guide_linktexts">14. 적절한 링크 텍스트</h2>
+  <p><code>&lt;a&gt;</code>, <code>&lt;area&gt;</code> 요소의 텍스트를 표시합니다.</p>
+  <h2 id="guide_lang">15. 기본 언어 표시</h2>
+  <p>모든 대상 페이지의 <code>&lt;html&gt;</code> 태그에 선언된 <code>lang</code>, <code>xml:lang</code> 속성을
+    표시합니다. <code>lang</code>, <code>xml:lang</code>이 선언되어 있지 않으면 오류항목으로 표시됩니다.</p> 
+  <p>HTML 계열의 Doctype 페이지는 <code>lang</code> 속성이 없으면 오류항목으로 표시됩니다.</p>
+  <p>XHTML 1.0 Transitional Doctype 페이지는 <code>lang</code> 속성만 있고 <code>xml:lang</code> 속성이 없는 경우와
+    그 반대의 경우 의심항목으로 표시됩니다.</p>
+  <p>그 외의 XHTML Doctype 페이지는 <code>xml:lang</code> 속성이 없으면 오류항목으로 표시됩니다.</p>
+  <h2 id="guide_demand">16. 사용자 요구에 따른 실행</h2>
+  <p>이 지표에서는 onclick 이벤트 핸들러 자바스크립트 코드에 <code>window.open</code>이 포함된 경우 및 onchange
+    이벤트 핸들러가 선언된 요소를 표시합니다.</p>
+  <p>이 지표에서 표시되는 항목들은 사용자 요구에 따른 실행 지표의 오류가 발생될 수 있는 일부 항목을 표시합니다. 우선
+    표시되는 항목 중에 오류가 있는지 보시고, 오류가 발견되지 않았다면 여기서 표시되지 않은 콘텐츠 중 오류가 있지는
+    않은지 추가적으로 점검해야 합니다.</p>
+  <h2 id="guide_thead_tfoot">18. 표의 구성(caption, summary)</h2>
+  <p><code>&lt;table&gt;</code> 요소의 <code>&lt;caption&gt;</code>과 <code>summary</code>가 표시됩니다.</p>
+  <p>caption, summary가 모두 제공되지 않으면 오류항목으로, 둘 중 한가지가 제공되지 않으면 의심항목으로 표시됩니다.</p>
+  <p>배치용 테이블이라면 오히려 caption, summary가 제공되지 않아야 하므로 참고하세요.</p>
+  <h2 id="guide_th">18. 표의 구성(th)</h2>
+  <p><code>&lt;table&gt;</code> 요소의 <code>&lt;th&gt;</code>가 thead, tfoot, tbody로 구분되어 표시됩니다.</p>
+  <p><code>&lt;th&gt;</code>가 제공되지 않거나 <code>&lt;th&gt;</code>에 <code>scope</code>가 선언되지 않으면
+    오류항목으로 표시됩니다. <code>&lt;th&gt;</code>와 <code>scope</code>를 모두 선언한 경우라도 올바르게 제목 셀의
+    역할을 하는지 꼭 확인하세요.</p>
+  <p>배치용 테이블이라면 오히려 <code>&lt;th&gt;</code>가 제공되지 않아야 하므로 참고하세요.</p>
+  <h2 id="guide_label">19. 레이블 제공</h2>
+  <p>레이블이 필요한 모든 입력 서식과 연결된 <code>&lt;label&gt;</code>과 <code>title</code> 속성을 표시합니다.</p>
+  <p><code>&lt;label&gt;</code>이 모두 제공되지 않았다면 오류항목으로, <code>title</code> 속성만 제공되었다면
+    의심항목으로 표시됩니다.</p>
+  <p>표시되는 입력 서식은 <code>&lt;input type=&quot;hidden&quot;&gt;</code>, <code>&lt;input
+    type=&quot;submit&quot;&gt;</code>, <code>&lt;input type=&quot;reset&quot;&gt;</code>, <code>&lt;input
+    type=&quot;button&quot;&gt;</code>, <code>&lt;input type=&quot;image&quot;&gt;</code>을 제외한 모든
+    <code>&lt;input&gt;</code> 및 <code>&lt;textarea&gt;</code>,
+    <code>&lt;select&gt;</code>입니다.</p>
+  <h2 id="guide_validation">21. 마크업 오류 방지</h2>
+  <p><a href="http://validator.w3.org/" target="_blank">W3C Validation Service</a>의 HTML 유효성 검사 결과 중 접근성
+    오류를 일으킬 수 있는 항목들을 표시합니다.</p>
+  <p>HTML 유효성 검사 결과에는 <a href="http://www.htmlhelp.com/tools/validator/problems.html" target="_blank">알려진
+    문제</a>가 발생할 수 있으니 무조건 오류라고 판단하지 않아야 하니 주의하세요!</p>
+  <p>OpenWAX가 HTML 유효성 검사 결과 중 접근성 오류를 일으킬 수 있는 항목으로 판단하는 목록은 다음과 같습니다.</p>
+  <p>북마클릿에서는 작동하지 않습니다. ㅠㅠ</p>
+  <ul lang="en">
+    <li>document type does not allow element * here; missing one of * start-tag.</li>
+    <li>end tag for * which is not finished*</li>
+    <li>end tag for element * which is not open*</li>
+    <li>ID * already defined.</li>
+    <li>unclosed start-tag requires SHORTTAG YES *</li>
+    <li>unclosed end-tag requires SHORTTAG YES *</li>
+    <li>empty start-tag *</li>
+    <li>empty end-tag *</li>
+  </ul>
+  <h2 id="guide_license"><%= t('main.License') %></h2>
+  <p><%- t('main.OpenWAX is on MIT License') %></p>
+</section>

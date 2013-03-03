@@ -1,13 +1,17 @@
 /*jshint node: true */
+/*global __ */
 "use strict";
 
 var step = require('step');
 var express = require('express');
 var app = express();
+var locale = require("locale");
+var I18n = require('i18n-2');
 var db = require('mongoose');
 require('./lib/func.js');
 require('./lib/models')(db, db.Schema);
 db.connect('mongodb://localhost/openwax');
+
 
 var main = function (req, res, next) {
   var Score = db.model('Score');
@@ -110,7 +114,7 @@ var search = function (req, res, next) {
     },
     function render(list, sum, avg) {
       res.render('search', {
-        title: '검색',
+        title: req.i18n.__('Search'),
         q: q,
         count: list.length,
         list: list,
@@ -120,12 +124,37 @@ var search = function (req, res, next) {
   );
 };
 
-app.use(app.router);
-app.use(express.static(__dirname + '/public'));
-app.use(express.bodyParser());
-app.set('view engine', 'html');
-app.set('views', __dirname + '/views');
-app.engine('html', require('ejs-locals'));
+app.configure(function () {
+  // see i18n-2-5.patch. Should be applied until
+  // https://github.com/jeresig/i18n-node-2/pull/5
+  // get merged or resolved
+  /*
+  app.use(function register_i18n(req, res, next) {
+    req.i18n = i18n;
+    I18n.registerMethods(res.locals, req);
+    i18n.setLocaleFromQuery(req);
+    i18n.prefLocale = i18n.preferredLocale();
+    next();
+  });
+  */
+  I18n.expressBind(app, {
+    locales: ['en', 'ko']
+  });
+
+  app.use(express.bodyParser());
+  app.use(express.static(__dirname + '/public'));
+  app.use(function (req, res, next) {
+    var supported = new locale.Locales(['en', 'ko']);
+    var locales = new locale.Locales(req.headers["accept-language"]);
+    var best = locales.best(supported);
+    req.i18n.setLocale(best ? best.language : 'en');
+    next();
+  });
+  app.use(app.router);
+  app.set('view engine', 'html');
+  app.set('views', __dirname + '/views');
+  app.engine('html', require('ejs-locals'));
+});
 
 app.get('/', main);
 app.get('/log', log, render1x1Gif);
