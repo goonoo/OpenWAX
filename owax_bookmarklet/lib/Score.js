@@ -60,15 +60,18 @@
   };
 
   var canonicalUrl = function (win) {
+    var url = win.location.href;
     var linkEls = win.document.getElementsByTagName("link");
     var i, l = linkEls.length;
     for (i = 0; i < l; i++) {
       if (linkEls[i].getAttribute("rel") === "canonical" &&
           linkEls[i].getAttribute("href")) {
-        return linkEls[i].getAttribute("href");
+        url = linkEls[i].getAttribute("href");
       }
     }
-    return win.location.href;
+    // remove fragment identifier from URL
+    url = url.replace(/\#.*$/, '');
+    return url;
   };
 
   g.achecker = g.achecker || {};
@@ -87,7 +90,7 @@
       }
     }
 
-    return score;
+    return parseInt(score * 10, 10) / 10;
   };
   g.achecker.Pajet.scoreAsElement = function (cwin, rdoc, pajetSections) {
     var score = g.achecker.Pajet.score(pajetSections);
@@ -109,7 +112,7 @@
     $logger.style.left = '-9999px';
     $logger.setAttribute('src', 'http://openwax.miya.pe.kr/log?' +
         'url=' + encodeURIComponent(canonicalUrl(cwin)) + '&' +
-        'title=' + encodeURIComponent(rdoc.title) + '&' +
+        'title=' + encodeURIComponent(cwin.document.title) + '&' +
         'score=' + score + '&');
 
     $label.appendChild($score);

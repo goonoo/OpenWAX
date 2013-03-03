@@ -55,12 +55,14 @@
 	</stringbundleset>
  
 	<menupopup id="viewSidebarMenu">
-		<menuitem observes="viewsidebar" />
+		<menuitem observes="achecker-viewsidebar" />
 	</menupopup>
 
 	<toolbarpalette id="BrowserToolbarPalette">
 		<toolbarbutton id="achecker-button"
 			label="OpenWAX" type="button"
+      tooltiptext="OpenWAX"
+      class="toolbarbutton-1 chromeclass-toolbar-additional custombutton"
 			oncommand="achecker.toggleChecker(); event.stopPropagation();"
 			disabled="false"
 			hidden="false">

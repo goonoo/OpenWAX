@@ -133,10 +133,36 @@ figcaption {
   text-decoration: underline;
 }
 
+[role=search] {
+  margin: 44px 0 0;
+  background: #ddf;
+}
+[role=search] fieldset {
+  width: 70%;
+  margin: 0 auto;
+  padding: 3px;
+  border: 0;
+  text-align: right;
+}
+[role=search] fieldset legend {
+  display: none;
+}
+[role=search] fieldset input {
+  max-width: 250px;
+  width: 70%;
+  vertical-align: middle;
+  font-size: 30px;
+}
+[role=search] fieldset button {
+  background: #66d;
+  vertical-align: middle;
+  color: #fff;
+}
+
 #body {
   width: 70%;
-  margin: 44px auto 0;
-  padding: 1px 15%;
+  margin: 0 auto;
+  padding: 1px 15% 40px;
   background: #fff;
   line-height: 1.6;
   font-size: .8em;

@@ -1613,28 +1613,31 @@ labelLoop:
 
                       if (req2.readyState === 4) {
                         if (req2.status === 200) {
-                          var res = filterValidationResult(JSON.parse(req2.responseText));
-                          var el = rdoc.getElementById("w3c_validation");
-                          var itemEls = el.querySelectorAll("li.validationItem");
-                          var errcnt = 0;
-                          for (i = 0; i < res.messages.length; i++) {
-                            if (res.messages[i].type === 'error') {
-                              errcnt++;
+                          try {
+                            var res = filterValidationResult(JSON.parse(req2.responseText));
+                            var el = rdoc.getElementById("w3c_validation");
+                            var itemEls = el.querySelectorAll("li.validationItem");
+                            var errcnt = 0;
+                            for (i = 0; i < res.messages.length; i++) {
+                              if (res.messages[i].type === 'error') {
+                                errcnt++;
+                              }
                             }
-                          }
-                          for (i = 0; i < itemEls.length; i++) {
-                            var urlEl = itemEls[i].getElementsByClassName("url")[0];
-                            var errcntEl = itemEls[i].getElementsByClassName("errcnt")[0];
-                            if (urlEl.innerText === url || urlEl.textContent === url) {
-                              //urlEl.setAttribute('href', 'validation_result.html?res=' + encodeURIComponent(req2.responseText));
-                              errcntEl.innerText = errcnt + ' Errors';
-                              errcntEl.textContent = errcnt + ' Errors';
-                              itemEls[i].className = errcnt > 0 ? 'fail' : 'pass';
-                              var $res = getResultDetailEl(res.messages, url);
-                              $res.style.display = 'none';
-                              itemEls[i].appendChild($res);
-                              itemEls[i].onclick = onClickItem;
+                            for (i = 0; i < itemEls.length; i++) {
+                              var urlEl = itemEls[i].getElementsByClassName("url")[0];
+                              var errcntEl = itemEls[i].getElementsByClassName("errcnt")[0];
+                              if (urlEl.innerText === url || urlEl.textContent === url) {
+                                //urlEl.setAttribute('href', 'validation_result.html?res=' + encodeURIComponent(req2.responseText));
+                                errcntEl.innerText = errcnt + ' Errors';
+                                errcntEl.textContent = errcnt + ' Errors';
+                                itemEls[i].className = errcnt > 0 ? 'fail' : 'pass';
+                                var $res = getResultDetailEl(res.messages, url);
+                                $res.style.display = 'none';
+                                itemEls[i].appendChild($res);
+                                itemEls[i].onclick = onClickItem;
+                              }
                             }
+                          } catch (e) {
                           }
                         }
                       }
