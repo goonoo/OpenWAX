@@ -5,7 +5,7 @@
 	"description": "OpenWAX(Open Web Accessibility eXtension) is a tool that can help diagnose and fix the accessibility problem.",
 	"browser_action": {
 		"default_icon": "logo_19.png",
-		"popup": "popup.html"
+		"default_popup": "popup.html"
 	},
 	"default_locale": "en",
 	"icons": {
@@ -19,7 +19,7 @@
     "persistent": false
   },
 	"options_page": "options.html",
-  "content_security_policy": "script-src 'self'; object-src 'self'",
+  "content_security_policy": "script-src 'self' chrome-extension-resource:; object-src 'self'",
 	"content_scripts": [ {
 		"all_frames": false,
 		"css": [ "achecker.css" ],

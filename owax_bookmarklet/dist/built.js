@@ -2215,58 +2215,59 @@ labelLoop:
                     var req2 = new XMLHttpRequest();
                     var charset = html.indexOf('euc-kr') > 0 ? 'euc-kr' : 'utf-8';
                     req2.onreadystatechange = function () {
-                      var i;
-                      var onClickItem = function () {
-                        var $res = this.getElementsByTagName("div")[0];
-                        $res.style.display = $res.style.display === 'none' ? 'block' : 'none';
-                      };
+                      try {
+                        var i;
+                        var onClickItem = function () {
+                          var $res = this.getElementsByTagName("div")[0];
+                          $res.style.display = $res.style.display === 'none' ? 'block' : 'none';
+                        };
 
-                      if (req2.readyState === 4) {
-                        if (req2.status === 200) {
-                          var res = filterValidationResult(JSON.parse(req2.responseText));
-                          var el = rdoc.getElementById("w3c_validation");
-                          var itemEls = el.querySelectorAll("li.validationItem");
-                          var errcnt = 0;
-                          for (i = 0; i < res.messages.length; i++) {
-                            if (res.messages[i].type === 'error') {
-                              errcnt++;
+                        if (req2.readyState === 4) {
+                          if (req2.status === 200) {
+                            var res = filterValidationResult(JSON.parse(req2.responseText));
+                            var el = rdoc.getElementById("w3c_validation");
+                            var itemEls = el.querySelectorAll("li.validationItem");
+                            var errcnt = 0;
+                            for (i = 0; i < res.messages.length; i++) {
+                              if (res.messages[i].type === 'error') {
+                                errcnt++;
+                              }
                             }
-                          }
-                          for (i = 0; i < itemEls.length; i++) {
-                            var urlEl = itemEls[i].getElementsByClassName("url")[0];
-                            var errcntEl = itemEls[i].getElementsByClassName("errcnt")[0];
-                            if (urlEl.innerText === url || urlEl.textContent === url) {
-                              //urlEl.setAttribute('href', 'validation_result.html?res=' + encodeURIComponent(req2.responseText));
-                              errcntEl.innerText = errcnt + ' Errors';
-                              errcntEl.textContent = errcnt + ' Errors';
-                              itemEls[i].className = errcnt > 0 ? 'fail' : 'pass';
-                              var $res = getResultDetailEl(res.messages, url);
-                              $res.style.display = 'none';
-                              itemEls[i].appendChild($res);
-                              itemEls[i].onclick = onClickItem;
+                            for (i = 0; i < itemEls.length; i++) {
+                              var urlEl = itemEls[i].getElementsByClassName("url")[0];
+                              var errcntEl = itemEls[i].getElementsByClassName("errcnt")[0];
+                              if (urlEl.innerText === url || urlEl.textContent === url) {
+                                //urlEl.setAttribute('href', 'validation_result.html?res=' + encodeURIComponent(req2.responseText));
+                                errcntEl.innerText = errcnt + ' Errors';
+                                errcntEl.textContent = errcnt + ' Errors';
+                                itemEls[i].className = errcnt > 0 ? 'fail' : 'pass';
+                                var $res = getResultDetailEl(res.messages, url);
+                                $res.style.display = 'none';
+                                itemEls[i].appendChild($res);
+                                itemEls[i].onclick = onClickItem;
+                              }
                             }
                           }
                         }
+
+                        req2.open("POST", "http://validator.w3.org/check", true);
+
+                        // Firefox < 4
+                        if (typeof FormData !== "object") {
+                          req2.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                          req2.send('fragment=' + global.escape(html) +
+                              '&doctype=Inline' +
+                              '&output=json');
+                        } else {
+                          var formData = new FormData();
+                          formData.append('fragment', html);
+                          formData.append('doctype', 'Inline');
+                          formData.append('output', 'json');
+                          req2.send(formData);
+                        }
+                      } catch (e) {
                       }
                     };
-                    try {
-                      req2.open("POST", "http://validator.w3.org/check", true);
-
-                      // Firefox < 4
-                      if (typeof FormData !== "object") {
-                        req2.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-                        req2.send('fragment=' + global.escape(html) +
-                            '&doctype=Inline' +
-                            '&output=json');
-                      } else {
-                        var formData = new FormData();
-                        formData.append('fragment', html);
-                        formData.append('doctype', 'Inline');
-                        formData.append('output', 'json');
-                        req2.send(formData);
-                      }
-                    } catch (e) {
-                    }
                   } else {
                     global.alert(achecker.i18n.get('ValidationFail'));
                   }
@@ -2380,15 +2381,18 @@ labelLoop:
   };
 
   var canonicalUrl = function (win) {
+    var url = win.location.href;
     var linkEls = win.document.getElementsByTagName("link");
     var i, l = linkEls.length;
     for (i = 0; i < l; i++) {
       if (linkEls[i].getAttribute("rel") === "canonical" &&
           linkEls[i].getAttribute("href")) {
-        return linkEls[i].getAttribute("href");
+        url = linkEls[i].getAttribute("href");
       }
     }
-    return win.location.href;
+    // remove fragment identifier from URL
+    url = url.replace(/\#.*$/, '');
+    return url;
   };
 
   g.achecker = g.achecker || {};
@@ -2407,7 +2411,7 @@ labelLoop:
       }
     }
 
-    return score;
+    return parseInt(score * 10, 10) / 10;
   };
   g.achecker.Pajet.scoreAsElement = function (cwin, rdoc, pajetSections) {
     var score = g.achecker.Pajet.score(pajetSections);
@@ -2424,9 +2428,12 @@ labelLoop:
     $score.innerText = score;
     $score.textContent = score;
     var $logger = rdoc.createElement('img');
+    $logger.style.position = 'absolute';
+    $logger.style.top = '-9999px';
+    $logger.style.left = '-9999px';
     $logger.setAttribute('src', 'http://openwax.miya.pe.kr/log?' +
         'url=' + encodeURIComponent(canonicalUrl(cwin)) + '&' +
-        'title=' + encodeURIComponent(rdoc.title) + '&' +
+        'title=' + encodeURIComponent(cwin.document.title) + '&' +
         'score=' + score + '&');
 
     $label.appendChild($score);
@@ -2863,7 +2870,8 @@ achecker_locale["messages"] = {
     if (!frameDocs.length && !cwin.document.documentElement) {
       return {
         err: true,
-        message: 'You cannot check this page.'
+        message: 'You cannot check this page.',
+        text_message: 'You cannot check this page.'
       };
     }
     if (cwin.document.getElementsByTagName("frameset").length > 0) {
@@ -2879,7 +2887,8 @@ achecker_locale["messages"] = {
 
       return {
         err: true,
-        message: '<p>' + g.achecker.i18n.get("CannotCheckFrameset") + '</p>' + msg
+        message: '<p>' + g.achecker.i18n.get("CannotCheckFrameset") + '</p>' + msg,
+        text_message: g.achecker.i18n.get("CannotCheckFrameset")
       };
     }
 
@@ -2927,5 +2936,8 @@ achecker_locale["messages"] = {
     return res;
   };
 
-  execute();
+  var result = execute();
+  if (result.err) {
+    window.alert(result.text_message);
+  }
 }(window));

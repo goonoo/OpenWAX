@@ -2,9 +2,8 @@
 
 <% if (q) { %>
   <section id="search_result">
-    <h1>검색 결과 - <mark><%= q %></mark></h1>
     <% if (count > 0) { %>
-      <p><mark><%= q %></mark>의 평균 WAX Score는 <b><%= avg %></b>점 입니다.</p>
+      <h1><mark><%= q %></mark>의 WAX Score: <b id="search_result_score"><%= avg %></b></h1>
       <ul>
         <% for (var i = 0; i < list.length; i++) { %>
           <li><a href="<%= list[i].url %>">
@@ -15,7 +14,7 @@
         <% } %>
       </ul>
     <% } else { %>
-      <p><mark><%= q %></mark>에 해당하는 검색 결과가 없습니다.</p>
+      <h1>아직 <mark><%= q %></mark>에 해당하는 OpenWAX 수행결과가 없습니다.</h1>
       <p><a href="<%= !/^https?:\/\//.test(q) ? 'http://' : '' %><%= q %>" target="_blank"><%= q %>로 이동</a>하여 직접 OpenWAX 검사를 수행해보세요! ;)</p>
     <% } %>
   </section>

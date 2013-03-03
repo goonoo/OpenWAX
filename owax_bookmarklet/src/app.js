@@ -56,7 +56,8 @@
     if (!frameDocs.length && !cwin.document.documentElement) {
       return {
         err: true,
-        message: 'You cannot check this page.'
+        message: 'You cannot check this page.',
+        text_message: 'You cannot check this page.'
       };
     }
     if (cwin.document.getElementsByTagName("frameset").length > 0) {
@@ -72,7 +73,8 @@
 
       return {
         err: true,
-        message: '<p>' + g.achecker.i18n.get("CannotCheckFrameset") + '</p>' + msg
+        message: '<p>' + g.achecker.i18n.get("CannotCheckFrameset") + '</p>' + msg,
+        text_message: g.achecker.i18n.get("CannotCheckFrameset")
       };
     }
 
@@ -120,5 +122,8 @@
     return res;
   };
 
-  execute();
+  var result = execute();
+  if (result.err) {
+    window.alert(result.text_message);
+  }
 }(window));

@@ -7,31 +7,7 @@
 body{font-size:13px;font-family:Georgia,"나눔고딕",NanumGothic,sans-serif}
 body.result{width:350px}
 </style>
-<script>
-chrome.tabs.getSelected(null, function(tab) {
-	if (tab.url.indexOf('http') != 0 && tab.url.indexOf('https')) {
-		document.body.innerHTML = '<p>You can check following schemas only: "http://", "https://"</p>';
-		document.body.className = 'result';
-		return;
-	};
-
-	var isIncludeFrame = window.localStorage.isIncludeFrame != 'false';
-	chrome.tabs.sendMessage(tab.id, {
-			action: 'execute_'+ (isIncludeFrame
-				? 'with_frames'
-				: 'without_frames')}, function(res) {
-		if (res && res.err && res.message) {
-			document.body.innerHTML = res.message;
-			document.body.className = 'result';
-		} else {
-			window.close();
-		};
-		return;
-	});
-});
-//alert('..');
-//window.close();
-</script>
+<script src="popup.js"></script>
 </head>
 <body>
 	<p>Loading...</p>

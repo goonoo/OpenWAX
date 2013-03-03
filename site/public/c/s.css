@@ -191,6 +191,14 @@ figcaption {
   font-size: .9em;
 }
 
+#search_result h1 {
+  font-size: 30px;
+}
+#search_result_score {
+  font-size: 40px;
+  text-shadow: 2px 2px 3px rgba(0,0,0,.2);
+}
+
 #recent ul {
   margin: 0;
   padding: 0;
