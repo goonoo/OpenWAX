@@ -1473,7 +1473,23 @@ labelLoop:
             return $res;
           },
           function () {
-            return this.textContent || this.innerText ? 'pass' : 'fail';
+            var title = this.textContent || this.innerText;
+            var dupCharacters = [
+              '::', '||', '--', '@@', '##', '$$', '%%', '&&', '**', '((', '))', '++', '==', '~~',
+              ';;', '<<', '>>', '[[', ']]', '★★', '☆☆', '◎◎', '●●', '◆◆', '◇◇', '□□', '■■', '△△',
+              '▲▲', '▽▽', '▼▼', '◁◁', '◀◀', '▷▷', '▶▶', '♠♠', '♤♤', '♡♡', '♥♥', '♧♧', '♣♣', '⊙⊙',
+              '◈◈', '▣▣', '◐◐', '◑◑', '▒▒', '▤▤', '▥▥', '▨▨', '▧▧', '▦▦', '▩▩', '♨♨', '☏☏', '☎☎'
+            ];
+            var hasTitle = !!title;
+            var hasSpecialCharactersDup = false;
+            for (var i = 0; i < dupCharacters.length; i++) {
+              if (title.indexOf(dupCharacters[i]) > -1) {
+                hasSpecialCharactersDup = true;
+                break;
+              }
+            }
+
+            return hasTitle && !hasSpecialCharactersDup ? 'pass' : 'fail';
           }
         ),
 

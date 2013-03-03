@@ -342,4 +342,8 @@ figcaption {
     background: #fff;
     overflow-y: auto;
   }
+
+  #skp_indicator {
+    display: none !important;
+  }
 }
