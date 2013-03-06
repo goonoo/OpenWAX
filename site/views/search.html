@@ -15,7 +15,7 @@
       </ul>
     <% } else { %>
       <h1><%- __('search: No result with SITE', q.h()) %></h1>
-      <p><%- __('search: Redirect SITE and run', !/^https?:\/\//.test(q) ? 'http://' : '', q) %></p>
+      <p><%- __('search: Redirect SITE and run', (!/^https?:\/\//.test(q) ? 'http://' : '') + q, q) %></p>
     <% } %>
   </section>
 <% } else { %>

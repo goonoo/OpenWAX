@@ -84,7 +84,11 @@ var render1x1Gif = function (req, res) {
 
 var search = function (req, res, next) {
   var Score = db.model('Score');
-  var q = req.param('q');
+  var q = req.param('q').replace(/^https?:\/\//i, '');
+  var validQExp = /^([a-z0-9]+\.)+[a-z]{2,3}$/i;
+  if (!validQExp.test(q)) {
+    q = "";
+  }
 
   step(
     function getScoresFromQ() {
