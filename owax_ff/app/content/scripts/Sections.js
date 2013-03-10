@@ -266,6 +266,9 @@ labelLoop:
   var getAbsolutePath = function (src, url) {
     var newpath, orgPath;
 
+    // remove url querystring
+    url = url.replace(/\?.*$/, '');
+
     if (src && src.indexOf('//') === -1) {
       if (src.substr(0, 3) === '../') {
         newpath = url.substr(0, url.lastIndexOf('/') > 10 ? url.lastIndexOf('/') : url.length);
@@ -295,9 +298,9 @@ labelLoop:
         var $foldBtn = rdoc.createElement('button');
 
         $fold.className = 'toggleAll';
-        $foldBtn.className = 'unfold';
-        $foldBtn.setAttribute('data-folded', '');
-        $foldBtn.title = achecker.i18n.get('FoldAll');
+        $foldBtn.className = 'fold';
+        $foldBtn.setAttribute('data-folded', 'folded');
+        $foldBtn.title = achecker.i18n.get('UnfoldAll');
         $foldBtn.setAttribute('type', 'button');
         $foldBtn.innerText = 'Toggle All';
         $foldBtn.textContent = 'Toggle All';
@@ -307,7 +310,7 @@ labelLoop:
           var i, l;
 
           for (i = 0, l = $headings.length; i < l; i++) {
-            $headings[i].className = foldedClass;
+            $headings[i].className = $headings[i].className.replace('folded', '') + ' ' + foldedClass;
           }
 
           if (foldedClass) {
@@ -863,7 +866,23 @@ labelLoop:
             return $res;
           },
           function () {
-            return this.textContent || this.innerText ? 'pass' : 'fail';
+            var title = this.textContent || this.innerText;
+            var dupCharacters = [
+              '::', '||', '--', '@@', '##', '$$', '%%', '&&', '**', '((', '))', '++', '==', '~~',
+              ';;', '<<', '>>', '[[', ']]', '★★', '☆☆', '◎◎', '●●', '◆◆', '◇◇', '□□', '■■', '△△',
+              '▲▲', '▽▽', '▼▼', '◁◁', '◀◀', '▷▷', '▶▶', '♠♠', '♤♤', '♡♡', '♥♥', '♧♧', '♣♣', '⊙⊙',
+              '◈◈', '▣▣', '◐◐', '◑◑', '▒▒', '▤▤', '▥▥', '▨▨', '▧▧', '▦▦', '▩▩', '♨♨', '☏☏', '☎☎'
+            ];
+            var hasTitle = !!title;
+            var hasSpecialCharactersDup = false;
+            for (var i = 0; i < dupCharacters.length; i++) {
+              if (title.indexOf(dupCharacters[i]) > -1) {
+                hasSpecialCharactersDup = true;
+                break;
+              }
+            }
+
+            return hasTitle && !hasSpecialCharactersDup ? 'pass' : 'fail';
           }
         ),
 
@@ -1140,7 +1159,13 @@ labelLoop:
             var hasCaption = !!$caption;
             var hasSummary = !!this.getAttribute('summary');
 
-            return hasCaption ? 'pass' : 'fail';
+            if (hasCaption) {
+              return 'pass';
+            } else if (!hasCaption && !hasSummary) {
+              return 'warning';
+            } else {
+              return 'fail';
+            }
           }
         ),
 
@@ -1357,8 +1382,14 @@ labelLoop:
               return true;
             };
 
-            return hasTh && hasScope($theadTh) && hasScope($tfootTh) &&
-                hasScope($tbodyTh) ? 'pass' : 'fail';
+            if (hasTh && hasScope($theadTh) && hasScope($tfootTh) &&
+                hasScope($tbodyTh)) {
+              return 'pass';
+            } else if (!hasTh && !$theadTh.length && !$tfootTh.length) {
+              return 'warning';
+            } else {
+              return 'fail';
+            }
           }
         ),
 
@@ -1377,12 +1408,13 @@ labelLoop:
           frameDocs,
           achecker.i18n.get('NotApplicable'),
           function (doc, url) {
+            var typeAttr = this.getAttribute('type').toLowerCase();
             if (this.tagName === 'INPUT' &&
-                (this.getAttribute('type') === 'submit' ||
-                  this.getAttribute('type') === 'button' ||
-                  this.getAttribute('type') === 'image' ||
-                  this.getAttribute('type') === 'hidden' ||
-                  this.getAttribute('type') === 'reset')) {
+                (typeAttr === 'submit' ||
+                  typeAttr === 'button' ||
+                  typeAttr === 'image' ||
+                  typeAttr === 'hidden' ||
+                  typeAttr === 'reset')) {
               return false;
             }
 
@@ -1423,7 +1455,7 @@ labelLoop:
             } while (parentEl.parentNode);
 
             data.el = this.tagName.toLowerCase();
-            data.type = this.getAttribute('type') ? this.getAttribute('type').toLowerCase() : '-';
+            data.type = typeAttr || '-';
             data.label = $label ? getTextContent($label) : '';
             if (!data.label) {
               data.label = 'X';
@@ -1605,17 +1637,18 @@ labelLoop:
                     var req2 = new XMLHttpRequest();
                     var charset = html.indexOf('euc-kr') > 0 ? 'euc-kr' : 'utf-8';
                     req2.onreadystatechange = function () {
-                      var i;
-                      var onClickItem = function () {
-                        var $res = this.getElementsByTagName("div")[0];
-                        $res.style.display = $res.style.display === 'none' ? 'block' : 'none';
-                      };
+                      try {
+                        var i;
+                        var onClickItem = function () {
+                          var $res = this.getElementsByTagName("div")[0];
+                          $res.style.display = $res.style.display === 'none' ? 'block' : 'none';
+                        };
 
-                      if (req2.readyState === 4) {
-                        if (req2.status === 200) {
-                          try {
+                        if (req2.readyState === 4) {
+                          if (req2.status === 200) {
                             var res = filterValidationResult(JSON.parse(req2.responseText));
                             var el = rdoc.getElementById("w3c_validation");
+                            var headerEl = el.querySelector("h2");
                             var itemEls = el.querySelectorAll("li.validationItem");
                             var errcnt = 0;
                             for (i = 0; i < res.messages.length; i++) {
@@ -1631,17 +1664,21 @@ labelLoop:
                                 errcntEl.innerText = errcnt + ' Errors';
                                 errcntEl.textContent = errcnt + ' Errors';
                                 itemEls[i].className = errcnt > 0 ? 'fail' : 'pass';
+                                if (errcnt > 0) {
+                                  headerEl.className += " fail";
+                                }
                                 var $res = getResultDetailEl(res.messages, url);
                                 $res.style.display = 'none';
                                 itemEls[i].appendChild($res);
                                 itemEls[i].onclick = onClickItem;
                               }
                             }
-                          } catch (e) {
                           }
                         }
+                      } catch (e) {
                       }
                     };
+
                     try {
                       req2.open("POST", "http://validator.w3.org/check", true);
 

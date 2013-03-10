@@ -66,6 +66,11 @@
 			oncommand="achecker.toggleChecker(); event.stopPropagation();"
 			disabled="false"
 			hidden="false">
+			<menupopup>
+				<menuitem
+					label="Preferences"
+					oncommand="achecker.openOptions(); event.stopPropagation();"/>
+			</menupopup>
 		</toolbarbutton>
 	</toolbarpalette>
 

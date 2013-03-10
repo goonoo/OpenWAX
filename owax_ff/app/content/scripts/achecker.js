@@ -164,6 +164,12 @@
 
     $: function (id) {
       return document.getElementById(id);
+    },
+
+    openOptions: function () {
+      window.openDialog('chrome://achecker/content/options.xul',
+        'AcheckerOptions',
+        'modal,centerscreen,chrome,resizable=no');
     }
   };
 

@@ -55,7 +55,7 @@
     return g.getComputedStyle(el, null).style;
   };
   var toggleFoldedClass = function (el) {
-    el.className = el.className === 'folded' ? '' : 'folded';
+    el.className = el.className.indexOf('folded') > -1 ? el.className.replace(/folded/g, '') : el.className + ' folded';
 
     // fix bug: IE8 won't reflow when set data-* attribute
     if (document && document.all) {
@@ -219,6 +219,8 @@
     var this_ = this;
     var doc = this.rdoc;
     var $contentList = doc.createElement("ul"), i;
+    var hasWarning = false;
+    var hasError = false;
     var onClickItem = function (e) {
       if (parent.Firebug) {
         parent.Firebug.Inspector.clearAllHighlights();
@@ -276,6 +278,11 @@
           }
         }
       }
+      if (info.validStatus === 'fail') {
+        hasError = true;
+      } else if (info.validStatus === 'warning') {
+        hasWarning = true;
+      }
       addEvent($item, 'click', onClickItem);
       $contentList.appendChild($item);
     }
@@ -286,7 +293,12 @@
     var $count = doc.createElement('span');
     $title.innerText = this.title + " ";
     $title.textContent = this.title + " ";
-    $title.className = '';
+    $title.className = 'folded';
+    if (hasError) {
+      $title.className += ' fail';
+    } else if (hasWarning) {
+      $title.className += ' warning';
+    }
     $count.innerText = "(" + this.contents.length + ")";
     $count.textContent = "(" + this.contents.length + ")";
     $title.appendChild($count);
@@ -392,6 +404,8 @@
     var $table = doc.createElement('table');
     var $thead = doc.createElement('thead');
     var $theadTr = doc.createElement('tr');
+    var hasWarning = false;
+    var hasError = false;
     var i;
     var onClickTr = function (e) {
       if (parent.Firebug) {
@@ -489,6 +503,11 @@
           }
         }
       }
+      if (info.validStatus === 'fail') {
+        hasError = true;
+      } else if (info.validStatus === 'warning') {
+        hasWarning = true;
+      }
       addEvent($tr, 'click', onClickTr);
       $tbody.appendChild($tr);
       $table.appendChild($tbody);
@@ -500,7 +519,12 @@
     var $count = doc.createElement('span');
     $title.innerText = this.title + " ";
     $title.textContent = this.title + " ";
-    $title.className = '';
+    $title.className = 'folded';
+    if (hasError) {
+      $title.className += ' fail';
+    } else if (hasWarning) {
+      $title.className += ' warning';
+    }
     $count.innerText = "(" + this.contents.length + ")";
     $count.textContent = "(" + this.contents.length + ")";
     $title.appendChild($count);
@@ -568,7 +592,7 @@
     $section.id = this.id;
     $section.className = 'pajetSection';
     var $title = doc.createElement('h2');
-    $title.className = '';
+    $title.className = 'folded';
     $title.innerText = this.title;
     $title.textContent = this.title;
     /*

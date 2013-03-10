@@ -55,7 +55,7 @@
     return g.getComputedStyle(el, null).style;
   };
   var toggleFoldedClass = function (el) {
-    el.className = el.className === 'folded' ? '' : 'folded';
+    el.className = el.className.indexOf('folded') > -1 ? el.className.replace(/folded/g, '') : el.className + ' folded';
 
     // fix bug: IE8 won't reflow when set data-* attribute
     if (document && document.all) {
@@ -219,6 +219,8 @@
     var this_ = this;
     var doc = this.rdoc;
     var $contentList = doc.createElement("ul"), i;
+    var hasWarning = false;
+    var hasError = false;
     var onClickItem = function (e) {
       if (parent.Firebug) {
         parent.Firebug.Inspector.clearAllHighlights();
@@ -276,6 +278,11 @@
           }
         }
       }
+      if (info.validStatus === 'fail') {
+        hasError = true;
+      } else if (info.validStatus === 'warning') {
+        hasWarning = true;
+      }
       addEvent($item, 'click', onClickItem);
       $contentList.appendChild($item);
     }
@@ -286,7 +293,12 @@
     var $count = doc.createElement('span');
     $title.innerText = this.title + " ";
     $title.textContent = this.title + " ";
-    $title.className = '';
+    $title.className = 'folded';
+    if (hasError) {
+      $title.className += ' fail';
+    } else if (hasWarning) {
+      $title.className += ' warning';
+    }
     $count.innerText = "(" + this.contents.length + ")";
     $count.textContent = "(" + this.contents.length + ")";
     $title.appendChild($count);
@@ -392,6 +404,8 @@
     var $table = doc.createElement('table');
     var $thead = doc.createElement('thead');
     var $theadTr = doc.createElement('tr');
+    var hasWarning = false;
+    var hasError = false;
     var i;
     var onClickTr = function (e) {
       if (parent.Firebug) {
@@ -489,6 +503,11 @@
           }
         }
       }
+      if (info.validStatus === 'fail') {
+        hasError = true;
+      } else if (info.validStatus === 'warning') {
+        hasWarning = true;
+      }
       addEvent($tr, 'click', onClickTr);
       $tbody.appendChild($tr);
       $table.appendChild($tbody);
@@ -500,7 +519,12 @@
     var $count = doc.createElement('span');
     $title.innerText = this.title + " ";
     $title.textContent = this.title + " ";
-    $title.className = '';
+    $title.className = 'folded';
+    if (hasError) {
+      $title.className += ' fail';
+    } else if (hasWarning) {
+      $title.className += ' warning';
+    }
     $count.innerText = "(" + this.contents.length + ")";
     $count.textContent = "(" + this.contents.length + ")";
     $title.appendChild($count);
@@ -568,7 +592,7 @@
     $section.id = this.id;
     $section.className = 'pajetSection';
     var $title = doc.createElement('h2');
-    $title.className = '';
+    $title.className = 'folded';
     $title.innerText = this.title;
     $title.textContent = this.title;
     /*
@@ -876,6 +900,9 @@ labelLoop:
   var getAbsolutePath = function (src, url) {
     var newpath, orgPath;
 
+    // remove url querystring
+    url = url.replace(/\?.*$/, '');
+
     if (src && src.indexOf('//') === -1) {
       if (src.substr(0, 3) === '../') {
         newpath = url.substr(0, url.lastIndexOf('/') > 10 ? url.lastIndexOf('/') : url.length);
@@ -905,9 +932,9 @@ labelLoop:
         var $foldBtn = rdoc.createElement('button');
 
         $fold.className = 'toggleAll';
-        $foldBtn.className = 'unfold';
-        $foldBtn.setAttribute('data-folded', '');
-        $foldBtn.title = achecker.i18n.get('FoldAll');
+        $foldBtn.className = 'fold';
+        $foldBtn.setAttribute('data-folded', 'folded');
+        $foldBtn.title = achecker.i18n.get('UnfoldAll');
         $foldBtn.setAttribute('type', 'button');
         $foldBtn.innerText = 'Toggle All';
         $foldBtn.textContent = 'Toggle All';
@@ -917,7 +944,7 @@ labelLoop:
           var i, l;
 
           for (i = 0, l = $headings.length; i < l; i++) {
-            $headings[i].className = foldedClass;
+            $headings[i].className = $headings[i].className.replace('folded', '') + ' ' + foldedClass;
           }
 
           if (foldedClass) {
@@ -1766,7 +1793,13 @@ labelLoop:
             var hasCaption = !!$caption;
             var hasSummary = !!this.getAttribute('summary');
 
-            return hasCaption ? 'pass' : 'fail';
+            if (hasCaption) {
+              return 'pass';
+            } else if (!hasCaption && !hasSummary) {
+              return 'warning';
+            } else {
+              return 'fail';
+            }
           }
         ),
 
@@ -1983,8 +2016,14 @@ labelLoop:
               return true;
             };
 
-            return hasTh && hasScope($theadTh) && hasScope($tfootTh) &&
-                hasScope($tbodyTh) ? 'pass' : 'fail';
+            if (hasTh && hasScope($theadTh) && hasScope($tfootTh) &&
+                hasScope($tbodyTh)) {
+              return 'pass';
+            } else if (!hasTh && !$theadTh.length && !$tfootTh.length) {
+              return 'warning';
+            } else {
+              return 'fail';
+            }
           }
         ),
 
@@ -2003,12 +2042,13 @@ labelLoop:
           frameDocs,
           achecker.i18n.get('NotApplicable'),
           function (doc, url) {
+            var typeAttr = this.getAttribute('type').toLowerCase();
             if (this.tagName === 'INPUT' &&
-                (this.getAttribute('type') === 'submit' ||
-                  this.getAttribute('type') === 'button' ||
-                  this.getAttribute('type') === 'image' ||
-                  this.getAttribute('type') === 'hidden' ||
-                  this.getAttribute('type') === 'reset')) {
+                (typeAttr === 'submit' ||
+                  typeAttr === 'button' ||
+                  typeAttr === 'image' ||
+                  typeAttr === 'hidden' ||
+                  typeAttr === 'reset')) {
               return false;
             }
 
@@ -2049,7 +2089,7 @@ labelLoop:
             } while (parentEl.parentNode);
 
             data.el = this.tagName.toLowerCase();
-            data.type = this.getAttribute('type') ? this.getAttribute('type').toLowerCase() : '-';
+            data.type = typeAttr || '-';
             data.label = $label ? getTextContent($label) : '';
             if (!data.label) {
               data.label = 'X';
@@ -2242,6 +2282,7 @@ labelLoop:
                           if (req2.status === 200) {
                             var res = filterValidationResult(JSON.parse(req2.responseText));
                             var el = rdoc.getElementById("w3c_validation");
+                            var headerEl = el.querySelector("h2");
                             var itemEls = el.querySelectorAll("li.validationItem");
                             var errcnt = 0;
                             for (i = 0; i < res.messages.length; i++) {
@@ -2257,6 +2298,9 @@ labelLoop:
                                 errcntEl.innerText = errcnt + ' Errors';
                                 errcntEl.textContent = errcnt + ' Errors';
                                 itemEls[i].className = errcnt > 0 ? 'fail' : 'pass';
+                                if (errcnt > 0) {
+                                  headerEl.className += " fail";
+                                }
                                 var $res = getResultDetailEl(res.messages, url);
                                 $res.style.display = 'none';
                                 itemEls[i].appendChild($res);
@@ -2265,25 +2309,28 @@ labelLoop:
                             }
                           }
                         }
-
-                        req2.open("POST", "http://validator.w3.org/check", true);
-
-                        // Firefox < 4
-                        if (typeof FormData !== "object") {
-                          req2.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-                          req2.send('fragment=' + global.escape(html) +
-                              '&doctype=Inline' +
-                              '&output=json');
-                        } else {
-                          var formData = new FormData();
-                          formData.append('fragment', html);
-                          formData.append('doctype', 'Inline');
-                          formData.append('output', 'json');
-                          req2.send(formData);
-                        }
                       } catch (e) {
                       }
                     };
+
+                    try {
+                      req2.open("POST", "http://validator.w3.org/check", true);
+
+                      // Firefox < 4
+                      if (typeof FormData !== "object") {
+                        req2.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                        req2.send('fragment=' + global.escape(html) +
+                            '&doctype=Inline' +
+                            '&output=json');
+                      } else {
+                        var formData = new FormData();
+                        formData.append('fragment', html);
+                        formData.append('doctype', 'Inline');
+                        formData.append('output', 'json');
+                        req2.send(formData);
+                      }
+                    } catch (e) {
+                    }
                   } else {
                     global.alert(achecker.i18n.get('ValidationFail'));
                   }
