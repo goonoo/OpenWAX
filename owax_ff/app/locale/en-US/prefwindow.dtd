@@ -1,3 +1,3 @@
 <!ENTITY prefwindow.title "OpenWAX preferences">
 <!ENTITY pane.title "OpenWAX preferences">
-<!ENTITY allow_logging.label "Provide inspection result to OpenWAX">
+<!ENTITY allowLogging.label "Provide inspection result to OpenWAX">

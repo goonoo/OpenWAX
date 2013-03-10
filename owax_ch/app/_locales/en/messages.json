@@ -310,5 +310,9 @@
 	"No21": {
 		"message": "Parsing",
 		"description": ""
-	}
+	},
+  "AllowLogging": {
+    "message": "Provide inspection result to OpenWAX? You can change this option in preferences window later.",
+    "description": ""
+  }
 }

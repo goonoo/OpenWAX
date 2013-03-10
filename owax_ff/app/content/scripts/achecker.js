@@ -77,6 +77,12 @@
     },
 
     checkCurrentPage: function (isIncludeFrame) {
+      if (achecker.preferences.getPref("allowLoggingSet") === false) {
+        achecker.preferences.setPref("allowLogging",
+          window.confirm(document.getElementById("achecker-properties").getString("AllowLogging")));
+        achecker.preferences.setPref("allowLoggingSet", true);
+      }
+
       var cwin = achecker.currentWin();
       var rdoc = achecker.resultDoc();
       var i;
@@ -107,7 +113,8 @@
       var pajetResult = achecker.Pajet.run(cwin, rdoc, isIncludeFrame, getFrameDocs(cwin));
       var pajetHeader = pajetResult.header;
       var pajetSections = pajetResult.sections;
-      var pajetScore = achecker.Pajet.scoreAsElement(cwin, rdoc, pajetSections);
+      var pajetScore = achecker.Pajet.scoreAsElement(cwin, rdoc, pajetSections,
+          achecker.preferences.getPref("allowLogging"));
 
       rdoc.body.textContent = '';
       rdoc.body.appendChild(pajetScore);

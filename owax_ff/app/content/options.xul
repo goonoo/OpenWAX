@@ -41,19 +41,19 @@
 <prefwindow id="acheckerPreferences" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" title="&prefwindow.title;">
 	<prefpane id="pane" label="&pane.title;">
     <preferences>
-      <preference id="_allow_logging" name="extensions.achecker.allow_logging" type="string"/>
+      <preference id="_allowLogging" name="extensions.achecker.allowLogging" type="bool"/>
     </preferences>
 
 	<grid>
 		<columns>
-			<column width="170" />
+			<column width="250" />
 			<column flex="1" />
 		</columns>
 		<rows>
 			<row>
-				<label control="allow_logging">&allow_logging.label;</label>
+				<label control="allowLogging">&allowLogging.label;</label>
 				<spacer/>
-				<checkbox id="allow_logging" preference="_allow_logging" checked="true"/>
+				<checkbox id="allowLogging" preference="_allowLogging" checked="true"/>
 			</row>
 		</rows>
 	</grid>

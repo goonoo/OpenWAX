@@ -2476,7 +2476,7 @@ labelLoop:
 
     return parseInt(score * 10, 10) / 10;
   };
-  g.achecker.Pajet.scoreAsElement = function (cwin, rdoc, pajetSections) {
+  g.achecker.Pajet.scoreAsElement = function (cwin, rdoc, pajetSections, allowLogging) {
     var score = g.achecker.Pajet.score(pajetSections);
     var $div = rdoc.createElement('div');
     $div.className = 'pajetScore ' + getLevel(score);
@@ -2490,19 +2490,22 @@ labelLoop:
     var $score = rdoc.createElement('strong');
     $score.innerText = score;
     $score.textContent = score;
-    var $logger = rdoc.createElement('img');
-    $logger.style.position = 'absolute';
-    $logger.style.top = '-9999px';
-    $logger.style.left = '-9999px';
-    $logger.setAttribute('src', 'http://openwax.miya.pe.kr/log?' +
-        'url=' + encodeURIComponent(canonicalUrl(cwin)) + '&' +
-        'title=' + encodeURIComponent(cwin.document.title) + '&' +
-        'score=' + score + '&');
 
     $label.appendChild($score);
     $title.appendChild($label);
     $div.appendChild($title);
-    $div.appendChild($logger);
+
+    if (allowLogging) {
+      var $logger = rdoc.createElement('img');
+      $logger.style.position = 'absolute';
+      $logger.style.top = '-9999px';
+      $logger.style.left = '-9999px';
+      $logger.setAttribute('src', 'http://openwax.miya.pe.kr/log?' +
+          'url=' + encodeURIComponent(canonicalUrl(cwin)) + '&' +
+          'title=' + encodeURIComponent(cwin.document.title) + '&' +
+          'score=' + score + '&');
+      $div.appendChild($logger);
+    }
 
     return $div;
   };
@@ -2962,7 +2965,7 @@ achecker_locale["messages"] = {
     var res = g.achecker.Pajet.run(cwin, rdoc, isIncludeFrame, frameDocs, discardFrameUrls);
     var header = res.header;
     var sections = res.sections;
-    var score = g.achecker.Pajet.scoreAsElement(cwin, rdoc, sections);
+    var score = g.achecker.Pajet.scoreAsElement(cwin, rdoc, sections, true);
 
     resultEl.appendChild(score);
     resultEl.appendChild(header);

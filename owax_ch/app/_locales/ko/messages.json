@@ -310,5 +310,9 @@
 	"No21": {
 		"message": "마크업 오류 방지",
 		"description": ""
-	}
+	},
+  "AllowLogging": {
+    "message": "사이트별 접근성 통계 수집을 위해 검사 결과를 OpenWAX에 제공하시겠습니까? 검사 결과 제공 여부는 이후에도 앱 환경설정에서 변경 가능합니다.",
+    "description": ""
+  }
 }

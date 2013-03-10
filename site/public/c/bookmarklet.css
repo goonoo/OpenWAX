@@ -25,10 +25,10 @@ html.achecker-included {
 #achecker-result a:visited{color:#669}
 #achecker-result .blind{overflow:hidden;position:absolute;top:0;left:0;width:0;height:0;font-size:0;line-height:0}
 /* CheckList Title */
-#achecker-result h2{-webkit-transition:200ms background-color linear;position:relative;margin:0;padding:.5em 2em .5em .5em;color:#fff;font-weight:normal;font-size:14px;background:#444;box-shadow:0 -5px 10px rgba(0,0,0,0.2) inset;border-bottom:solid 1px #999;cursor:pointer}
+#achecker-result h2{display:block;position:relative;margin:0;padding:.5em 2em .5em .5em;color:#fff;font-weight:normal;font-size:14px;background:#444;box-shadow:0 -5px 10px rgba(0,0,0,0.2) inset;border-bottom:solid 1px #999;cursor:pointer}
 #achecker-result h2.fail{background:#d00}
-#achecker-result h2.warning{background:#aa0}
-#achecker-result h2:hover{background:#666}
+#achecker-result h2.warning{background:#550}
+#achecker-result h2:hover:before{content:'';position:absolute;top:0;right:0;bottom:0;left:0;background:#fff;opacity:.2}
 #achecker-result h2.folded+*{display:none}
 #achecker-result h2 span{color:#ff9}
 #achecker-result .pajetScore h2{padding:.2em 0 .1em;text-align:center}

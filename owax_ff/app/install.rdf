@@ -16,7 +16,7 @@
       </Description>
     </em:targetApplication>
     <em:description>OpenWAX(Open Web Accessibility eXtension) is a tool that can help diagnose and fix the accessibility problem.</em:description>
-    <em:optionsURL>chrome://itrans/content/options.xul</em:optionsURL>
+    <em:optionsURL>chrome://achecker/content/options.xul</em:optionsURL>
     <em:iconURL>chrome://achecker/skin/logo32.png</em:iconURL>
     <em:icon64URL>chrome://achecker/skin/logo64.png</em:icon64URL>
   </Description>

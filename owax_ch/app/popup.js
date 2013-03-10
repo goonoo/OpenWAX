@@ -10,10 +10,18 @@ chrome.tabs.getSelected(null, function (tab) {
 	}
 
 	var isIncludeFrame = window.localStorage.isIncludeFrame != 'false';
+	var allowLogging = window.localStorage.allowLogging;
+
+  if (allowLogging === undefined) {
+    allowLogging = window.localStorage.allowLogging = window.confirm(
+        chrome.i18n.getMessage('AllowLogging')) ? 'true' : 'false';
+  }
+
 	chrome.tabs.sendMessage(
     tab.id,
     {
-			action: 'execute_' + (isIncludeFrame ? 'with_frames' : 'without_frames')
+			action: 'execute_' + (isIncludeFrame ? 'with_frames' : 'without_frames'),
+      allowLogging: allowLogging === 'true'
     },
     function (res) {
       if (res && res.err && res.message) {

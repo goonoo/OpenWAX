@@ -31,7 +31,7 @@
 
   var isLoading = false;
 
-  var runAchecker = function (isIncludeFrame) {
+  var runAchecker = function (isIncludeFrame, allowLogging) {
     var frameDocs = [], discardFrameUrls = [], i, l;
 
     if (isIncludeFrame) {
@@ -80,7 +80,7 @@
     var res = achecker.Pajet.run(cwin, rdoc, isIncludeFrame, frameDocs, discardFrameUrls);
     var header = res.header;
     var sections = res.sections;
-    var score = achecker.Pajet.scoreAsElement(cwin, rdoc, sections);
+    var score = achecker.Pajet.scoreAsElement(cwin, rdoc, sections, allowLogging);
 
     resultEl.appendChild(score);
     resultEl.appendChild(header);
@@ -96,7 +96,7 @@
     };
   };
 
-  var execute = function (isIncludeFrame) {
+  var execute = function (isIncludeFrame, allowLogging) {
     if (document.getElementById("achecker-result")) {
       document.body.removeChild(document.getElementById("achecker-result"));
       document.documentElement.className = document.documentElement.className.replace(/ achecker\-included/, '');
@@ -104,16 +104,16 @@
         err: false
       };
     }
-    var res = runAchecker(isIncludeFrame);
+    var res = runAchecker(isIncludeFrame, allowLogging);
     return res;
   };
 
   chrome.extension.onMessage.addListener(function (request, sender, sendResponse) {
     var res;
     if (request.action === 'execute_with_frames') {
-      res = execute(true);
+      res = execute(true, request.allowLogging);
     } else if (request.action === 'execute_without_frames') {
-      res = execute(false);
+      res = execute(false, request.allowLogging);
     } else {
       res = {
         err: true,
