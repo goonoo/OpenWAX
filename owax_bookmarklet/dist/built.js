@@ -2042,7 +2042,7 @@ labelLoop:
           frameDocs,
           achecker.i18n.get('NotApplicable'),
           function (doc, url) {
-            var typeAttr = this.getAttribute('type').toLowerCase();
+            var typeAttr = this.getAttribute('type') ? this.getAttribute('type').toLowerCase() : null;
             if (this.tagName === 'INPUT' &&
                 (typeAttr === 'submit' ||
                   typeAttr === 'button' ||
