@@ -866,7 +866,7 @@ labelLoop:
             return $res;
           },
           function () {
-            var title = this.textContent || this.innerText;
+            var title = this.textContent || this.innerText || '';
             var dupCharacters = [
               '::', '||', '--', '@@', '##', '$$', '%%', '&&', '**', '((', '))', '++', '==', '~~',
               ';;', '<<', '>>', '[[', ']]', '★★', '☆☆', '◎◎', '●●', '◆◆', '◇◇', '□□', '■■', '△△',

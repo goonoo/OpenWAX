@@ -55,7 +55,7 @@ body {overflow-y:scroll}
 #achecker-result h2:hover:before{content:'';position:absolute;top:0;right:0;bottom:0;left:0;background:#fff;opacity:.2}
 #achecker-result h2.folded+*{display:none}
 #achecker-result h2 span{color:#ff9}
-#achecker-result .pajetScore{width:100%;-moz-transition:200ms background-color linear;position:relative;margin:0;padding:.2em 0 .1em;color:#fff;font-weight:normal;font-size:14px;background:#444;box-shadow:0 -5px 10px rgba(0,0,0,0.2) inset;border-bottom:solid 1px #999;text-align:center;text-indent:10px}
+#achecker-result .pajetScore{width:100%;transition:200ms background-color linear;position:relative;margin:0;padding:.2em 0 .1em;color:#fff;font-weight:normal;font-size:14px;background:#444;box-shadow:0 -5px 10px rgba(0,0,0,0.2) inset;border-bottom:solid 1px #999;text-align:center;text-indent:10px}
 #achecker-result .pajetScore h2{display:inline;background:none;box-shadow:none;margin:0;border:0;padding:0;cursor:default}
 #achecker-result .pajetScore.perfect{background:#00d}
 #achecker-result .pajetScore.good{background:#099}
@@ -77,15 +77,11 @@ body {overflow-y:scroll}
 #achecker-result th:last-child,
 #achecker-result td:last-child,
 #achecker-result .lt{padding-left:5px;text-align:left}
-#achecker-result tr:hover td{background:#bfde6d;background:-moz-linear-gradient(top,#fff 0%,#f6f6f6 30%,#e1e1e1 100%);color:#000;text-shadow:1px 1px 1px rgba(255,255,255,0.7)}
-#achecker-result tr.warning td{background:-moz-linear-gradient(top,#fcfcdd 0%,#ffffaa 100%);
-background:-webkit-gradient(,inear,0 0,0 100%,color-stop(0%,#fcfcdd),color-stop(100%,#ffffaa))}
-#achecker-result tr.warning td:first-child {background:#ffa url(http://openwax.miya.pe.kr/i/warning.png) no-repeat 5px 3px;background:url(http://openwax.miya.pe.kr/i/warning.png) no-repeat 5px 3px,-moz-linear-gradient(top,#fcfcdd 0%,#ffffaa 100%);
-background:url(http://openwax.miya.pe.kr/i/warning.png) no-repeat 5px 3px,-webkit-gradient(linear,0 0,0 100%,color-stop(0%,#fcfcdd),color-stop(100%,#ffffaa))}
-#achecker-result tr.fail td{background:#fda6a6;background-image:-moz-linear-gradient(top,#fceaea 0%,#fda6a6 100%);
-background-image:-webkit-gradient(linear,0 0,0 100%,color-stop(0%,#fceaea),color-stop(100%,#fda6a6))}
-#achecker-result tr.fail td:first-child {background:#fda6a6 url(http://openwax.miya.pe.kr/i/error.png) no-repeat 5px 3px;background:url(http://openwax.miya.pe.kr/i/error.png) no-repeat 5px 3px,-moz-linear-gradient(top,#fceaea 0%,#fda6a6 100%);
-background:url(http://openwax.miya.pe.kr/i/error.png) no-repeat 5px 3px,-webkit-gradient(linear,0 0,0 100%,color-stop(0%,#fceaea),color-stop(100%,#fda6a6))}
+#achecker-result tr:hover td{background:#bfde6d;background:linear-gradient(top,#fff 0%,#f6f6f6 30%,#e1e1e1 100%);color:#000;text-shadow:1px 1px 1px rgba(255,255,255,0.7)}
+#achecker-result tr.warning td{background:linear-gradient(top,#fcfcdd 0%,#ffffaa 100%)}
+#achecker-result tr.warning td:first-child {background:#ffa url(http://openwax.miya.pe.kr/i/warning.png) no-repeat 5px 3px;background:url(http://openwax.miya.pe.kr/i/warning.png) no-repeat 5px 3px,linear-gradient(top,#fcfcdd 0%,#ffffaa 100%)}
+#achecker-result tr.fail td{background:#fda6a6;background-image:linear-gradient(top,#fceaea 0%,#fda6a6 100%)}
+#achecker-result tr.fail td:first-child {background:#fda6a6 url(http://openwax.miya.pe.kr/i/error.png) no-repeat 5px 3px;background:url(http://openwax.miya.pe.kr/i/error.png) no-repeat 5px 3px,linear-gradient(top,#fceaea 0%,#fda6a6 100%)}
 #achecker-result tr.hidden_el td,
 #achecker-result tr.hidden_el td li{color:#999}
 #achecker-result tr.blind_el td:first-child:before{content:'Blind'}
@@ -94,12 +90,10 @@ background:url(http://openwax.miya.pe.kr/i/error.png) no-repeat 5px 3px,-webkit-
 #achecker-result ul{margin:0;padding:0;list-style:none}
 #achecker-result li{display:block;padding:5px 15px;background:#fff;border-top:1px solid #ddd;color:#333;text-decoration:none;word-break:break-all}
 #achecker-result li:first-child{border-top:none}
-#achecker-result li:hover{background:#bfde6d;background:-moz-linear-gradient(top,#fff 0%,#f6f6f6 30%,#e1e1e1 100%);color:#000;text-shadow:1px 1px 1px rgba(255,255,255,0.7)}
+#achecker-result li:hover{background:#bfde6d;background:linear-gradient(top,#fff 0%,#f6f6f6 30%,#e1e1e1 100%);color:#000;text-shadow:1px 1px 1px rgba(255,255,255,0.7)}
 #achecker-result li:hover>div{text-shadow:none}
-#achecker-result li.warning{background:#ffa url(http://openwax.miya.pe.kr/i/warning.png) no-repeat 5px 3px;background:url(http://openwax.miya.pe.kr/i/warning.png) no-repeat 5px 3px,-moz-linear-gradient(top,#fcfcdd 0%,#ffffaa 100%);
-background:url(http://openwax.miya.pe.kr/i/warning.png) no-repeat 5px 3px,-webkit-gradient(linear,0 0,0 100%,color-stop(0%,#fcfcdd),color-stop(100%,#ffffaa))}
-#achecker-result li.fail {background:#fda6a6 url(http://openwax.miya.pe.kr/i/error.png) no-repeat 5px 3px;background:url(http://openwax.miya.pe.kr/i/error.png) no-repeat 5px 3px,-moz-linear-gradient(top,#fceaea 0%,#fda6a6 100%);
-background:url(http://openwax.miya.pe.kr/i/error.png) no-repeat 5px 3px,-webkit-gradient(linear,0 0,0 100%,color-stop(0%,#fceaea),color-stop(100%,#fda6a6))}
+#achecker-result li.warning{background:#ffa url(http://openwax.miya.pe.kr/i/warning.png) no-repeat 5px 3px;background:url(http://openwax.miya.pe.kr/i/warning.png) no-repeat 5px 3px,linear-gradient(top,#fcfcdd 0%,#ffffaa 100%)}
+#achecker-result li.fail {background:#fda6a6 url(http://openwax.miya.pe.kr/i/error.png) no-repeat 5px 3px;background:url(http://openwax.miya.pe.kr/i/error.png) no-repeat 5px 3px,linear-gradient(top,#fceaea 0%,#fda6a6 100%)}
 /* Inner Contents */
 #achecker-result .tb_str{padding:0 !important}
 #achecker-result .tb_str th:first-child{width:45px}
@@ -121,7 +115,7 @@ background:url(http://openwax.miya.pe.kr/i/error.png) no-repeat 5px 3px,-webkit-
 
 /* Toggle All */
 #achecker-result .toggleAll{position:fixed;z-index:10;top:-7px;right:5px;width:68px;margin-right:-4px;padding:2px;border-radius:0 0 2px 2px;background:#aa9;box-shadow:1px 1px 0 #272727;text-align:center;opacity:.8;}
-#achecker-result .toggleAll:hover{-moz-transition:150ms linear;opacity:1;top:-4px}
+#achecker-result .toggleAll:hover{transition:150ms linear;opacity:1;top:-4px}
 #achecker-result .toggleAll button{display:block;width:68px;padding:7px 1px 3px 0;margin-bottom:0;border-radius:2px;border:1px solid #1e2627;background:#2d3639;box-shadow:1px 1px 1px rgba(255,255,255,0.1) inset,-1px -1px 1px rgba(255,255,255,0.1) inset;font-weight:700;font-size:12px;font-family:verdana;cursor:pointer;color:#bac7c2;letter-spacing:-1px;text-align:center;text-decoration:none;text-shadow:0 1px 0 #000;line-height:1}
 #achecker-result .toggleAll button:hover{border-color:#2e3a3b;background:#445256;text-decoration:none;color:#eef5f3}
 
