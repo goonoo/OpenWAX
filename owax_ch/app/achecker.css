@@ -18,7 +18,7 @@ html.achecker-included {
 }
 /* Reset */
 #achecker-result,
-#achecker-result *{float:none;margin:0;padding:0;width:auto;height:auto;border:none;color:#000;background:transparent;font:12px/1.2 'Helvetica Neue',Helvetica,arial,'나눔고딕',NanumGothic}
+#achecker-result *{position:static;top:auto;left:auto;right:auto;bottom:auto;float:none;margin:0;padding:0;width:auto;height:auto;border:none;color:#000;background:transparent;font:12px/1.2 'Helvetica Neue',Helvetica,arial,'나눔고딕',NanumGothic;text-indent:0}
 #achecker-result h1,#achecker-result h2,#achecker-result h3, #achecker-result h4{font-weight:bold}
 #achecker-result img{max-width:100px;max-height:100px}
 #achecker-result a{color:#00d;text-decoration:underline}

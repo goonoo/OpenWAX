@@ -1,0 +1,15 @@
+{
+  "name": "openwax",
+  "version": "1.9.5",
+  "author": "mctenshi <mctenshi@gmail.com>",
+  "private": true,
+  "dependencies": {
+    "grunt": "latest",
+    "grunt-contrib-jshint": "latest",
+    "grunt-contrib-concat": "latest",
+    "grunt-contrib-uglify": "latest",
+    "grunt-json": "https://github.com/mctenshi/grunt-json/tarball/master",
+    "uglify-js": "1",
+    "grunt-exec": "latest"
+  }
+}

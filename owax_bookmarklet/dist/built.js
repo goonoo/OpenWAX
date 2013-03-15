@@ -52,7 +52,7 @@
     if (el.currentStyle) {
       return el.currentStyle.style;
     }
-    return g.getComputedStyle(el, null).style;
+    return g.getComputedStyle(el, null)[style];
   };
   var toggleFoldedClass = function (el) {
     el.className = el.className.indexOf('folded') > -1 ? el.className.replace(/folded/g, '') : el.className + ' folded';
@@ -118,24 +118,6 @@
     }
     do {
       if (el.tagName && getStyle(el, 'display') === 'none') {
-        return true;
-      }
-      el = el.parentNode;
-    } while (el);
-    return false;
-  };
-  g.achecker.Pajet.isElBlind = function (el) {
-    var hasClass = function (className, needle) {
-      var classes = className.split(' '), i;
-      for (i = 0; i < classes.length; i++) {
-        if (classes[i] === needle) {
-          return true;
-        }
-      }
-      return false;
-    };
-    do {
-      if (el.className && hasClass(el.className, 'blind')) {
         return true;
       }
       el = el.parentNode;
@@ -259,11 +241,10 @@
     for (i = 0; i < this.contents.length; i++) {
       var info = this.contents[i];
       var hiddenClass = g.achecker.Pajet.isElHidden(info.el) ? ' hidden_el' : '';
-      var blindClass = g.achecker.Pajet.isElBlind(info.el) ? ' blind_el' : '';
       var $item = doc.createElement('li');
       var key;
 
-      $item.className = info.validStatus + ' ' + hiddenClass + ' ' + blindClass;
+      $item.className = info.validStatus + ' ' + hiddenClass;
       if (typeof info.content === 'string') {
         $item.innerText = info.content;
         $item.textContent = info.content;
@@ -468,11 +449,10 @@
     for (i = 0; i < this.contents.length; i++) {
       var info = this.contents[i];
       var hiddenClass = g.achecker.Pajet.isElHidden(info.el) ? ' hidden_el' : '';
-      var blindClass = g.achecker.Pajet.isElBlind(info.el) ? ' blind_el' : '';
       var $tr = doc.createElement('tr');
       var j, key;
 
-      $tr.className = info.validStatus + ' ' + hiddenClass + ' ' + blindClass;
+      $tr.className = info.validStatus + ' ' + hiddenClass;
       for (j in info.content) {
         if (info.content.hasOwnProperty(j)) {
           var _content = info.content[j];
@@ -2827,7 +2807,6 @@ achecker_locale["messages"] = {
 	}
 }
 ;
-
 /* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
