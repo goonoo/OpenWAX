@@ -75,13 +75,13 @@
   };
 
   g.achecker = g.achecker || {};
-  g.achecker.Pajet = g.achecker.Pajet || {};
-  g.achecker.Pajet.score = function (pajetSections) {
+  g.achecker.Wax = g.achecker.Wax || {};
+  g.achecker.Wax.score = function (waxSections) {
     var score = 0, info;
 
     for (var key in sectionWeights) {
       if (sectionWeights.hasOwnProperty(key)) {
-        info = pajetSections[key] ? pajetSections[key].getScore() : null;
+        info = waxSections[key] ? waxSections[key].getScore() : null;
         if (info && info.all > 0) {
           score += parseInt(info.pass / info.all * sectionWeights[key] * 10, 10) / 10;
         } else {
@@ -92,10 +92,10 @@
 
     return parseInt(score * 10, 10) / 10;
   };
-  g.achecker.Pajet.scoreAsElement = function (cwin, rdoc, pajetSections, allowLogging) {
-    var score = g.achecker.Pajet.score(pajetSections);
+  g.achecker.Wax.scoreAsElement = function (cwin, rdoc, waxSections, allowLogging) {
+    var score = g.achecker.Wax.score(waxSections);
     var $div = rdoc.createElement('div');
-    $div.className = 'pajetScore ' + getLevel(score);
+    $div.className = 'waxScore ' + getLevel(score);
 
     var $title = rdoc.createElement('h2');
     var $label = rdoc.createElement('a');

@@ -102,17 +102,17 @@
   };
 
   g.achecker = g.achecker || {};
-  g.achecker.Pajet = g.achecker.Pajet || {};
-  g.achecker.Pajet.Section = function () {
+  g.achecker.Wax = g.achecker.Wax || {};
+  g.achecker.Wax.Section = function () {
     throw 'not implemented';
   };
-  g.achecker.Pajet.Section.prototype = {
+  g.achecker.Wax.Section.prototype = {
     getAsElement : function () {
       throw 'not implemented';
     }
   };
 
-  g.achecker.Pajet.isElHidden = function (el) {
+  g.achecker.Wax.isElHidden = function (el) {
     if (el && el.tagName && (el.tagName === 'TITLE' || el.tagName === 'BODY' || el.tagName === 'HTML')) {
       return false;
     }
@@ -125,8 +125,8 @@
     return false;
   };
 
-  g.achecker.Pajet.ListSection = g.achecker.Pajet.Section;
-  g.achecker.Pajet.ListSection = function (cwin, rdoc, title, targetSelector,
+  g.achecker.Wax.ListSection = g.achecker.Wax.Section;
+  g.achecker.Wax.ListSection = function (cwin, rdoc, title, targetSelector,
       limit, isIncludeFrame, frameDocs, emptyMessage,
       content, validStatus, eventHandlers) {
     var this_ = this;
@@ -137,7 +137,7 @@
     this.contents = this._getContents(cwin, isIncludeFrame, frameDocs,
         targetSelector, content, validStatus, eventHandlers, limit);
   };
-  g.achecker.Pajet.ListSection.prototype._getContentsFromDocument = function (doc, url,
+  g.achecker.Wax.ListSection.prototype._getContentsFromDocument = function (doc, url,
       targetSelector, content, validStatus, eventHandlers, limit) {
     if (!limit) {
       limit = 99999;
@@ -166,7 +166,7 @@
     }
     return contents;
   };
-  g.achecker.Pajet.ListSection.prototype._getContents = function (win, isIncludeFrame,
+  g.achecker.Wax.ListSection.prototype._getContents = function (win, isIncludeFrame,
       frameDocs, targetSelector, content, validStatus,
       eventHandlers, limit) {
     if (!limit) {
@@ -197,7 +197,7 @@
     }
     return contents;
   };
-  g.achecker.Pajet.ListSection.prototype.getAsElement = function () {
+  g.achecker.Wax.ListSection.prototype.getAsElement = function () {
     var this_ = this;
     var doc = this.rdoc;
     var $contentList = doc.createElement("ul"), i;
@@ -209,7 +209,7 @@
       }
 
       var $targetEl = this['data-el'];
-      var isHidden = g.achecker.Pajet.isElHidden($targetEl);
+      var isHidden = g.achecker.Wax.isElHidden($targetEl);
       if ($targetEl.tagName === 'TITLE') {
         while ($targetEl) {
           if ($targetEl.tagName === 'HTML') {
@@ -240,7 +240,7 @@
 
     for (i = 0; i < this.contents.length; i++) {
       var info = this.contents[i];
-      var hiddenClass = g.achecker.Pajet.isElHidden(info.el) ? ' hidden_el' : '';
+      var hiddenClass = g.achecker.Wax.isElHidden(info.el) ? ' hidden_el' : '';
       var $item = doc.createElement('li');
       var key;
 
@@ -269,7 +269,7 @@
     }
 
     var $section = doc.createElement('div');
-    $section.className = 'pajetSection';
+    $section.className = 'waxSection';
     var $title = doc.createElement('h2');
     var $count = doc.createElement('span');
     $title.innerText = this.title + " ";
@@ -315,7 +315,7 @@
     */
     return $section;
   };
-  g.achecker.Pajet.ListSection.prototype.getScore = function () {
+  g.achecker.Wax.ListSection.prototype.getScore = function () {
     var count = this.contents.length,
         pass = 0;
 
@@ -331,8 +331,8 @@
     };
   };
 
-  g.achecker.Pajet.TableSection = g.achecker.Pajet.Section;
-  g.achecker.Pajet.TableSection = function (cwin, rdoc, title, targetSelector,
+  g.achecker.Wax.TableSection = g.achecker.Wax.Section;
+  g.achecker.Wax.TableSection = function (cwin, rdoc, title, targetSelector,
       colInfo, isIncludeFrame, frameDocs, emptyMessage,
       content, validStatus, eventHandlers) {
     var this_ = this;
@@ -344,7 +344,7 @@
     this.contents = this._getContents(cwin, isIncludeFrame, frameDocs,
         targetSelector, content, validStatus, eventHandlers);
   };
-  g.achecker.Pajet.TableSection.prototype._getContentsFromDocument = function (doc, url,
+  g.achecker.Wax.TableSection.prototype._getContentsFromDocument = function (doc, url,
       targetSelector, content, validStatus, eventHandlers) {
     var $target = doc.querySelectorAll(targetSelector);
     var contents = [], i;
@@ -364,7 +364,7 @@
     }
     return contents;
   };
-  g.achecker.Pajet.TableSection.prototype._getContents = function (win, isIncludeFrame,
+  g.achecker.Wax.TableSection.prototype._getContents = function (win, isIncludeFrame,
       frameDocs, targetSelector, content, validStatus,
       eventHandlers) {
     var contents = this._getContentsFromDocument(win.document, win.location.href,
@@ -379,7 +379,7 @@
     }
     return contents;
   };
-  g.achecker.Pajet.TableSection.prototype.getAsElement = function () {
+  g.achecker.Wax.TableSection.prototype.getAsElement = function () {
     var this_ = this;
     var doc = this.rdoc;
     var $table = doc.createElement('table');
@@ -394,7 +394,7 @@
       }
 
       var $targetEl = this['data-el'];
-      var isHidden = g.achecker.Pajet.isElHidden($targetEl);
+      var isHidden = g.achecker.Wax.isElHidden($targetEl);
       if ($targetEl.tagName === 'TITLE') {
         while ($targetEl) {
           if ($targetEl.tagName === 'HTML') {
@@ -448,7 +448,7 @@
     var $tbody = doc.createElement('tbody');
     for (i = 0; i < this.contents.length; i++) {
       var info = this.contents[i];
-      var hiddenClass = g.achecker.Pajet.isElHidden(info.el) ? ' hidden_el' : '';
+      var hiddenClass = g.achecker.Wax.isElHidden(info.el) ? ' hidden_el' : '';
       var $tr = doc.createElement('tr');
       var j, key;
 
@@ -494,7 +494,7 @@
     }
 
     var $section = doc.createElement('div');
-    $section.className = 'pajetSection';
+    $section.className = 'waxSection';
     var $title = doc.createElement('h2');
     var $count = doc.createElement('span');
     $title.innerText = this.title + " ";
@@ -540,7 +540,7 @@
     */
     return $section;
   };
-  g.achecker.Pajet.TableSection.prototype.getScore = function () {
+  g.achecker.Wax.TableSection.prototype.getScore = function () {
     var count = this.contents.length,
         pass = 0;
 
@@ -556,7 +556,7 @@
     };
   };
 
-  g.achecker.Pajet.ToolSection = function (cwin, rdoc, id, title, content, eventHandlers) {
+  g.achecker.Wax.ToolSection = function (cwin, rdoc, id, title, content, eventHandlers) {
     var this_ = this;
     this.cwin = cwin;
     this.rdoc = rdoc;
@@ -565,12 +565,12 @@
     this.content = typeof content === 'function' ? content.apply(this, [this.cwin, this.rdoc]) : content;
     this.eventHandlers = eventHandlers;
   };
-  g.achecker.Pajet.ToolSection.prototype.getAsElement = function () {
+  g.achecker.Wax.ToolSection.prototype.getAsElement = function () {
     var doc = this.rdoc;
 
     var $section = doc.createElement('div');
     $section.id = this.id;
-    $section.className = 'pajetSection';
+    $section.className = 'waxSection';
     var $title = doc.createElement('h2');
     $title.className = 'folded';
     $title.innerText = this.title;
@@ -607,7 +607,7 @@
     */
     return $section;
   };
-  g.achecker.Pajet.ToolSection.prototype.getScore = function () {
+  g.achecker.Wax.ToolSection.prototype.getScore = function () {
     return null;
   };
 }(window));
@@ -655,7 +655,7 @@
   "use strict";
 
   var achecker = global.achecker || {};
-  achecker.Pajet = achecker.Pajet || {};
+  achecker.Wax = achecker.Wax || {};
   var addEvent = function (obj, type, fn) {
     if (obj.addEventListener) {
       obj.addEventListener(type, fn, false);
@@ -667,9 +667,9 @@
       obj.attachEvent("on" + type, obj[type + fn]);
     }
   };
-  var ListSection = achecker.Pajet.ListSection;
-  var TableSection = achecker.Pajet.TableSection;
-  var ToolSection = achecker.Pajet.ToolSection;
+  var ListSection = achecker.Wax.ListSection;
+  var TableSection = achecker.Wax.TableSection;
+  var ToolSection = achecker.Wax.ToolSection;
   var getElsFromChildNodes = function (pEl, tagName) {
     var els = [], i = 0;
     if (pEl.length && pEl.push) {
@@ -902,11 +902,11 @@ labelLoop:
     return src;
   };
 
-  achecker.Pajet.run = function (cwin, rdoc, isIncludeFrame, frameDocs, discardFrameUrls) {
+  achecker.Wax.run = function (cwin, rdoc, isIncludeFrame, frameDocs, discardFrameUrls) {
     return {
       header: (function () {
         var $div = rdoc.createElement('div');
-        $div.className = 'pajetFrames';
+        $div.className = 'waxFrames';
 
         var $fold = rdoc.createElement('div');
         var $foldBtn = rdoc.createElement('button');
@@ -919,7 +919,7 @@ labelLoop:
         $foldBtn.innerText = 'Toggle All';
         $foldBtn.textContent = 'Toggle All';
         $foldBtn.onclick = function () {
-          var $headings = rdoc.querySelectorAll('.pajetSection h2,.pajetFrames h2');
+          var $headings = rdoc.querySelectorAll('.waxSection h2,.waxFrames h2');
           var foldedClass = this.getAttribute('data-folded') === 'folded' ? '' : 'folded';
           var i, l;
 
@@ -2439,13 +2439,13 @@ labelLoop:
   };
 
   g.achecker = g.achecker || {};
-  g.achecker.Pajet = g.achecker.Pajet || {};
-  g.achecker.Pajet.score = function (pajetSections) {
+  g.achecker.Wax = g.achecker.Wax || {};
+  g.achecker.Wax.score = function (waxSections) {
     var score = 0, info;
 
     for (var key in sectionWeights) {
       if (sectionWeights.hasOwnProperty(key)) {
-        info = pajetSections[key] ? pajetSections[key].getScore() : null;
+        info = waxSections[key] ? waxSections[key].getScore() : null;
         if (info && info.all > 0) {
           score += parseInt(info.pass / info.all * sectionWeights[key] * 10, 10) / 10;
         } else {
@@ -2456,10 +2456,10 @@ labelLoop:
 
     return parseInt(score * 10, 10) / 10;
   };
-  g.achecker.Pajet.scoreAsElement = function (cwin, rdoc, pajetSections, allowLogging) {
-    var score = g.achecker.Pajet.score(pajetSections);
+  g.achecker.Wax.scoreAsElement = function (cwin, rdoc, waxSections, allowLogging) {
+    var score = g.achecker.Wax.score(waxSections);
     var $div = rdoc.createElement('div');
-    $div.className = 'pajetScore ' + getLevel(score);
+    $div.className = 'waxScore ' + getLevel(score);
 
     var $title = rdoc.createElement('h2');
     var $label = rdoc.createElement('a');
@@ -2941,10 +2941,10 @@ achecker_locale["messages"] = {
     resultEl.id = "achecker-result";
     rdoc.documentElement.className += " achecker-included";
 
-    var res = g.achecker.Pajet.run(cwin, rdoc, isIncludeFrame, frameDocs, discardFrameUrls);
+    var res = g.achecker.Wax.run(cwin, rdoc, isIncludeFrame, frameDocs, discardFrameUrls);
     var header = res.header;
     var sections = res.sections;
-    var score = g.achecker.Pajet.scoreAsElement(cwin, rdoc, sections, true);
+    var score = g.achecker.Wax.scoreAsElement(cwin, rdoc, sections, true);
 
     resultEl.appendChild(score);
     resultEl.appendChild(header);

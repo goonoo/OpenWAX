@@ -110,18 +110,18 @@
 
 
 
-      var pajetResult = achecker.Pajet.run(cwin, rdoc, isIncludeFrame, getFrameDocs(cwin));
-      var pajetHeader = pajetResult.header;
-      var pajetSections = pajetResult.sections;
-      var pajetScore = achecker.Pajet.scoreAsElement(cwin, rdoc, pajetSections,
+      var waxResult = achecker.Wax.run(cwin, rdoc, isIncludeFrame, getFrameDocs(cwin));
+      var waxHeader = waxResult.header;
+      var waxSections = waxResult.sections;
+      var waxScore = achecker.Wax.scoreAsElement(cwin, rdoc, waxSections,
           achecker.preferences.getPref("allowLogging"));
 
       rdoc.body.textContent = '';
-      rdoc.body.appendChild(pajetScore);
-      rdoc.body.appendChild(pajetHeader);
-      for (i in pajetSections) {
-        if (pajetSections.hasOwnProperty(i)) {
-          rdoc.body.appendChild(pajetSections[i].getAsElement());
+      rdoc.body.appendChild(waxScore);
+      rdoc.body.appendChild(waxHeader);
+      for (i in waxSections) {
+        if (waxSections.hasOwnProperty(i)) {
+          rdoc.body.appendChild(waxSections[i].getAsElement());
         }
       }
     },

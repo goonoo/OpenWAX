@@ -82,10 +82,10 @@
     resultEl.id = "achecker-result";
     rdoc.documentElement.className += " achecker-included";
 
-    var res = g.achecker.Pajet.run(cwin, rdoc, isIncludeFrame, frameDocs, discardFrameUrls);
+    var res = g.achecker.Wax.run(cwin, rdoc, isIncludeFrame, frameDocs, discardFrameUrls);
     var header = res.header;
     var sections = res.sections;
-    var score = g.achecker.Pajet.scoreAsElement(cwin, rdoc, sections, true);
+    var score = g.achecker.Wax.scoreAsElement(cwin, rdoc, sections, true);
 
     resultEl.appendChild(score);
     resultEl.appendChild(header);

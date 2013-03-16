@@ -31,15 +31,15 @@ html.achecker-included {
 #achecker-result h2:hover:before{content:'';position:absolute;top:0;right:0;bottom:0;left:0;background:#fff;opacity:.2}
 #achecker-result h2.folded+*{display:none}
 #achecker-result h2 span{color:#ff9}
-#achecker-result .pajetScore h2{padding:.2em 0 .1em;text-align:center}
-#achecker-result .pajetScore.perfect h2{background:#00d}
-#achecker-result .pajetScore.good h2{background:#099}
-#achecker-result .pajetScore.bad h2{background:#990}
-#achecker-result .pajetScore.fail h2{background:#d00}
-#achecker-result .pajetScore h2 a{color:#ccc;font-size:20px}
-#achecker-result .pajetScore h2 strong{font-size:25px;font-weight:bold;color:#fff}
-#achecker-result .pajetSection h2 a{position:absolute;top:50%;right:2%;width:44px;padding:3px 1px 3px 0;margin-top:-10px;border-radius:3px;border:1px solid #1e2627;background:#2d3639;box-shadow:1px 1px 1px rgba(255,255,255,0.1) inset,-1px -1px 1px rgba(255,255,255,0.1) inset;font-weight:700;font-size:11px;font-family:verdana;cursor:pointer;color:#bac7c2;letter-spacing:-1px;text-decoration:none;text-align:center;text-shadow:0 1px 0 #000}
-#achecker-result .pajetSection h2 a:hover{border-color:#2e3a3b;background:#445256;text-decoration:none;color:#eef5f3}
+#achecker-result .waxScore h2{padding:.2em 0 .1em;text-align:center}
+#achecker-result .waxScore.perfect h2{background:#00d}
+#achecker-result .waxScore.good h2{background:#099}
+#achecker-result .waxScore.bad h2{background:#990}
+#achecker-result .waxScore.fail h2{background:#d00}
+#achecker-result .waxScore h2 a{color:#ccc;font-size:20px}
+#achecker-result .waxScore h2 strong{font-size:25px;font-weight:bold;color:#fff}
+#achecker-result .waxSection h2 a{position:absolute;top:50%;right:2%;width:44px;padding:3px 1px 3px 0;margin-top:-10px;border-radius:3px;border:1px solid #1e2627;background:#2d3639;box-shadow:1px 1px 1px rgba(255,255,255,0.1) inset,-1px -1px 1px rgba(255,255,255,0.1) inset;font-weight:700;font-size:11px;font-family:verdana;cursor:pointer;color:#bac7c2;letter-spacing:-1px;text-decoration:none;text-align:center;text-shadow:0 1px 0 #000}
+#achecker-result .waxSection h2 a:hover{border-color:#2e3a3b;background:#445256;text-decoration:none;color:#eef5f3}
 
 /* Validation Title */
 #achecker-result h3{margin:0;padding:.5em;background:#eee;color:#333;font-size:13px}

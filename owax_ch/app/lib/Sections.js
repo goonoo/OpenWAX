@@ -41,7 +41,7 @@
   "use strict";
 
   var achecker = global.achecker || {};
-  achecker.Pajet = achecker.Pajet || {};
+  achecker.Wax = achecker.Wax || {};
   var addEvent = function (obj, type, fn) {
     if (obj.addEventListener) {
       obj.addEventListener(type, fn, false);
@@ -53,9 +53,9 @@
       obj.attachEvent("on" + type, obj[type + fn]);
     }
   };
-  var ListSection = achecker.Pajet.ListSection;
-  var TableSection = achecker.Pajet.TableSection;
-  var ToolSection = achecker.Pajet.ToolSection;
+  var ListSection = achecker.Wax.ListSection;
+  var TableSection = achecker.Wax.TableSection;
+  var ToolSection = achecker.Wax.ToolSection;
   var getElsFromChildNodes = function (pEl, tagName) {
     var els = [], i = 0;
     if (pEl.length && pEl.push) {
@@ -288,11 +288,11 @@ labelLoop:
     return src;
   };
 
-  achecker.Pajet.run = function (cwin, rdoc, isIncludeFrame, frameDocs, discardFrameUrls) {
+  achecker.Wax.run = function (cwin, rdoc, isIncludeFrame, frameDocs, discardFrameUrls) {
     return {
       header: (function () {
         var $div = rdoc.createElement('div');
-        $div.className = 'pajetFrames';
+        $div.className = 'waxFrames';
 
         var $fold = rdoc.createElement('div');
         var $foldBtn = rdoc.createElement('button');
@@ -305,7 +305,7 @@ labelLoop:
         $foldBtn.innerText = 'Toggle All';
         $foldBtn.textContent = 'Toggle All';
         $foldBtn.onclick = function () {
-          var $headings = rdoc.querySelectorAll('.pajetSection h2,.pajetFrames h2');
+          var $headings = rdoc.querySelectorAll('.waxSection h2,.waxFrames h2');
           var foldedClass = this.getAttribute('data-folded') === 'folded' ? '' : 'folded';
           var i, l;
 
