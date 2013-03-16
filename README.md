@@ -1,5 +1,6 @@
 OpenWAX (Open Web Accessibility eXtension)
 ========================================
+[![Build Status](https://travis-ci.org/mctenshi/OpenWAX.png?branch=master)](https://travis-ci.org/mctenshi/OpenWAX)
 
 [OpenWAX(Open Web Accessibility eXtension)](http://openwax.miya.pe.kr) is a tool that can help diagnose and fix the accessibility problem.
 

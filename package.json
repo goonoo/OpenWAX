@@ -3,6 +3,10 @@
   "version": "1.9.5",
   "author": "mctenshi <mctenshi@gmail.com>",
   "private": true,
+  "scripts": {
+    "test": "grunt qunit",
+    "jshint": "grunt jshint"
+  },
   "dependencies": {
     "grunt": "latest",
     "grunt-contrib-jshint": "latest",
