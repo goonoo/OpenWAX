@@ -164,4 +164,4 @@ app.get('/', main);
 app.get('/log', log, render1x1Gif);
 app.get('/search', search);
 
-app.listen(8117);
+app.listen((process.argv && process.argv[2] && parseInt(process.argv[2], 10)) || 8117);

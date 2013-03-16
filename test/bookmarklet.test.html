@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="utf-8">
+	<title>OpenWAX 테스트</title>
+  <link rel="stylesheet" href="resources/qunit.css">
+	<style>
+	#outline{outline:0}
+	table{border-collapse:collapse}
+	caption{background-color:#bbb}
+	th,td{border:solid 1px #000}
+	</style>
+	<script>
+	window.onload = function() {
+		document.getElementById("blur").onfocus = function() {
+			 this.blur();
+		};
+		document.getElementById("windowOpen").onclick = function() {
+			window.open(this.href);
+			return false;
+		};
+		document.getElementById("change").onchange = function() {
+			alert('짠');
+		};
+	};
+	</script>
+</head>
+<body>
+  <div id="qunit"></div>
+  <div id="qunit-fixture">
+    <h2>24. 건너뛰기 링크</h2>
+    <a href="#content1">연결된 링크 (id)</a>
+    <a href="#content2">연결된 링크 (name)</a>
+    <a href="#content3">연결안된 링크</a>
+
+    <div id="content1" customattr1="customattr1"></div>
+    <a name="content2" customattr2="customattr2"></a>
+
+    <h2>1. 대체 텍스트</h2>
+    <div>
+      [IMG] alt X: <img src="i/1.png" width="30"><br>
+      [IMG] alt X: <img src="i/1.png" width="30"><br>
+      [IMG] alt 빈값: <img src="i/2.png" width="30" alt=""><br>
+      [IMG] alt 있음: <img src="i/3.png" width="30" alt="네이버톡"><br>
+      [IMG] alt+longdesc: <img src="i/4.png" width="30" alt="네이버지도" longdesc="longdesc.html"><br>
+      [IMG] longdesc: <img src="i/5.png" width="30" longdesc="longdesc.html"><br>
+      [IMG] BG: <div style="display:inline-block;width:200px;height:30px;background:url(i/6.png) no-repeat 0 0;">BG 대체 텍스트</div><br>
+      [INPUT type="image"] alt 있음: <input type="image" alt="전송" src="i/7.png" width="30"><br>
+      [IMG] usemap: <img src="i/9.png" width="30" usemap="#test">
+      <map name="test">
+        <area alt="area" href="#" coords="0,0,10,10">
+      </map><br>
+      Object: <object><embed>Object 대체 콘텐츠</embed></object><br>
+      embed: <embed>embed 대체 콘텐츠</embed>
+    </div>
+
+    <h2>7~9. 표</h2>
+    <div>
+      summary+caption (thead,th):
+      <table summary="summary">
+        <caption>caption</caption>
+        <thead>
+          <tr>
+            <th scope="col">제목1</th>
+            <th scope="col">제목2</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>내용1</td>
+            <td>내용2</td>
+          </tr>
+        </tbody>
+      </table>
+      summary (th):
+      <table summary="summary">
+        <tbody>
+          <tr>
+            <th>제목1</th>
+            <td>내용1</td>
+          </tr>
+          <tr>
+            <th>제목2</th>
+            <td>내용2</td>
+          </tr>
+        </tbody>
+      </table>
+      caption (X):
+      <table>
+        <caption>caption</caption>
+        <tbody>
+          <tr>
+            <td>내용1</td>
+            <td>내용2</td>
+          </tr>
+        </tbody>
+      </table>
+      X (tfoot):
+      <table>
+        <tfoot>
+          <tr>
+            <td>제목1</td>
+            <td>제목2</td>
+          </tr>
+        </tfoot>
+        <tbody>
+          <tr>
+            <td>내용1</td>
+            <td>내용2</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>20. 키보드 포커스</h2>
+    <div>
+      <a href="http://naver.com">normal</a><br>
+      <a href="http://naver.com" onfocus="this.blur()">blur</a><br>
+      <a href="http://naver.com" id="blur">blur-separated</a><br>
+      <a href="http://naver.com" style="outline:0">outline</a><br>
+      <a href="http://naver.com" id="outline">outline-separated</a><br>
+    </div>
+
+    <h2>21. 의도하지 않은 기능</h2>
+    <div>
+      onchange: <input onchange="alert('changed!')" placeholder="change!"><br>
+      onchange (분리): <input id="change" placeholder="change!"><br>
+      
+      window.open: <a href="http://naver.com" onclick="window.open(this.href);return false;">
+        window.open</a><br>
+      window.open (분리): <a href="http://naver.com" id="windowOpen">
+        window.open - separated</a>
+    </div>
+
+    <h2>23. 프레임 사용</h2>
+    <div>
+      프레임 제목: <iframe src="about:blank" title="프레임 제목"></iframe><br>
+      빈 제목(title=""): <iframe src="about:blank" title=""></iframe><br>
+      제목 없음: <iframe src="about:blank"></iframe><br>
+      <iframe src="test2.html" title="테스트 파일"></iframe>
+    </div>
+
+    <h2>25. 링크 텍스트</h2>
+    <div>
+      <a href="http://naver.com">일반 링크</a><br>
+      <a href="http://naver.com" title="타이틀">일반 링크 (타이틀)</a><br>
+      빈 링크: <a href="http://naver.com"></a><br>
+      빈 링크 (타이틀): <a href="http://naver.com" title="타이틀"></a><br>
+    </div>
+
+    <h2>25. 버튼 텍스트</h2>
+    <div>
+      <input type="button" value="인풋 타입 버튼"><br />
+      <input type="reset" value="인풋 타입 리셋"><br />
+      <input type="submit" value="인풋 타입 서브밋"><br />
+      <button type="button">버튼 타입 버튼</button><br />
+      <button type="reset">버튼 타입 리셋</button><br />
+      <button type="submit">버튼 타입 서브밋</button><br />
+      <button>버튼 타입 생략</button>
+    </div>
+
+    <h2>26. 레이블 사용</h2>
+    <div>
+      <input type="text" id="text1"> <label for="text1">text1 명시레이블</label><br />
+      <input type="checkbox" id="checkbox1"> <label for="checkbox1">checkbox1 명시레이블</label><br />
+      <input type="text" id="text2" title="text2 title 레이블"> <label for="text2">text2 명시레이블</label><br />
+      <input type="text" id="text3" title="text3 title 레이블"><br />
+      <label>암묵 레이블 <input type="text" id="text4"></label><br />
+      <label>암묵 레이블 <input type="text" id="text5" title="text5 title 레이블"></label>
+      <input type="text" id="text3" title="text5 숨어있는 title 레이블" style="display:none"><br />
+    </div>
+
+    <h2>ETC</h2>
+    <ul>
+      <li><img src="../owax_ff/app/skin/logo.png" alt="" tabindex="1">tabindex=1</li>
+      <li><img src="../owax_ff/app/skin/logo.png" alt="" tabindex="0">tabindex=0</li>
+      <li><img src="../owax_ff/app/skin/logo.png" alt="" tabindex="-1">tabindex=-1</li>
+      <li><img src="../owax_ff/app/skin/logo.png" alt="" >no tabindex</li>
+    </ul>
+
+    <h2>단순 열람 문서 형식</h2>
+    <ul>
+      <li><a href="test.pdf" accesskey="1">test.pdf 링크 (accesskey: 1)</a></li>
+      <li><a href="test.ppt" accesskey="s">test.ppt 링크 (accesskey: s)</a></li>
+      <li><a href="test.hwp" accesskey="l">test.hwp 링크 (accesskey: l)</a></li>
+      <li><a href="test.xls">test.xls 링크</a></li>
+      <li><a href="test.doc">test.doc 링크</a></li>
+    </ul>
+  </div>
+
+  <script src="resources/jquery.min.js"></script>
+  <script src="resources/underscore-min.js"></script>
+  <script src="resources/qunit.js"></script>
+  <script src="../lib/Section.js"></script>
+  <script src="../lib/Sections.js"></script>
+  <script src="../lib/Score.js"></script>
+  <script src="../owax_bookmarklet/dist/locale_ko.js"></script>
+  <script src="../owax_bookmarklet/lib/i18n.js"></script>
+  <script src="../owax_bookmarklet/src/app.js"></script>
+  <script src="bookmarklet.test.js"></script>
+</body>
+</html>

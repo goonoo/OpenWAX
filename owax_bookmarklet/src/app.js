@@ -107,7 +107,7 @@
       var css = document.createElement("link");
       css.rel = "stylesheet";
       css.id = "achecker-css";
-      css.href = "http://openwax.miya.pe.kr/c/bookmarklet.css";
+      css.href = "http://openwax.miya.pe.kr/c/bookmarklet.css?t=" + new Date().valueOf();
       document.getElementsByTagName("head")[0].appendChild(css);
     }
 

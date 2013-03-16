@@ -53,8 +53,7 @@ html.achecker-included {
 #achecker-result td:last-child,
 #achecker-result .lt{padding-left:5px;text-align:left}
 #achecker-result tr:hover td{background:#bfde6d;background:-moz-linear-gradient(top,#fff 0%,#f6f6f6 30%,#e1e1e1 100%);background:-webkit-gradient(linear,0 0,0 100%,color-stop(0%,#fff),color-stop(30%,#f6f6f6),color-stop(100%,#e1e1e1));color:#000;text-shadow:1px 1px 1px rgba(255,255,255,0.7)}
-#achecker-result tr.warning td{background:-moz-linear-gradient(top,#fcfcdd 0%,#ffffaa 100%);
-background:-webkit-gradient(linear,0 0,0 100%,color-stop(0%,#fcfcdd),color-stop(100%,#ffffaa))}
+#achecker-result tr.warning td{background:-moz-linear-gradient(top,#fcfcdd 0%,#ffffaa 100%);background:-webkit-gradient(linear,0 0,0 100%,color-stop(0%,#fcfcdd),color-stop(100%,#ffffaa))}
 #achecker-result tr.warning td:first-child {background:#ffa url(http://openwax.miya.pe.kr/i/warning.png) no-repeat 5px 3px;background:url(http://openwax.miya.pe.kr/i/warning.png) no-repeat 5px 3px,-moz-linear-gradient(top,#fcfcdd 0%,#ffffaa 100%);
 background:url(http://openwax.miya.pe.kr/i/warning.png) no-repeat 5px 3px,-webkit-gradient(linear,0 0,0 100%,color-stop(0%,#fcfcdd),color-stop(100%,#ffffaa))}
 #achecker-result tr.fail td{background:#fda6a6;background-image:-moz-linear-gradient(top,#fceaea 0%,#fda6a6 100%);

@@ -999,8 +999,9 @@ labelLoop:
             var val = '';
             var $res = rdoc.createElement('span');
 
-            // ignore if protocol is not http(s)?
-            if (url.substr(0, 4).toLowerCase() !== 'http') {
+            // ignore if protocol is not http(s)? or .html extension
+            if (url.substr(0, 4).toLowerCase() !== 'http' &&
+                url.substr(-5).toLowerCase() !== '.html') {
               return false;
             }
             if (isXhtml && this.getAttribute('xml:lang') && this.getAttribute('lang')) {

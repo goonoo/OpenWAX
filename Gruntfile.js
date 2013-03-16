@@ -24,6 +24,10 @@ module.exports = function (grunt) {
       }
     },
 
+    qunit: {
+      all: ['test/*.test.html']
+    },
+
     json: {
       files: {
         src: ['owax_bookmarklet/_locales/ko/messages.json'],
@@ -65,11 +69,12 @@ module.exports = function (grunt) {
 
   // load plugins
   grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.loadNpmTasks('grunt-contrib-qunit');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-exec');
   grunt.loadNpmTasks('grunt-json');
 
   // default task
-  grunt.registerTask('default', ['jshint', 'json', 'concat', 'uglify', 'exec']);
+  grunt.registerTask('default', ['jshint', 'qunit', 'json', 'concat', 'uglify', 'exec']);
 };

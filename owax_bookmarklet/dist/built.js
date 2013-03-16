@@ -1613,8 +1613,9 @@ labelLoop:
             var val = '';
             var $res = rdoc.createElement('span');
 
-            // ignore if protocol is not http(s)?
-            if (url.substr(0, 4).toLowerCase() !== 'http') {
+            // ignore if protocol is not http(s)? or .html extension
+            if (url.substr(0, 4).toLowerCase() !== 'http' &&
+                url.substr(-5).toLowerCase() !== '.html') {
               return false;
             }
             if (isXhtml && this.getAttribute('xml:lang') && this.getAttribute('lang')) {
@@ -2966,7 +2967,7 @@ achecker_locale["messages"] = {
       var css = document.createElement("link");
       css.rel = "stylesheet";
       css.id = "achecker-css";
-      css.href = "http://openwax.miya.pe.kr/c/bookmarklet.css";
+      css.href = "http://openwax.miya.pe.kr/c/bookmarklet.css?t=" + new Date().valueOf();
       document.getElementsByTagName("head")[0].appendChild(css);
     }
 
