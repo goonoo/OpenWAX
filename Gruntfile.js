@@ -1,9 +1,10 @@
 /*jshint node: true */
 "use strict";
 module.exports = function (grunt) {
+  var pkgInfo = grunt.file.readJSON('package.json');
 
   grunt.initConfig({
-    pkg: grunt.file.readJSON('package.json'),
+    pkg: pkgInfo,
     jshint: {
       options: {
         jshintrc: ".jshintrc"
@@ -37,7 +38,26 @@ module.exports = function (grunt) {
     },
 
     concat: {
+      openwax: {
+        options: {
+          stripBanners: true,
+          banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - ' +
+            '<%= grunt.template.today("yyyy-mm-dd") %> */\n'
+        },
+        src: [
+          'lib/Section.js',
+          'lib/Sections.js',
+          'lib/Score.js'
+        ],
+        dest: 'OpenWAX-' + pkgInfo.version + '.js'
+      },
+
       bookmarklet: {
+        options: {
+          stripBanners: true,
+          banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - ' +
+            '<%= grunt.template.today("yyyy-mm-dd") %> */\n'
+        },
         src: [
           'owax_bookmarklet/lib/Section.js',
           'owax_bookmarklet/lib/Sections.js',
@@ -61,6 +81,11 @@ module.exports = function (grunt) {
 
     uglify: {
       bookmarklet: {
+        options: {
+          stripBanners: true,
+          banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - ' +
+            '<%= grunt.template.today("yyyy-mm-dd") %> */\n'
+        },
         src: ['owax_bookmarklet/dist/built.js'],
         dest: 'owax_bookmarklet/dist/built.min.js'
       }
