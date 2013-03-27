@@ -8,12 +8,11 @@
   },
   "dependencies": {
     "grunt": "latest",
-    "phantomjs": "latest",
     "grunt-contrib-jshint": "latest",
     "grunt-contrib-concat": "latest",
     "grunt-contrib-uglify": "latest",
-    "grunt-contrib-qunit": "0.1",
-    "grunt-json": "latest",
+    "grunt-contrib-qunit": "latest",
+    "grunt-json": "https://github.com/mctenshi/grunt-json/tarball/master",
     "uglify-js": "1",
     "grunt-exec": "latest"
   }
