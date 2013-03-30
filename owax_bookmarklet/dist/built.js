@@ -1,4 +1,4 @@
-/*! OpenWAX - v1.9.6 - 2013-03-30 */
+/*! OpenWAX - v1.9.7 - 2013-03-30 */
 (function (g) {
   "use strict";
 
@@ -1702,10 +1702,37 @@ labelLoop:
             }
             var hasCaption = !!$caption;
             var hasSummary = !!this.getAttribute('summary');
+            var $theadTh = getElsFromChildNodes(
+                getElsFromChildNodes(
+                  getElsFromChildNodes(this, 'thead'),
+                  'tr'
+                ),
+                'th'
+              );
+            var $tfootTh = getElsFromChildNodes(
+                getElsFromChildNodes(
+                  getElsFromChildNodes(this, 'tfoot'),
+                  'tr'
+                ),
+                'th'
+              );
+            var $tbodyTh = getElsFromChildNodes(
+                getElsFromChildNodes(
+                  getElsFromChildNodes(this, 'tbody'),
+                  'tr'
+                ),
+                'th'
+              ).concat(
+                getElsFromChildNodes(
+                  getElsFromChildNodes(this, 'tr'),
+                  'th'
+                )
+              );
+            var hasTh = $theadTh.length || $tfootTh.length || $tbodyTh.length;
 
-            if (hasCaption) {
+            if (hasCaption && hasTh) {
               return 'pass';
-            } else if (!hasCaption && !hasSummary) {
+            } else if (!hasCaption && !hasSummary && !hasTh) {
               return 'warning';
             } else {
               return 'fail';
@@ -1889,6 +1916,19 @@ labelLoop:
             ];
           },
           function () {
+            var childNodes = this.childNodes,
+              $caption = null,
+              i,
+              l;
+            for (i = 0; i < childNodes.length; i++) {
+              if (childNodes[i].tagName &&
+                  childNodes[i].tagName.toLowerCase() === 'caption') {
+                $caption = childNodes[i];
+                break;
+              }
+            }
+            var hasCaption = !!$caption;
+            var hasSummary = !!this.getAttribute('summary');
             var $theadTh = getElsFromChildNodes(
                 getElsFromChildNodes(
                   getElsFromChildNodes(this, 'thead'),
@@ -1927,9 +1967,11 @@ labelLoop:
             };
 
             if (hasTh && hasScope($theadTh) && hasScope($tfootTh) &&
-                hasScope($tbodyTh)) {
+                hasScope($tbodyTh) && hasCaption) {
               return 'pass';
-            } else if (!hasTh && !$theadTh.length && !$tfootTh.length) {
+            } else if (hasTh && hasCaption) {
+              return 'warning';
+            } else if (!hasCaption && !hasSummary && !hasTh) {
               return 'warning';
             } else {
               return 'fail';

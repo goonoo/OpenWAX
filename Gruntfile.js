@@ -72,10 +72,10 @@ module.exports = function (grunt) {
 
     exec: {
       chrome: {
-        command: 'cd owax_ch; zip -r app.zip app/*; cd ..'
+        command: 'cd owax_ch; zip -r ../release/chrome-app-' + pkgInfo.version + '.zip app/*; cd ..'
       },
       firefox: {
-        command: 'cd owax_ff/app; zip -r ../app.xpi . -i \\*.xul -i \\*.js -i \\*.html -i \\*.properties -i \\*.dtd -i \\*.css -i \\*.png -i \\*.manifest -i \\*.rdf -x test\\* -x sample\\* -x template\\* -x \\*sample.html; cd ../..'
+        command: 'cd owax_ff/app; zip -r ../../release/firefox-app-' + pkgInfo.version + '.xpi . -i \\*.xul -i \\*.js -i \\*.html -i \\*.properties -i \\*.dtd -i \\*.css -i \\*.png -i \\*.manifest -i \\*.rdf -x test\\* -x sample\\* -x template\\* -x \\*sample.html; cd ../..'
       }
     },
 

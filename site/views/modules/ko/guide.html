@@ -112,14 +112,13 @@
     않은지 추가적으로 점검해야 합니다.</p>
   <h2 id="guide_thead_tfoot">18. 표의 구성(caption, summary)</h2>
   <p><code>&lt;table&gt;</code> 요소의 <code>&lt;caption&gt;</code>과 <code>summary</code>가 표시됩니다.</p>
-  <p>caption, summary가 모두 제공되지 않으면 오류항목으로, 둘 중 한가지가 제공되지 않으면 의심항목으로 표시됩니다.</p>
-  <p>배치용 테이블이라면 오히려 caption, summary가 제공되지 않아야 하므로 참고하세요.</p>
+  <p><code>&lt;caption&gt;</code>이 제공되었으나 제목 셀(<code>&lt;th&gt;</code>)이 하나도 없으면 오류로 표시됩니다.
+    제목 셀이 필요없는 테이블은 배치용 테이블이니 <code>&lt;caption&gt;</code>을 제공하지 않아야 합니다.</p>
+  <p>반대로 제목 셀(<code>&lt;th&gt;</code>)이 제공되었음에도 <code>&lt;caption&gt;</code>이 제공되지 않은 경우에도 오류로 표시됩니다.</p>
+  <p>배치용 테이블은 의심항목으로 표시됩니다. 배치용 테이블은 지양하자는 의미를 담고있죠.</p>
   <h2 id="guide_th">18. 표의 구성(th)</h2>
-  <p><code>&lt;table&gt;</code> 요소의 <code>&lt;th&gt;</code>가 thead, tfoot, tbody로 구분되어 표시됩니다.</p>
-  <p><code>&lt;th&gt;</code>가 제공되지 않거나 <code>&lt;th&gt;</code>에 <code>scope</code>가 선언되지 않으면
-    오류항목으로 표시됩니다. <code>&lt;th&gt;</code>와 <code>scope</code>를 모두 선언한 경우라도 올바르게 제목 셀의
-    역할을 하는지 꼭 확인하세요.</p>
-  <p>배치용 테이블이라면 오히려 <code>&lt;th&gt;</code>가 제공되지 않아야 하므로 참고하세요.</p>
+  <p><a href="#guide_thead_tfoot">18. 표의 구성(caption, summary)</a>과 같은 조건으로 오류 및 의심항목을 표시합니다.</p>
+  <p>추가로, <code>scope</code> 속성이 부여되지 않은 <code>&lt;th&gt;</code>가 존재하는 경우도 의심항목으로 표시합니다.</p>
   <h2 id="guide_label">19. 레이블 제공</h2>
   <p>레이블이 필요한 모든 입력 서식과 연결된 <code>&lt;label&gt;</code>과 <code>title</code> 속성을 표시합니다.</p>
   <p><code>&lt;label&gt;</code>이 모두 제공되지 않았다면 오류항목으로, <code>title</code> 속성만 제공되었다면

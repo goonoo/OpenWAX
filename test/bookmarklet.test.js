@@ -1,3 +1,5 @@
+/*jshint undef: false */
+
 (function () {
   "use strict";
 
@@ -211,9 +213,9 @@
       return $(el).hasClass('fail');
     });
 
-    equal($section.find("h2 span").text(), '(4)',
+    equal($section.find("h2 span").text(), '(5)',
       "항목 갯수를 정확히 집계해야 한다.");
-    deepEqual(isErrors, [false, true, false, false],
+    deepEqual(isErrors, [false, true, true, false, true],
       "오류를 정확히 표시한다.");
   });
 
@@ -226,9 +228,9 @@
       return $(el).hasClass('fail');
     });
 
-    equal($section.find("h2 span").text(), '(4)',
+    equal($section.find("h2 span").text(), '(5)',
       "항목 갯수를 정확히 집계해야 한다.");
-    deepEqual(isErrors, [false, true, false, false],
+    deepEqual(isErrors, [false, true, true, false, true],
       "오류를 정확히 표시한다.");
   });
 
@@ -261,12 +263,12 @@
 
 
     $('.toggleAll button').click();
-    ok($('.toggleAll button').hasClass('fold')
-        && !$('.waxFrames h2, .waxSection h2').hasClass('folded'),
+    ok($('.toggleAll button').hasClass('fold') &&
+        !$('.waxFrames h2, .waxSection h2').hasClass('folded'),
       "Section들이 잘 접힌다.");
     $('.toggleAll button').click();
-    ok($('.toggleAll button').hasClass('unfold')
-        && $('.waxFrames h2, .waxSection h2').hasClass('folded'),
+    ok($('.toggleAll button').hasClass('unfold') &&
+        $('.waxFrames h2, .waxSection h2').hasClass('folded'),
       "Section들이 잘 펴진다.");
   });
 
