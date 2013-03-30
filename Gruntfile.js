@@ -49,7 +49,7 @@ module.exports = function (grunt) {
           'lib/Sections.js',
           'lib/Score.js'
         ],
-        dest: 'OpenWAX-' + pkgInfo.version + '.js'
+        dest: 'release/OpenWAX-' + pkgInfo.version + '.js'
       },
 
       bookmarklet: {

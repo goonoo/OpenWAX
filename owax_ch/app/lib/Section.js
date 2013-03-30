@@ -63,6 +63,44 @@
     }
   };
 
+  var Xpath = {};
+
+  // ********************************************************************************************* //
+  // XPATH
+
+  /**
+   * Gets an XPath for an element which describes its hierarchical location.
+   */
+  Xpath.getElementXPath = function (element) {
+    if (element && element.id) {
+      return '//*[@id="' + element.id + '"]';
+    }
+    return Xpath.getElementTreeXPath(element);
+  };
+
+  Xpath.getElementTreeXPath = function (element) {
+    var paths = [];
+    var DOCUMENT_TYPE_NODE = 10;
+    var sibling;
+
+    // Use nodeName (instead of localName) so namespace prefix is included (if any).
+    for (element; element && element.nodeType === 1; element = element.parentNode) {
+      var index = 0;
+      for (sibling = element.previousSibling; sibling; sibling = sibling.previousSibling) {
+        // Ignore document type declaration.
+        if (sibling.nodeType !== DOCUMENT_TYPE_NODE && sibling.nodeName === element.nodeName) {
+          ++index;
+        }
+      }
+
+      var tagName = element.nodeName.toLowerCase();
+      var pathIndex = (index ? "[" + (index + 1) + "]" : "");
+      paths.splice(0, 0, tagName + pathIndex);
+    }
+
+    return paths.length ? "/" + paths.join("/") : null;
+  };
+
   g.achecker = g.achecker || {};
   g.achecker.Wax = g.achecker.Wax || {};
   g.achecker.Wax.Section = function () {
@@ -196,7 +234,7 @@
         // compatible with firebug 1.9.x
         parent.Firebug.Inspector.highlightObject($targetEl, parent.Firebug.currentContext);
       } else if (g.console && g.console.log && $targetEl) {
-        g.console.log('OpenWAX Info: ', $targetEl);
+        g.console.log('OpenWAX Info: ', Xpath.getElementXPath($targetEl));
       }
     };
 
@@ -381,7 +419,7 @@
         // compatible with firebug 1.9.x
         parent.Firebug.Inspector.highlightObject($targetEl, parent.Firebug.currentContext);
       } else if (g.console && g.console.log && $targetEl) {
-        g.console.log('OpenWAX Info: ', $targetEl);
+        g.console.log('OpenWAX Info: ', Xpath.getElementXPath($targetEl));
       }
     };
 

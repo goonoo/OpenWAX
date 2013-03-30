@@ -1,5 +1,4 @@
 /*jshint node: true */
-/*global __ */
 "use strict";
 
 var step = require('step');

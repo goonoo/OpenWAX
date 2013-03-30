@@ -1,4 +1,4 @@
-/*! OpenWAX - v1.9.5 - 2013-03-27 */
+/*! OpenWAX - v1.9.6 - 2013-03-30 */
 (function (g) {
   "use strict";
 
@@ -2170,6 +2170,19 @@ labelLoop:
               return $res;
             };
 
+            var getItemEl = function (url) {
+              var el = rdoc.getElementById("w3c_validation");
+              var itemEls = el.querySelectorAll("li.validationItem");
+              var i;
+
+              for (i = 0; i < itemEls.length; i++) {
+                var urlEl = itemEls[i].getElementsByClassName("url")[0];
+                if (urlEl.innerText === url || urlEl.textContent === url) {
+                  return itemEls[i];
+                }
+              }
+            };
+
             var doValidation = function (url, doc) {
               var sourceUrl = url;
               var req = new XMLHttpRequest();
@@ -2180,6 +2193,18 @@ labelLoop:
                     var html = req.responseText;
                     var req2 = new XMLHttpRequest();
                     var charset = html.indexOf('euc-kr') > 0 ? 'euc-kr' : 'utf-8';
+                    var ggTimeout = setTimeout(function () {
+                      var itemEl = getItemEl(url);
+                      var errcntEl = itemEl.getElementsByClassName("errcnt")[0];
+                      var directValidationLink = rdoc.createElement("a");
+                      directValidationLink.target = '_blank';
+                      directValidationLink.href = 'http://validator.w3.org/check?uri=' + encodeURIComponent(url);
+                      directValidationLink.textContent = '(' + achecker.i18n.get('ValidateManually') + ')';
+                      errcntEl.innerText = achecker.i18n.get('ValidationTimeout') + ' ';
+                      errcntEl.textContent = achecker.i18n.get('ValidationTimeout') + ' ';
+                      errcntEl.appendChild(directValidationLink);
+                    }, 10 * 1000);
+
                     req2.onreadystatechange = function () {
                       try {
                         var i;
@@ -2191,32 +2216,29 @@ labelLoop:
                         if (req2.readyState === 4) {
                           if (req2.status === 200) {
                             var res = filterValidationResult(JSON.parse(req2.responseText));
+
                             var el = rdoc.getElementById("w3c_validation");
                             var headerEl = el.querySelector("h2");
-                            var itemEls = el.querySelectorAll("li.validationItem");
+                            var itemEl = getItemEl(url);
                             var errcnt = 0;
                             for (i = 0; i < res.messages.length; i++) {
                               if (res.messages[i].type === 'error') {
                                 errcnt++;
                               }
                             }
-                            for (i = 0; i < itemEls.length; i++) {
-                              var urlEl = itemEls[i].getElementsByClassName("url")[0];
-                              var errcntEl = itemEls[i].getElementsByClassName("errcnt")[0];
-                              if (urlEl.innerText === url || urlEl.textContent === url) {
-                                //urlEl.setAttribute('href', 'validation_result.html?res=' + encodeURIComponent(req2.responseText));
-                                errcntEl.innerText = errcnt + ' Errors';
-                                errcntEl.textContent = errcnt + ' Errors';
-                                itemEls[i].className = errcnt > 0 ? 'fail' : 'pass';
-                                if (errcnt > 0) {
-                                  headerEl.className += " fail";
-                                }
-                                var $res = getResultDetailEl(res.messages, url);
-                                $res.style.display = 'none';
-                                itemEls[i].appendChild($res);
-                                itemEls[i].onclick = onClickItem;
-                              }
+
+                            clearTimeout(ggTimeout);
+                            var errcntEl = itemEl.getElementsByClassName("errcnt")[0];
+                            errcntEl.innerText = errcnt + ' Errors';
+                            errcntEl.textContent = errcnt + ' Errors';
+                            itemEl.className = errcnt > 0 ? 'fail' : 'pass';
+                            if (errcnt > 0) {
+                              headerEl.className += " fail";
                             }
+                            var $res = getResultDetailEl(res.messages, url);
+                            $res.style.display = 'none';
+                            itemEl.appendChild($res);
+                            itemEl.onclick = onClickItem;
                           }
                         }
                       } catch (e) {
@@ -2652,6 +2674,14 @@ achecker_locale["messages"] = {
 	},
 	"CannotCheckFrameset": {
 		"message": "프레임셋 페이지는 검사할 수 없습니다. 프레임셋에 포함된 URL로 이동하여 재시도하실 수 있습니다.",
+		"description": ""
+	},
+	"ValidationTimeout": {
+		"message": "시간초과",
+		"description": ""
+	},
+	"ValidateManually": {
+		"message": "수동 검사",
 		"description": ""
 	},
 

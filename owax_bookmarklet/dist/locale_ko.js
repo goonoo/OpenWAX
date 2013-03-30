@@ -267,6 +267,14 @@ achecker_locale["messages"] = {
 		"message": "프레임셋 페이지는 검사할 수 없습니다. 프레임셋에 포함된 URL로 이동하여 재시도하실 수 있습니다.",
 		"description": ""
 	},
+	"ValidationTimeout": {
+		"message": "시간초과",
+		"description": ""
+	},
+	"ValidateManually": {
+		"message": "수동 검사",
+		"description": ""
+	},
 
 	"No1": {
 		"message": "적절한 대체 텍스트",

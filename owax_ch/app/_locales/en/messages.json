@@ -266,6 +266,14 @@
 		"message": "Cannot check frameset page. You could move to page in frameset and try again.",
 		"description": ""
 	},
+	"ValidationTimeout": {
+		"message": "Timeout",
+		"description": ""
+	},
+	"ValidateManually": {
+		"message": "Validate Manually",
+		"description": ""
+	},
 
 	"No1": {
 		"message": "Alternative text",
