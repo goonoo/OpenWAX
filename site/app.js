@@ -40,6 +40,13 @@ var log = function (req, res, next) {
   var score = parseInt(req.param('score'), 10);
   var title = req.param('title');
 
+  // do nothing on protocol other than http and https
+  if (url.indexOf('http://') === -1 &&
+      url.indexOf('https://') === -1) {
+    next();
+    return;
+  }
+
   step(
     function readOldData() {
       Score.findOne({url: url}, this);
