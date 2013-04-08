@@ -35,19 +35,27 @@
  * ***** END LICENSE BLOCK ***** */
 
 /*global Components */
-(function (global, document) {
+(function (g, document) {
   "use strict";
 
-  var achecker = global.achecker = {
+  var extend = function (destination, source) {   
+    for (var property in source) {
+      destination[property] = source[property];
+    }
+    return destination;
+  };
+
+  g.achecker = g.achecker || {};
+  g.achecker = extend(g.achecker, {
     init: function () {
-      if (achecker.preferences.getPref("firstUse") === true) {
-        achecker.initFirstTimeUser();
+      if (g.achecker.preferences.getPref("firstUse") === true) {
+        g.achecker.initFirstTimeUser();
       }
     },
 
     initFirstTimeUser: function () {
-      achecker.attachToolbarButton();
-      achecker.preferences.setPref("firstUse", false);
+      g.achecker.attachToolbarButton();
+      g.achecker.preferences.setPref("firstUse", false);
     },
 
     attachToolbarButton: function () {
@@ -67,24 +75,24 @@
         firefoxnav.currentSet = set;
         document.persist("nav-bar", "currentset");
         try {
-          global.BrowserToolboxCustomizeDone(true);
+          g.BrowserToolboxCustomizeDone(true);
         } catch (e) {}
       }
     },
 
     toggleChecker: function () {
-      global.toggleSidebar('achecker-viewsidebar');
+      g.toggleSidebar('achecker-viewsidebar');
     },
 
     checkCurrentPage: function (isIncludeFrame) {
-      if (achecker.preferences.getPref("allowLoggingSet") === false) {
-        achecker.preferences.setPref("allowLogging",
+      if (g.achecker.preferences.getPref("allowLoggingSet") === false) {
+        g.achecker.preferences.setPref("allowLogging",
           window.confirm(document.getElementById("achecker-properties").getString("AllowLogging")));
-        achecker.preferences.setPref("allowLoggingSet", true);
+        g.achecker.preferences.setPref("allowLoggingSet", true);
       }
 
-      var cwin = achecker.currentWin();
-      var rdoc = achecker.resultDoc();
+      var cwin = g.achecker.currentWin();
+      var rdoc = g.achecker.resultDoc();
       var i;
       var getFrameDocs = function (win) {
         if (!win.frames) {
@@ -110,11 +118,11 @@
 
 
 
-      var waxResult = achecker.Wax.run(cwin, rdoc, isIncludeFrame, getFrameDocs(cwin));
+      var waxResult = g.achecker.Wax.run(cwin, rdoc, isIncludeFrame, getFrameDocs(cwin));
       var waxHeader = waxResult.header;
       var waxSections = waxResult.sections;
-      var waxScore = achecker.Wax.scoreAsElement(cwin, rdoc, waxSections,
-          achecker.preferences.getPref("allowLogging"));
+      var waxScore = g.achecker.Wax.scoreAsElement(cwin, rdoc, waxSections,
+          g.achecker.preferences.getPref("allowLogging"));
 
       rdoc.body.textContent = '';
       rdoc.body.appendChild(waxScore);
@@ -136,20 +144,20 @@
     },
 
     currentDoc: function () {
-      return global.parent.gBrowser.selectedBrowser.contentDocument;
+      return g.parent.gBrowser.selectedBrowser.contentDocument;
     },
 
     currentWin: function () {
-      return global.parent.gBrowser.selectedBrowser.contentWindow;
+      return g.parent.gBrowser.selectedBrowser.contentWindow;
     },
 
     showOverlay: function () {
-      if (achecker.currentDoc().getElementById("_acheckeroverlay")) {
-        achecker.currentDoc().getElementById("_acheckeroverlay").style.display = "block";
+      if (g.achecker.currentDoc().getElementById("_acheckeroverlay")) {
+        g.achecker.currentDoc().getElementById("_acheckeroverlay").style.display = "block";
         return;
       }
 
-      var $overlay = achecker.currentDoc().createElement('div');
+      var $overlay = g.achecker.currentDoc().createElement('div');
       $overlay.id = '_acheckeroverlay';
       $overlay.style.display = 'block';
       $overlay.style.zIndex = '99999999';
@@ -160,12 +168,12 @@
       $overlay.style.left = '0';
       $overlay.style.backgroundColor = '#fff';
       $overlay.style.opacity = '0.01';
-      achecker.currentDoc().body.appendChild($overlay);
+      g.achecker.currentDoc().body.appendChild($overlay);
     },
 
     hideOverlay: function () {
-      if (achecker.currentDoc().getElementById("_acheckeroverlay")) {
-        achecker.currentDoc().getElementById("_acheckeroverlay").style.display = "none";
+      if (g.achecker.currentDoc().getElementById("_acheckeroverlay")) {
+        g.achecker.currentDoc().getElementById("_acheckeroverlay").style.display = "none";
       }
     },
 
@@ -178,9 +186,9 @@
         'AcheckerOptions',
         'modal,centerscreen,chrome,resizable=no');
     }
-  };
+  });
 
-  achecker.preferences = {
+  g.achecker.preferences = {
     SERVICE_COMPONENT: Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefService).getBranch("extensions.achecker."),
 
     getPref: function (key) {
@@ -218,5 +226,5 @@
     }
   };
 
-  achecker.preferences.SERVICE_COMPONENT.QueryInterface(Components.interfaces.nsIPrefBranch);
+  g.achecker.preferences.SERVICE_COMPONENT.QueryInterface(Components.interfaces.nsIPrefBranch);
 }(this, this.document));

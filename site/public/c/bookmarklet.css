@@ -4,6 +4,7 @@ html.achecker-included {
 #achecker-result {
 	overflow-y:scroll !important;
 	position:fixed !important;
+  _position:absolute !important;
 	z-index: 9999999999999999;
 	top:0 !important;
 	left:0 !important;
@@ -94,7 +95,7 @@ background:url(http://openwax.miya.pe.kr/i/error.png) no-repeat 5px 3px,-webkit-
 #achecker-result .comment{margin:0;padding:10px 5px}
 
 /* Toggle All */
-#achecker-result .toggleAll{position:fixed;z-index:10;top:-7px;right:20px;width:68px;margin-right:-4px;padding:2px;border-radius:0 0 2px 2px;background:#aa9;box-shadow:1px 1px 0 #272727;text-align:center;opacity:.8;}
+#achecker-result .toggleAll{_display:none;position:fixed;z-index:10;top:-7px;right:20px;width:68px;margin-right:-4px;padding:2px;border-radius:0 0 2px 2px;background:#aa9;box-shadow:1px 1px 0 #272727;text-align:center;opacity:.8;}
 #achecker-result .toggleAll:hover{-webkit-transition:150ms linear;opacity:1;top:-4px}
 #achecker-result .toggleAll button{display:block;width:68px;padding:7px 1px 3px 0;margin-bottom:0;border-radius:2px;border:1px solid #1e2627;background:#2d3639;box-shadow:1px 1px 1px rgba(255,255,255,0.1) inset,-1px -1px 1px rgba(255,255,255,0.1) inset;font-weight:700;font-size:12px;font-family:verdana;cursor:pointer;color:#bac7c2;letter-spacing:-1px;text-align:center;text-decoration:none;text-shadow:0 1px 0 #000;line-height:1}
 #achecker-result .toggleAll button:hover{border-color:#2e3a3b;background:#445256;text-decoration:none;color:#eef5f3}

@@ -1,10 +1,10 @@
 /*jslint browser: true */
 /*global chrome */
-(function (global, document) {
+(function (g, document) {
   "use strict";
 
-  var achecker = global.achecker || {};
-  achecker.showOverlay = function () {
+  g.achecker = g.achecker || {};
+  g.achecker.showOverlay = function () {
     if (document.getElementById("_acheckeroverlay")) {
       document.getElementById("_acheckeroverlay").style.display = "block";
       return;
@@ -23,7 +23,7 @@
     $overlay.style.opacity = '0.01';
     document.body.appendChild($overlay);
   };
-  achecker.hideOverlay = function () {
+  g.achecker.hideOverlay = function () {
     if (document.getElementById("_acheckeroverlay")) {
       document.getElementById("_acheckeroverlay").style.display = "none";
     }
@@ -48,7 +48,7 @@
       }
     }
 
-    var cwin = global;
+    var cwin = g;
     var rdoc = document;
 
     if (!frameDocs.length && !cwin.document.documentElement) {
@@ -69,7 +69,7 @@
 
       return {
         err: true,
-        message: '<p>' + achecker.i18n.get("CannotCheckFrameset") + '</p>' + msg
+        message: '<p>' + g.achecker.i18n.get("CannotCheckFrameset") + '</p>' + msg
       };
     }
 
@@ -77,10 +77,10 @@
     resultEl.id = "achecker-result";
     rdoc.documentElement.className += " achecker-included";
 
-    var res = achecker.Wax.run(cwin, rdoc, isIncludeFrame, frameDocs, discardFrameUrls);
+    var res = g.achecker.Wax.run(cwin, rdoc, isIncludeFrame, frameDocs, discardFrameUrls);
     var header = res.header;
     var sections = res.sections;
-    var score = achecker.Wax.scoreAsElement(cwin, rdoc, sections, allowLogging);
+    var score = g.achecker.Wax.scoreAsElement(cwin, rdoc, sections, allowLogging);
 
     resultEl.appendChild(score);
     resultEl.appendChild(header);

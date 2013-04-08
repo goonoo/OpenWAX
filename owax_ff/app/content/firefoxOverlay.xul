@@ -94,4 +94,7 @@
 			</hbox>
 		</panel>
 	</window>
+
+  <!-- This is never actually shown. It's just used for getting the raw source of HTML pages -->
+  <browser id="invisibleBrowser" collapsed="true"/>
 </overlay>

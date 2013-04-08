@@ -37,25 +37,29 @@
 /*jslint browser: true */
 /*global chrome, Components, openDialog, XMLHttpRequest, FormData */
 
-(function (global, document) {
+(function (g, document) {
   "use strict";
 
-  var achecker = global.achecker || {};
-  achecker.Wax = achecker.Wax || {};
+  if (!g.achecker) {
+    g.achecker = {};
+  }
+  if (!g.achecker.Wax) {
+    g.achecker.Wax = {};
+  }
   var addEvent = function (obj, type, fn) {
     if (obj.addEventListener) {
       obj.addEventListener(type, fn, false);
     } else if (obj.attachEvent) {
       obj["e" + type + fn] = fn;
       obj[type + fn] = function () {
-        obj["e" + type + fn](global.event);
+        obj["e" + type + fn](g.event);
       };
       obj.attachEvent("on" + type, obj[type + fn]);
     }
   };
-  var ListSection = achecker.Wax.ListSection;
-  var TableSection = achecker.Wax.TableSection;
-  var ToolSection = achecker.Wax.ToolSection;
+  var ListSection = g.achecker.Wax.ListSection;
+  var TableSection = g.achecker.Wax.TableSection;
+  var ToolSection = g.achecker.Wax.ToolSection;
   var getElsFromChildNodes = function (pEl, tagName) {
     var els = [], i = 0;
     if (pEl.length && pEl.push) {
@@ -288,7 +292,15 @@ labelLoop:
     return src;
   };
 
-  achecker.Wax.run = function (cwin, rdoc, isIncludeFrame, frameDocs, discardFrameUrls) {
+  g.achecker.Wax.run = function (cwin, rdoc, isIncludeFrame, frameDocs, discardFrameUrls) {
+    var isIEQuirksMode = rdoc && rdoc.compatMode === "BackCompat" && rdoc.documentMode;
+
+    if (!rdoc.querySelectorAll) {
+      // IE7 support for querySelectorAll in 274 bytes. Supports multiple / grouped selectors and the attribute selector
+      // with a "for" attribute. http://www.codecouch.com/
+      (function (d, s) {d = rdoc, s = d.createStyleSheet(); d.querySelectorAll = function (r, c, i, j, a) {a = d.all, c = [], r = r.replace(/\[for\b/gi, '[htmlFor').split(','); for (i = r.length; i--;) {s.addRule(r[i], 'k:v'); for (j = a.length;j--;) {a[j].currentStyle.k && c.push(a[j]); } s.removeRule(0); } return c; }; })();
+    }
+
     return {
       header: (function () {
         var $div = rdoc.createElement('div');
@@ -300,7 +312,7 @@ labelLoop:
         $fold.className = 'toggleAll';
         $foldBtn.className = 'fold';
         $foldBtn.setAttribute('data-folded', 'folded');
-        $foldBtn.title = achecker.i18n.get('UnfoldAll');
+        $foldBtn.title = g.achecker.i18n.get('UnfoldAll');
         $foldBtn.setAttribute('type', 'button');
         $foldBtn.innerText = 'Toggle All';
         $foldBtn.textContent = 'Toggle All';
@@ -315,10 +327,10 @@ labelLoop:
 
           if (foldedClass) {
             this.className = 'unfold';
-            this.title = achecker.i18n.get('UnfoldAll');
+            this.title = g.achecker.i18n.get('UnfoldAll');
           } else {
             this.className = 'fold';
-            this.title = achecker.i18n.get('FoldAll');
+            this.title = g.achecker.i18n.get('FoldAll');
           }
           this.setAttribute('data-folded', foldedClass);
           // fix bug: IE8 won't reflow when set data-* attribute
@@ -329,8 +341,8 @@ labelLoop:
 
         var $title = rdoc.createElement('h2');
         $title.className = '';
-        $title.innerText = achecker.i18n.get('TargetPage');
-        $title.textContent = achecker.i18n.get('TargetPage');
+        $title.innerText = g.achecker.i18n.get('TargetPage');
+        $title.textContent = g.achecker.i18n.get('TargetPage');
         addEvent($title, 'click', function (e) {
           toggleFoldedClass(this);
         });
@@ -362,8 +374,8 @@ labelLoop:
 
         if (discardFrameUrls && discardFrameUrls.length) {
           $title = rdoc.createElement('h2');
-          $title.innerText = achecker.i18n.get('NoneTargetPage');
-          $title.textContent = achecker.i18n.get('NoneTargetPage');
+          $title.innerText = g.achecker.i18n.get('NoneTargetPage');
+          $title.textContent = g.achecker.i18n.get('NoneTargetPage');
           $title.className = 'folded';
           addEvent($title, 'click', function (e) {
             toggleFoldedClass(this);
@@ -388,16 +400,16 @@ labelLoop:
         altText: new TableSection(
           cwin,
           rdoc,
-          '1. ' + achecker.i18n.get('No1') + ' (img)',
+          '1. ' + g.achecker.i18n.get('No1') + ' (img)',
           'input[type=image],img,area',
-          [ {label: achecker.i18n.get('Hidden'), width: 45},
-            {label: achecker.i18n.get('Preview'), width: 106},
-            {label: achecker.i18n.get('Element'), width: 45},
-            {label: achecker.i18n.get('Contents')}
+          [ {label: g.achecker.i18n.get('Hidden'), width: 45},
+            {label: g.achecker.i18n.get('Preview'), width: 106},
+            {label: g.achecker.i18n.get('Element'), width: 45},
+            {label: g.achecker.i18n.get('Contents')}
           ],
           isIncludeFrame,
           frameDocs,
-          achecker.i18n.get('NotApplicable'),
+          g.achecker.i18n.get('NotApplicable'),
           function (doc, url) {
             var tagName = this.tagName.toLowerCase();
             var data = {
@@ -409,11 +421,11 @@ labelLoop:
             var self = this;
 
             var handleImg = function () {
-              var hasAlt = self.getAttribute('alt') !== null;
+              var hasAlt = isIEQuirksMode && self.outerHTML ? self.outerHTML.toLowerCase().indexOf("alt=") > 0 : self.getAttribute('alt') !== null;
               data.alt = rdoc.createElement('span');
               if (!hasAlt) {
-                data.alt.innerText = 'alt ' + achecker.i18n.get('Undefined');
-                data.alt.textContent = 'alt ' + achecker.i18n.get('Undefined');
+                data.alt.innerText = 'alt ' + g.achecker.i18n.get('Undefined');
+                data.alt.textContent = 'alt ' + g.achecker.i18n.get('Undefined');
               } else if (!self.getAttribute('alt')) {
                 data.alt.innerText = 'alt=""';
                 data.alt.textContent = 'alt=""';
@@ -466,11 +478,11 @@ labelLoop:
               return handleImg();
 
             case "area":
-              var hasAlt = this.getAttribute('alt') !== null;
+              var hasAlt = isIEQuirksMode && this.outerHTML ? this.outerHTML.toLowerCase().indexOf("alt=") > 0 : this.getAttribute('alt') !== null;
               data.alt = rdoc.createElement('span');
               if (!hasAlt) {
-                data.alt.innerText = 'alt ' + achecker.i18n.get('Undefined');
-                data.alt.textContent = 'alt ' + achecker.i18n.get('Undefined');
+                data.alt.innerText = 'alt ' + g.achecker.i18n.get('Undefined');
+                data.alt.textContent = 'alt ' + g.achecker.i18n.get('Undefined');
               } else if (!this.getAttribute('alt')) {
                 data.alt.innerText = 'alt=""';
                 data.alt.textContent = 'alt=""';
@@ -496,7 +508,7 @@ labelLoop:
             case "IMG":
             case "INPUT":
             case "AREA":
-              var hasAlt = this.getAttribute('alt') !== null;
+              var hasAlt = isIEQuirksMode && this.outerHTML ? this.outerHTML.toLowerCase().indexOf("alt=") > 0 : this.getAttribute('alt') !== null;
 
               if (!hasAlt) {
                 return 'fail';
@@ -512,15 +524,15 @@ labelLoop:
         altTextBG: new TableSection(
           cwin,
           rdoc,
-          '1. ' + achecker.i18n.get('No1') + ' (bg)',
+          '1. ' + g.achecker.i18n.get('No1') + ' (bg)',
           'body *',
-          [ {label: achecker.i18n.get('Hidden'), width: 45},
-            {label: achecker.i18n.get('Preview'), width: 106},
-            {label: achecker.i18n.get('Contents')}
+          [ {label: g.achecker.i18n.get('Hidden'), width: 45},
+            {label: g.achecker.i18n.get('Preview'), width: 106},
+            {label: g.achecker.i18n.get('Contents')}
           ],
           isIncludeFrame,
           frameDocs,
-          achecker.i18n.get('NotApplicable'),
+          g.achecker.i18n.get('NotApplicable'),
           function (doc, url) {
             var data = {
               hidden: '',
@@ -564,14 +576,14 @@ labelLoop:
         altTextEmbed: new TableSection(
           cwin,
           rdoc,
-          '1. ' + achecker.i18n.get('No1') + ' (object)',
+          '1. ' + g.achecker.i18n.get('No1') + ' (object)',
           'object,embed,video,audio,canvas,svg',
-          [ {label: achecker.i18n.get('Hidden'), width: 45},
-            {label: achecker.i18n.get('Element')}
+          [ {label: g.achecker.i18n.get('Hidden'), width: 45},
+            {label: g.achecker.i18n.get('Element')}
           ],
           isIncludeFrame,
           frameDocs,
-          achecker.i18n.get('NotApplicable'),
+          g.achecker.i18n.get('NotApplicable'),
           function (doc, url) {
             var tagName = this.tagName;
             switch (tagName) {
@@ -605,9 +617,9 @@ labelLoop:
           cwin,
           rdoc,
           'contrast',
-          '5. ' + achecker.i18n.get('No5'),
+          '5. ' + g.achecker.i18n.get('No5'),
           function (win, rdoc) {
-            if (!achecker.colorInspector) {
+            if (!g.achecker.colorInspector) {
               var $res = rdoc.createElement('p');
               $res.className = 'comment';
               $res.innerText = 'Not Supported.';
@@ -623,8 +635,8 @@ labelLoop:
 
             $color1.className = 'color1';
             var $color1_label = rdoc.createElement('span');
-            $color1_label.innerText = achecker.i18n.get('Foreground') + ': ';
-            $color1_label.textContent = achecker.i18n.get('Foreground') + ': ';
+            $color1_label.innerText = g.achecker.i18n.get('Foreground') + ': ';
+            $color1_label.textContent = g.achecker.i18n.get('Foreground') + ': ';
             var $color1_color = rdoc.createElement('span');
             $color1_color.className = 'color';
             $color1_color.style.backgroundColor = '#000';
@@ -633,8 +645,8 @@ labelLoop:
             $color1_val.innerText = '#000000';
             $color1_val.textContent = '#000000';
             var $color1_btn = rdoc.createElement('button');
-            $color1_btn.innerText = achecker.i18n.get('SelectForegroundColor');
-            $color1_btn.textContent = achecker.i18n.get('SelectForegroundColor');
+            $color1_btn.innerText = g.achecker.i18n.get('SelectForegroundColor');
+            $color1_btn.textContent = g.achecker.i18n.get('SelectForegroundColor');
             $color1.appendChild($color1_label);
             $color1.appendChild($color1_color);
             $color1.appendChild(rdoc.createTextNode(' '));
@@ -642,9 +654,9 @@ labelLoop:
             $color1.appendChild(rdoc.createTextNode(' '));
             $color1.appendChild($color1_btn);
             $color1.onclick = function () {
-              achecker.showOverlay();
-              achecker.colorInspector.startInspect(function (color) {
-                achecker.hideOverlay();
+              g.achecker.showOverlay();
+              g.achecker.colorInspector.startInspect(function (color) {
+                g.achecker.hideOverlay();
                 $color1.getElementsByClassName('color')[0].style.backgroundColor = color;
                 $color1.getElementsByClassName('val')[0].innerText = color;
                 $color1.getElementsByClassName('val')[0].textContent = color;
@@ -664,8 +676,8 @@ labelLoop:
 
             $color2.className = 'color2';
             var $color2_label = rdoc.createElement('span');
-            $color2_label.innerText = achecker.i18n.get('Background') + ': ';
-            $color2_label.textContent = achecker.i18n.get('Background') + ': ';
+            $color2_label.innerText = g.achecker.i18n.get('Background') + ': ';
+            $color2_label.textContent = g.achecker.i18n.get('Background') + ': ';
             var $color2_color = rdoc.createElement('span');
             $color2_color.className = 'color';
             $color2_color.style.backgroundColor = '#FFF';
@@ -674,8 +686,8 @@ labelLoop:
             $color2_val.innerText = '#FFFFFF';
             $color2_val.textContent = '#FFFFFF';
             var $color2_btn = rdoc.createElement('button');
-            $color2_btn.innerText = achecker.i18n.get('SelectBackgroundColor');
-            $color2_btn.textContent = achecker.i18n.get('SelectBackgroundColor');
+            $color2_btn.innerText = g.achecker.i18n.get('SelectBackgroundColor');
+            $color2_btn.textContent = g.achecker.i18n.get('SelectBackgroundColor');
             $color2.appendChild($color2_label);
             $color2.appendChild($color2_color);
             $color2.appendChild(rdoc.createTextNode(' '));
@@ -683,9 +695,9 @@ labelLoop:
             $color2.appendChild(rdoc.createTextNode(' '));
             $color2.appendChild($color2_btn);
             $color2.onclick = function () {
-              achecker.showOverlay();
-              achecker.colorInspector.startInspect(function (color) {
-                achecker.hideOverlay();
+              g.achecker.showOverlay();
+              g.achecker.colorInspector.startInspect(function (color) {
+                g.achecker.hideOverlay();
                 $color2.getElementsByClassName('color')[0].style.backgroundColor = color;
                 $color2.getElementsByClassName('val')[0].innerText = color;
                 $color2.getElementsByClassName('val')[0].textContent = color;
@@ -705,16 +717,16 @@ labelLoop:
 
             $result.className = 'pass';
             var $result_label = rdoc.createElement('span');
-            $result_label.innerText = achecker.i18n.get('Result') + ': ';
-            $result_label.textContent = achecker.i18n.get('Result') + ': ';
+            $result_label.innerText = g.achecker.i18n.get('Result') + ': ';
+            $result_label.textContent = g.achecker.i18n.get('Result') + ': ';
             var $result_result = rdoc.createElement('span');
             $result_result.className = 'result';
             $result_result.innerText = '21:1';
             $result_result.textContent = '21:1';
             var $result_resultText = rdoc.createElement('span');
             $result_resultText.className = 'resultText';
-            $result_resultText.innerText = achecker.i18n.get('Test');
-            $result_resultText.textContent = achecker.i18n.get('Test');
+            $result_resultText.innerText = g.achecker.i18n.get('Test');
+            $result_resultText.textContent = g.achecker.i18n.get('Test');
             $result.appendChild($result_label);
             $result.appendChild($result_result);
             $result.appendChild(rdoc.createTextNode(' '));
@@ -731,15 +743,15 @@ labelLoop:
         kbdFocus: new TableSection(
           cwin,
           rdoc,
-          '8. ' + achecker.i18n.get('No8'),
+          '8. ' + g.achecker.i18n.get('No8'),
           '*',
-          [ {label: achecker.i18n.get('Hidden'), width: 45},
-            {label: achecker.i18n.get('ErrorType'), width: 65},
-            {label: achecker.i18n.get('Contents')}
+          [ {label: g.achecker.i18n.get('Hidden'), width: 45},
+            {label: g.achecker.i18n.get('ErrorType'), width: 65},
+            {label: g.achecker.i18n.get('Contents')}
           ],
           isIncludeFrame,
           frameDocs,
-          achecker.i18n.get('RequireConfirmation'),
+          g.achecker.i18n.get('RequireConfirmation'),
           function (doc, url) {
             try {
               var evtWrapper = this.wrappedJSObject || this;
@@ -795,12 +807,12 @@ labelLoop:
         skipNav: new TableSection(
           cwin,
           rdoc,
-          '12. ' + achecker.i18n.get('No12'),
+          '12. ' + g.achecker.i18n.get('No12'),
           'a[href^="#"]',
-          [ {label: achecker.i18n.get('Hidden'), width: 45},
-            {label: achecker.i18n.get('No'), width: 65},
-            {label: achecker.i18n.get('Contents')},
-            {label: achecker.i18n.get('Connected'), width: 45}
+          [ {label: g.achecker.i18n.get('Hidden'), width: 45},
+            {label: g.achecker.i18n.get('No'), width: 65},
+            {label: g.achecker.i18n.get('Contents')},
+            {label: g.achecker.i18n.get('Connected'), width: 45}
           ],
           isIncludeFrame,
           frameDocs,
@@ -829,7 +841,7 @@ labelLoop:
 
             return [
               '',
-              linkIdx + achecker.i18n.get('ThLink'),
+              linkIdx + g.achecker.i18n.get('ThLink'),
               '(' + href + ') ' + getTextContent(this),
               (isConnectedLink ? 'O' : 'X')
             ];
@@ -846,7 +858,7 @@ labelLoop:
         pageTitle: new ListSection(
           cwin,
           rdoc,
-          '13. ' + achecker.i18n.get('No13') + '(<title>)',
+          '13. ' + g.achecker.i18n.get('No13') + '(<title>)',
           'title',
           null,
           isIncludeFrame,
@@ -855,7 +867,7 @@ labelLoop:
           function (doc, url) {
             var $res = rdoc.createElement('span');
             var $val = rdoc.createElement('strong');
-            var val = this.textContent || this.innerText || achecker.i18n.get('NoPageTitle');
+            var val = this.textContent || this.innerText || g.achecker.i18n.get('NoPageTitle');
 
             $res.innerText = url + ': ';
             $res.textContent = url + ': ';
@@ -889,16 +901,16 @@ labelLoop:
         frame: new TableSection(
           cwin,
           rdoc,
-          '13. ' + achecker.i18n.get('No13') + '(frame)',
+          '13. ' + g.achecker.i18n.get('No13') + '(frame)',
           'iframe',
-          [ {label: achecker.i18n.get('Hidden'), width: 45},
-            {label: achecker.i18n.get('Element'), width: 45},
-            {label: achecker.i18n.get('Title'), minWidth: 50, className: 'lt'},
-            {label: achecker.i18n.get('Contents'), maxWidth: 200}
+          [ {label: g.achecker.i18n.get('Hidden'), width: 45},
+            {label: g.achecker.i18n.get('Element'), width: 45},
+            {label: g.achecker.i18n.get('Title'), minWidth: 50, className: 'lt'},
+            {label: g.achecker.i18n.get('Contents'), maxWidth: 200}
           ],
           isIncludeFrame,
           frameDocs,
-          achecker.i18n.get('NotApplicable'),
+          g.achecker.i18n.get('NotApplicable'),
           function () {
             var data = {
               hidden: '',
@@ -918,9 +930,9 @@ labelLoop:
               $a.textContent = src;
               data.url = $a;
             } else {
-              data.url = achecker.i18n.get('NoSrc');
+              data.url = g.achecker.i18n.get('NoSrc');
             }
-            data.title = title || achecker.i18n.get('NoTitle');
+            data.title = title || g.achecker.i18n.get('NoTitle');
             return [
               data.hidden,
               data.el,
@@ -937,15 +949,15 @@ labelLoop:
         blockTitle: new TableSection(
           cwin,
           rdoc,
-          '13. ' + achecker.i18n.get('No13') + '(<h1>~<h6>)',
+          '13. ' + g.achecker.i18n.get('No13') + '(<h1>~<h6>)',
           'h1,h2,h3,h4,h5,h6',
-          [ {label: achecker.i18n.get('Hidden'), width: 45},
-            {label: achecker.i18n.get('Element'), width: 45},
-            {label: achecker.i18n.get('Contents')}
+          [ {label: g.achecker.i18n.get('Hidden'), width: 45},
+            {label: g.achecker.i18n.get('Element'), width: 45},
+            {label: g.achecker.i18n.get('Contents')}
           ],
           isIncludeFrame,
           frameDocs,
-          achecker.i18n.get('RequireConfirmation'),
+          g.achecker.i18n.get('RequireConfirmation'),
           function () {
             return [
               '',
@@ -958,15 +970,15 @@ labelLoop:
         linkText: new TableSection(
           cwin,
           rdoc,
-          '14. ' + achecker.i18n.get('No14'),
+          '14. ' + g.achecker.i18n.get('No14'),
           'a,area',
-          [ {label: achecker.i18n.get('Hidden'), width: 45},
-            {label: achecker.i18n.get('Element'), width: 45},
-            {label: achecker.i18n.get('Contents')}
+          [ {label: g.achecker.i18n.get('Hidden'), width: 45},
+            {label: g.achecker.i18n.get('Element'), width: 45},
+            {label: g.achecker.i18n.get('Contents')}
           ],
           isIncludeFrame,
           frameDocs,
-          achecker.i18n.get('NotApplicable'),
+          g.achecker.i18n.get('NotApplicable'),
           function () {
             var text = getTextContent(this);
             var title = this.getAttribute('title');
@@ -988,7 +1000,7 @@ labelLoop:
         pageLang: new ListSection(
           cwin,
           rdoc,
-          '15. ' + achecker.i18n.get('No15'),
+          '15. ' + g.achecker.i18n.get('No15'),
           'html',
           null,
           isIncludeFrame,
@@ -1009,11 +1021,11 @@ labelLoop:
             } else if (isXhtml && this.getAttribute('xml:lang')) {
               val = 'xml:lang=' + this.getAttribute('xml:lang');
             } else if (isXhtml && this.getAttribute('lang')) {
-              val = 'xml:lang=' + achecker.i18n.get('None') + ', lang=' + this.getAttribute('lang');
+              val = 'xml:lang=' + g.achecker.i18n.get('None') + ', lang=' + this.getAttribute('lang');
             } else if (!isXhtml && this.getAttribute('lang')) {
               val = 'lang=' + this.getAttribute('lang');
             } else {
-              val = achecker.i18n.get('NoMainLang');
+              val = g.achecker.i18n.get('NoMainLang');
             }
             $res.innerText = url + ': ';
             $res.textContent = url + ': ';
@@ -1043,16 +1055,16 @@ labelLoop:
         unintendedFunction: new TableSection(
           cwin,
           rdoc,
-          '16. ' + achecker.i18n.get('No16'),
+          '16. ' + g.achecker.i18n.get('No16'),
           'a,area,input,button',
-          [ {label: achecker.i18n.get('Hidden'), width: 45},
-            {label: achecker.i18n.get('Event'), width: 80},
-            {label: achecker.i18n.get('Contents'), className: 'lt'},
-            {label: achecker.i18n.get('TitleAttribute')}
+          [ {label: g.achecker.i18n.get('Hidden'), width: 45},
+            {label: g.achecker.i18n.get('Event'), width: 80},
+            {label: g.achecker.i18n.get('Contents'), className: 'lt'},
+            {label: g.achecker.i18n.get('TitleAttribute')}
           ],
           isIncludeFrame,
           frameDocs,
-          achecker.i18n.get('RequireConfirmation'),
+          g.achecker.i18n.get('RequireConfirmation'),
           function (doc, url) {
             var data = {
               hidden: '',
@@ -1107,15 +1119,15 @@ labelLoop:
         tableTitle: new TableSection(
           cwin,
           rdoc,
-          '18. ' + achecker.i18n.get('No18') + '(caption, summary)',
+          '18. ' + g.achecker.i18n.get('No18') + '(caption, summary)',
           'table',
-          [ {label: achecker.i18n.get('Hidden'), width: 45},
-            {label: achecker.i18n.get('CaptionContent'), className: 'lt'},
-            {label: achecker.i18n.get('SummaryContent')}
+          [ {label: g.achecker.i18n.get('Hidden'), width: 45},
+            {label: g.achecker.i18n.get('CaptionContent'), className: 'lt'},
+            {label: g.achecker.i18n.get('SummaryContent')}
           ],
           isIncludeFrame,
           frameDocs,
-          achecker.i18n.get('NotApplicable'),
+          g.achecker.i18n.get('NotApplicable'),
           function () {
             var childNodes = this.childNodes,
               $caption = null,
@@ -1136,8 +1148,8 @@ labelLoop:
             var hasCaption = !!$caption;
             var hasSummary = !!this.getAttribute('summary');
 
-            data.caption = hasCaption ? getTextContent($caption) : achecker.i18n.get('None');
-            data.summary = hasSummary ? this.getAttribute('summary') : achecker.i18n.get('None');
+            data.caption = hasCaption ? getTextContent($caption) : g.achecker.i18n.get('None');
+            data.summary = hasSummary ? this.getAttribute('summary') : g.achecker.i18n.get('None');
 
             return [
               data.hidden,
@@ -1200,14 +1212,14 @@ labelLoop:
         tableStructure: new TableSection(
           cwin,
           rdoc,
-          '18. ' + achecker.i18n.get('No18') + '(th)',
+          '18. ' + g.achecker.i18n.get('No18') + '(th)',
           'table',
-          [ {label: achecker.i18n.get('Hidden'), width: 45},
-            {label: achecker.i18n.get('Structure'), className: 'tb_str'}
+          [ {label: g.achecker.i18n.get('Hidden'), width: 45},
+            {label: g.achecker.i18n.get('Structure'), className: 'tb_str'}
           ],
           isIncludeFrame,
           frameDocs,
-          achecker.i18n.get('NotApplicable'),
+          g.achecker.i18n.get('NotApplicable'),
           function () {
             var data = {
               hidden: '',
@@ -1439,17 +1451,17 @@ labelLoop:
         label: new TableSection(
           cwin,
           rdoc,
-          '19. ' + achecker.i18n.get('No19'),
+          '19. ' + g.achecker.i18n.get('No19'),
           'input,textarea,select',
-          [ {label: achecker.i18n.get('Hidden'), width: 45},
-            {label: achecker.i18n.get('Element'), width: 45},
-            {label: achecker.i18n.get('FormType'), width: 66},
-            {label: achecker.i18n.get('LabelConnection'), className: 'lt'},
-            {label: achecker.i18n.get('TitleAttribute')}
+          [ {label: g.achecker.i18n.get('Hidden'), width: 45},
+            {label: g.achecker.i18n.get('Element'), width: 45},
+            {label: g.achecker.i18n.get('FormType'), width: 66},
+            {label: g.achecker.i18n.get('LabelConnection'), className: 'lt'},
+            {label: g.achecker.i18n.get('TitleAttribute')}
           ],
           isIncludeFrame,
           frameDocs,
-          achecker.i18n.get('NotApplicable'),
+          g.achecker.i18n.get('NotApplicable'),
           function (doc, url) {
             var typeAttr = this.getAttribute('type') ? this.getAttribute('type').toLowerCase() : null;
             if (this.tagName === 'INPUT' &&
@@ -1556,7 +1568,7 @@ labelLoop:
           cwin,
           rdoc,
           'w3c_validation',
-          '21. ' + achecker.i18n.get('No21'),
+          '21. ' + g.achecker.i18n.get('No21'),
           function (win, rdoc) {
             var isChromeAddon = typeof chrome === "object" && chrome.extension;
             var isFirefoxAddon = typeof Components === "object" && Components.classes;
@@ -1671,7 +1683,7 @@ labelLoop:
 
             var getItemEl = function (url) {
               var el = rdoc.getElementById("w3c_validation");
-              var itemEls = el.querySelectorAll("li.validationItem");
+              var itemEls = rdoc.querySelectorAll("#w3c_validation li.validationItem");
               var i;
 
               for (i = 0; i < itemEls.length; i++) {
@@ -1682,98 +1694,109 @@ labelLoop:
               }
             };
 
-            var doValidation = function (url, doc) {
-              var sourceUrl = url;
-              var req = new XMLHttpRequest();
-              req.onreadystatechange = function () {
-                if (req.readyState === 4) {
-                  if (req.status === 200) {
-                    // IT WORKS!
-                    var html = req.responseText;
-                    var req2 = new XMLHttpRequest();
-                    var charset = html.indexOf('euc-kr') > 0 ? 'euc-kr' : 'utf-8';
-                    var ggTimeout = setTimeout(function () {
+            var runValidator = function (url, html, doc) {
+              var req2 = new XMLHttpRequest();
+              var charset = html.indexOf('euc-kr') > 0 ? 'euc-kr' : 'utf-8';
+              var ggTimeout = setTimeout(function () {
+                var itemEl = getItemEl(url);
+                var errcntEl = itemEl.getElementsByClassName("errcnt")[0];
+                var directValidationLink = rdoc.createElement("a");
+                directValidationLink.target = '_blank';
+                directValidationLink.href = 'http://validator.w3.org/check?uri=' + encodeURIComponent(url);
+                directValidationLink.textContent = '(' + g.achecker.i18n.get('ValidateManually') + ')';
+                errcntEl.innerText = g.achecker.i18n.get('ValidationTimeout') + ' ';
+                errcntEl.textContent = g.achecker.i18n.get('ValidationTimeout') + ' ';
+                errcntEl.appendChild(directValidationLink);
+              }, 10 * 1000);
+
+              req2.onreadystatechange = function () {
+                try {
+                  var i;
+                  var onClickItem = function () {
+                    var $res = this.getElementsByTagName("div")[0];
+                    $res.style.display = $res.style.display === 'none' ? 'block' : 'none';
+                  };
+
+                  if (req2.readyState === 4) {
+                    if (req2.status === 200) {
+                      var res = filterValidationResult(JSON.parse(req2.responseText));
+
+                      var el = rdoc.getElementById("w3c_validation");
+                      var headerEl = rdoc.querySelectorAll("#w3c_validation h2")[0];
                       var itemEl = getItemEl(url);
-                      var errcntEl = itemEl.getElementsByClassName("errcnt")[0];
-                      var directValidationLink = rdoc.createElement("a");
-                      directValidationLink.target = '_blank';
-                      directValidationLink.href = 'http://validator.w3.org/check?uri=' + encodeURIComponent(url);
-                      directValidationLink.textContent = '(' + achecker.i18n.get('ValidateManually') + ')';
-                      errcntEl.innerText = achecker.i18n.get('ValidationTimeout') + ' ';
-                      errcntEl.textContent = achecker.i18n.get('ValidationTimeout') + ' ';
-                      errcntEl.appendChild(directValidationLink);
-                    }, 10 * 1000);
-
-                    req2.onreadystatechange = function () {
-                      try {
-                        var i;
-                        var onClickItem = function () {
-                          var $res = this.getElementsByTagName("div")[0];
-                          $res.style.display = $res.style.display === 'none' ? 'block' : 'none';
-                        };
-
-                        if (req2.readyState === 4) {
-                          if (req2.status === 200) {
-                            var res = filterValidationResult(JSON.parse(req2.responseText));
-
-                            var el = rdoc.getElementById("w3c_validation");
-                            var headerEl = el.querySelector("h2");
-                            var itemEl = getItemEl(url);
-                            var errcnt = 0;
-                            for (i = 0; i < res.messages.length; i++) {
-                              if (res.messages[i].type === 'error') {
-                                errcnt++;
-                              }
-                            }
-
-                            clearTimeout(ggTimeout);
-                            var errcntEl = itemEl.getElementsByClassName("errcnt")[0];
-                            errcntEl.innerText = errcnt + ' Errors';
-                            errcntEl.textContent = errcnt + ' Errors';
-                            itemEl.className = errcnt > 0 ? 'fail' : 'pass';
-                            if (errcnt > 0) {
-                              headerEl.className += " fail";
-                            }
-                            var $res = getResultDetailEl(res.messages, url);
-                            $res.style.display = 'none';
-                            itemEl.appendChild($res);
-                            itemEl.onclick = onClickItem;
-                          }
+                      var errcnt = 0;
+                      for (i = 0; i < res.messages.length; i++) {
+                        if (res.messages[i].type === 'error') {
+                          errcnt++;
                         }
-                      } catch (e) {
                       }
-                    };
 
-                    try {
-                      req2.open("POST", "http://validator.w3.org/check", true);
-
-                      // Firefox < 4
-                      if (typeof FormData !== "object") {
-                        req2.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-                        req2.send('fragment=' + global.escape(html) +
-                            '&doctype=Inline' +
-                            '&output=json');
-                      } else {
-                        var formData = new FormData();
-                        formData.append('fragment', html);
-                        formData.append('doctype', 'Inline');
-                        formData.append('output', 'json');
-                        req2.send(formData);
+                      clearTimeout(ggTimeout);
+                      var errcntEl = itemEl.getElementsByClassName("errcnt")[0];
+                      errcntEl.innerText = errcnt + ' Errors';
+                      errcntEl.textContent = errcnt + ' Errors';
+                      itemEl.className = errcnt > 0 ? 'fail' : 'pass';
+                      if (errcnt > 0) {
+                        headerEl.className += " fail";
                       }
-                    } catch (e) {
+                      var $res = getResultDetailEl(res.messages, url);
+                      $res.style.display = 'none';
+                      itemEl.appendChild($res);
+                      itemEl.onclick = onClickItem;
                     }
-                  } else {
-                    global.alert(achecker.i18n.get('ValidationFail'));
                   }
+                } catch (e) {
                 }
               };
-              req.open("GET", sourceUrl, true);
-              req.send(null);
+
+              try {
+                req2.open("POST", "http://validator.w3.org/check", true);
+
+                // Firefox < 4
+                if (typeof FormData !== "object") {
+                  req2.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                  req2.send('fragment=' + g.escape(html) +
+                      '&doctype=Inline' +
+                      '&output=json');
+                } else {
+                  var formData = new FormData();
+                  formData.append('fragment', html);
+                  formData.append('doctype', 'Inline');
+                  formData.append('output', 'json');
+                  req2.send(formData);
+                }
+              } catch (e) {
+              }
+            };
+
+            var doValidation = function (url, doc) {
+              var browser = g.achecker.$ ? g.achecker.$('invisibleBrowser') : null;
+              if (browser && browser.contentDocument) {
+                var source = browser.contentDocument.getElementById('viewsource').textContent;
+                runValidator(url, source, doc);
+              } else {
+                var sourceUrl = url;
+                var req = new XMLHttpRequest();
+                req.onreadystatechange = function () {
+                  if (req.readyState === 4) {
+                    if (req.status === 200) {
+                      // IT WORKS!
+                      var html = req.responseText;
+                      runValidator(url, html, doc);
+                    } else {
+                      g.alert(g.achecker.i18n.get('ValidationFail'));
+                    }
+                  }
+                };
+                req.open("GET", sourceUrl, true);
+                req.send(null);
+              }
             };
 
             var urls = [], docs = [], i, l;
             if (win.location.href.substr(0, 7) === 'http://' ||
-                  win.location.href.substr(0, 8) === 'https://') {
+                  win.location.href.substr(0, 8) === 'https://' ||
+                  win.location.href.substr(0, 7) === 'file://') {
               urls.push(win.location.href);
               docs.push(win.document);
             }
@@ -1798,8 +1821,8 @@ labelLoop:
               $_url.textContent = urls[i];
               var $_errcnt = rdoc.createElement('b');
               $_errcnt.className = 'errcnt';
-              $_errcnt.innerText = achecker.i18n.get('Loading');
-              $_errcnt.textContent = achecker.i18n.get('Loading');
+              $_errcnt.innerText = g.achecker.i18n.get('Loading');
+              $_errcnt.textContent = g.achecker.i18n.get('Loading');
               $item.appendChild($_url);
               $item.appendChild(rdoc.createTextNode(': '));
               $item.appendChild($_errcnt);
@@ -1811,4 +1834,4 @@ labelLoop:
       }
     };
   };
-}(window, window.document));
+}(this, this.document));
