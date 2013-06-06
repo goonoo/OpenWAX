@@ -1,4 +1,4 @@
-/*! OpenWAX - v1.9.7 - 2013-04-08 */
+/*! OpenWAX - v1.9.8 - 2013-06-06 */
 (function (g) {
   "use strict";
 
@@ -817,8 +817,20 @@ labelLoop:
     return txt;
   };
 
-  var getAbsolutePath = function (src, url) {
+  var getAbsolutePath = function (src, url, doc) {
     var newpath, orgPath;
+    var baseHref = (function () {
+      if (!doc.getElementsByTagName("base").length) {
+        return null;
+      }
+
+      var baseEl = doc.getElementsByTagName("base")[0];
+      return baseEl.href || null;
+    }());
+
+    if (baseHref) {
+      url = baseHref;
+    }
 
     // remove url querystring
     url = url.replace(/\?.*$/, '');
@@ -833,7 +845,7 @@ labelLoop:
         src = newpath + '/' + src;
       } else if (src.substr(0, 1) === '/') {
         orgPath = url.replace(/^((?:https?\:\/\/|file\:\/\/\/)[^\/]+)\/.*$/, '$1');
-        src = orgPath + '/' + src;
+        src = orgPath + src;
       } else {
         orgPath = url.substr(0, url.lastIndexOf('/'));
         src = orgPath + '/' + src;
@@ -988,7 +1000,7 @@ labelLoop:
               if (self.getAttribute('longdesc')) {
                 var $longdesc = rdoc.createElement('a');
                 $longdesc.setAttribute('href',
-                  getAbsolutePath(self.getAttribute('longdesc'), url));
+                  getAbsolutePath(self.getAttribute('longdesc'), url, doc));
                 $longdesc.setAttribute('target', '_blank');
                 $longdesc.innerText = 'longdesc link';
                 $longdesc.textContent = 'longdesc link';
@@ -1005,7 +1017,7 @@ labelLoop:
               $container.style.overflow = "hidden";
               var $img = rdoc.createElement('img');
               $img.setAttribute('alt', '');
-              $img.setAttribute('src', getAbsolutePath(src, url));
+              $img.setAttribute('src', getAbsolutePath(src, url, doc));
               $container.appendChild($img);
               data.preview = $container;
 
