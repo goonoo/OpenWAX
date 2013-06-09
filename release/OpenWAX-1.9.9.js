@@ -1,4 +1,4 @@
-/*! OpenWAX - v1.9.8 - 2013-06-09 */
+/*! OpenWAX - v1.9.9 - 2013-06-09 */
 (function (g) {
   "use strict";
 

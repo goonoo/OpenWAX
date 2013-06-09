@@ -1761,23 +1761,32 @@ labelLoop:
                 }
               };
 
-              try {
-                req2.open("POST", "http://validator.w3.org/check", true);
+              if (charset === 'utf-8') {
+                try {
+                  req2.open("POST", "http://validator.w3.org/check", true);
 
-                // Firefox < 4
-                if (typeof FormData !== "object") {
-                  req2.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-                  req2.send('fragment=' + g.escape(html) +
-                      '&doctype=Inline' +
-                      '&output=json');
-                } else {
-                  var formData = new FormData();
-                  formData.append('fragment', html);
-                  formData.append('doctype', 'Inline');
-                  formData.append('output', 'json');
-                  req2.send(formData);
+                  // Firefox < 4
+                  if (typeof FormData !== "object") {
+                    req2.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                    req2.send('fragment=' + g.escape(html) +
+                        '&doctype=HTML%204.01%20Transitional' +
+                        '&prefill_doctype=html401' +
+                        '&output=json' +
+                        '&fbd=1');
+                  } else {
+                    var formData = new FormData();
+                    formData.append('fragment', html);
+                    formData.append('doctype', 'HTML 4.01 Transitional');
+                    formData.append('prefill_doctype', 'html401');
+                    formData.append('fbd', '1');
+                    formData.append('output', 'json');
+                    req2.send(formData);
+                  }
+                } catch (e) {
                 }
-              } catch (e) {
+              } else {
+                req2.open("GET", "http://validator.w3.org/check?uri=" + g.escape(url) + "&output=json", true);
+                req2.send();
               }
             };
 
