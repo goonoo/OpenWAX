@@ -2258,7 +2258,7 @@ labelLoop:
 
             var runValidator = function (url, html, doc) {
               var req2 = new XMLHttpRequest();
-              var charset = html.indexOf('euc-kr') > 0 ? 'euc-kr' : 'utf-8';
+              var charset = html.toLowerCase().indexOf('euc-kr') > 0 ? 'euc-kr' : 'utf-8';
               var ggTimeout = setTimeout(function () {
                 var itemEl = getItemEl(url);
                 var errcntEl = itemEl.getElementsByClassName("errcnt")[0];
