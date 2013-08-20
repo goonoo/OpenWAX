@@ -79,7 +79,7 @@
   test("8. Focus order/visible", function () {
     expect(2);
 
-    var $section = $(".waxSection").eq(4);
+    var $section = $(".waxSection").eq(5);
     var $items = $section.find('>table>tbody>tr');
     var isErrors = _.map($items, function (el) {
       return $(el).hasClass('fail');
@@ -94,7 +94,7 @@
   test("12. Skip navigation", function () {
     expect(2);
 
-    var $section = $(".waxSection").eq(5);
+    var $section = $(".waxSection").eq(6);
     var $items = $section.find('>table>tbody>tr');
     var isErrors = _.map($items, function (el) {
       return $(el).hasClass('fail');
@@ -109,7 +109,7 @@
   test("13. Page titled", function () {
     expect(2);
 
-    var $section = $(".waxSection").eq(6);
+    var $section = $(".waxSection").eq(7);
     var $items = $section.find('li');
     var isErrors = _.map($items, function (el) {
       return $(el).hasClass('fail');
@@ -124,7 +124,7 @@
   test("13. Frame titled", function () {
     expect(2);
 
-    var $section = $(".waxSection").eq(7);
+    var $section = $(".waxSection").eq(8);
     var $items = $section.find('>table>tbody>tr');
     var isErrors = _.map($items, function (el) {
       return $(el).hasClass('fail');
@@ -139,7 +139,7 @@
   test("13. Headings", function () {
     expect(2);
 
-    var $section = $(".waxSection").eq(8);
+    var $section = $(".waxSection").eq(9);
     var $items = $section.find('>table>tbody>tr');
     var isErrors = _.map($items, function (el) {
       return $(el).hasClass('fail');
@@ -156,7 +156,7 @@
   test("14. Link purpose", function () {
     expect(3);
 
-    var $section = $(".waxSection").eq(9);
+    var $section = $(".waxSection").eq(10);
     var $items = $section.find('>table>tbody>tr');
     var isErrors = _.map($items, function (el) {
       return $(el).hasClass('fail');
@@ -177,7 +177,7 @@
   test("15. Language of page", function () {
     expect(2);
 
-    var $section = $(".waxSection").eq(10);
+    var $section = $(".waxSection").eq(11);
     var $items = $section.find('li');
     var isErrors = _.map($items, function (el) {
       return $(el).hasClass('fail');
@@ -192,7 +192,7 @@
   test("16. Unintended consequences", function () {
     expect(2);
 
-    var $section = $(".waxSection").eq(11);
+    var $section = $(".waxSection").eq(12);
     var $items = $section.find('>table>tbody>tr');
     var isErrors = _.map($items, function (el) {
       return $(el).hasClass('fail');
@@ -207,7 +207,7 @@
   test("18. Table (caption, summary)", function () {
     expect(2);
 
-    var $section = $(".waxSection").eq(12);
+    var $section = $(".waxSection").eq(13);
     var $items = $section.find('>table>tbody>tr');
     var isErrors = _.map($items, function (el) {
       return $(el).hasClass('fail');
@@ -222,7 +222,7 @@
   test("18. Table (th)", function () {
     expect(2);
 
-    var $section = $(".waxSection").eq(13);
+    var $section = $(".waxSection").eq(14);
     var $items = $section.find('>table>tbody>tr');
     var isErrors = _.map($items, function (el) {
       return $(el).hasClass('fail');
@@ -237,7 +237,7 @@
   test("19. Labels", function () {
     expect(4);
 
-    var $section = $(".waxSection").eq(14);
+    var $section = $(".waxSection").eq(15);
     var $items = $section.find('>table>tbody>tr');
     var isErrors = _.map($items, function (el) {
       return $(el).hasClass('fail');

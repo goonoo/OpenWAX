@@ -1,4 +1,4 @@
-/*! OpenWAX - v2.0.0 - 2013-08-06 */
+/*! OpenWAX - v2.0.0 - 2013-08-20 */
 (function (g) {
   "use strict";
 
@@ -1172,6 +1172,41 @@ labelLoop:
             }
 
             return false;
+          }
+        ),
+
+        grayscale: new ToolSection(
+          cwin,
+          rdoc,
+          'grayscale',
+          '3. ' + g.achecker.i18n.get('No3'),
+          function (win, rdoc) {
+            var $ul = rdoc.createElement('ul');
+            $ul.className = 'grayscale';
+            var $tool = rdoc.createElement('li');
+            var $tool_btn = rdoc.createElement('button');
+            $tool_btn.innerText = g.achecker.i18n.get('ToggleGrayscale');
+            $tool_btn.textContent = g.achecker.i18n.get('ToggleGrayscale');
+            $tool_btn.onclick = function () {
+              var is_on = $tool_btn.getAttribute('data-on') === '1';
+              var el = cwin.document.getElementsByTagName("html")[0];
+              if (is_on) {
+                el.style.webkitFilter = '';
+                el.style.mozFilter = '';
+                el.style.filter = ''; // IE
+                $tool_btn.setAttribute('data-on', '');
+              } else {
+                el.style.webkitFilter = 'grayscale(100%)';
+                el.style.mozFilter = 'grayscale(100%)';
+                el.style.filter = 'gray'; // IE
+                $tool_btn.setAttribute('data-on', '1');
+              }
+            };
+
+            $tool.appendChild($tool_btn);
+            $ul.appendChild($tool);
+
+            return $ul;
           }
         ),
 
@@ -2567,6 +2602,10 @@ achecker_locale["messages"] = {
 		"message": "주언어 없음",
 		"description": ""
 	},
+	"ToggleGrayscale": {
+		"message": "흑백 토글",
+		"description": ""
+	},
 	"Contrast": {
 		"message": "명도 대비",
 		"description": ""
@@ -2763,6 +2802,10 @@ achecker_locale["messages"] = {
 		"message": "적절한 대체 텍스트",
 		"description": ""
 	},
+  "No3": {
+		"message": "색에 무관한 콘텐츠 인식",
+		"description": ""
+  },
 	"No5": {
 		"message": "텍스트 콘텐츠의 명도 대비",
 		"description": ""

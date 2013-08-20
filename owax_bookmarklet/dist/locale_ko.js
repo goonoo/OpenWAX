@@ -84,6 +84,10 @@ achecker_locale["messages"] = {
 		"message": "주언어 없음",
 		"description": ""
 	},
+	"ToggleGrayscale": {
+		"message": "흑백 토글",
+		"description": ""
+	},
 	"Contrast": {
 		"message": "명도 대비",
 		"description": ""
@@ -280,6 +284,10 @@ achecker_locale["messages"] = {
 		"message": "적절한 대체 텍스트",
 		"description": ""
 	},
+  "No3": {
+		"message": "색에 무관한 콘텐츠 인식",
+		"description": ""
+  },
 	"No5": {
 		"message": "텍스트 콘텐츠의 명도 대비",
 		"description": ""

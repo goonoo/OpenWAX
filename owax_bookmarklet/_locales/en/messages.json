@@ -83,6 +83,10 @@
 		"message": "no language of page",
 		"description": ""
 	},
+	"ToggleGrayscale": {
+		"message": "toggle grayscale",
+		"description": ""
+	},
 	"Contrast": {
 		"message": "contrast",
 		"description": ""
@@ -277,6 +281,10 @@
 
 	"No1": {
 		"message": "Alternative text",
+		"description": ""
+	},
+	"No3": {
+		"message": "Use of Color",
 		"description": ""
 	},
 	"No5": {

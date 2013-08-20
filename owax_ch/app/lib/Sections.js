@@ -625,6 +625,41 @@ labelLoop:
           }
         ),
 
+        grayscale: new ToolSection(
+          cwin,
+          rdoc,
+          'grayscale',
+          '3. ' + g.achecker.i18n.get('No3'),
+          function (win, rdoc) {
+            var $ul = rdoc.createElement('ul');
+            $ul.className = 'grayscale';
+            var $tool = rdoc.createElement('li');
+            var $tool_btn = rdoc.createElement('button');
+            $tool_btn.innerText = g.achecker.i18n.get('ToggleGrayscale');
+            $tool_btn.textContent = g.achecker.i18n.get('ToggleGrayscale');
+            $tool_btn.onclick = function () {
+              var is_on = $tool_btn.getAttribute('data-on') === '1';
+              var el = cwin.document.getElementsByTagName("html")[0];
+              if (is_on) {
+                el.style.webkitFilter = '';
+                el.style.mozFilter = '';
+                el.style.filter = ''; // IE
+                $tool_btn.setAttribute('data-on', '');
+              } else {
+                el.style.webkitFilter = 'grayscale(100%)';
+                el.style.mozFilter = 'grayscale(100%)';
+                el.style.filter = 'gray'; // IE
+                $tool_btn.setAttribute('data-on', '1');
+              }
+            };
+
+            $tool.appendChild($tool_btn);
+            $ul.appendChild($tool);
+
+            return $ul;
+          }
+        ),
+
         contrast: new ToolSection(
           cwin,
           rdoc,
