@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="euc-kr">
+    <title>Validation Test</title>
+  </head>
+  <body>
+    <form action="http://wordpress.miya.pe.kr/w3c-validator/check" method="post" target="ttt">
+      <!--
+      doctype: <input type="text" name="doctype" value="HTML 4.01 Transitional" style="width:400px"><br>
+      prefill_doctype: <input type="text" name="prefill_doctype" value="html401" style="width:400px"><br>
+      fbd: <input type="text" name="fbd" value="1"><br>
+      -->
+      output: <input type="text" name="output" value="json"><br>
+      <textarea name="fragment" cols="80" rows="10"></textarea><br>
+      <button type="submit">Submit</button>
+    </form>
+
+    <iframe name="ttt" style="width:800px;height:500px"></iframe>
+  </body>
+</html>

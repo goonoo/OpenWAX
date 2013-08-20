@@ -162,15 +162,15 @@
       return $(el).hasClass('fail');
     });
 
-    equal($section.find("h2 span").text(), '(21)',
+    equal($section.find("h2 span").text(), '(20)',
       "항목 갯수를 정확히 집계해야 한다.");
-    deepEqual(isErrors, [false, false, false, true, false,
+    deepEqual(isErrors, [false, false, false, false,
                          false, false, false, false, false,
                          false, false, false, false, true,
                          true, false, false, false, false,
                          false],
       "오류를 정확히 표시한다.");
-    ok($items.eq(4).hasClass('hidden_el'),
+    ok($items.eq(3).hasClass('hidden_el'),
       "숨김 여부를 제대로 표시한다.");
   });
 
@@ -275,7 +275,7 @@
   test("WAX Score", function () {
     expect(1);
 
-    ok($('.waxScore strong').text() === '57.5',
+    ok($('.waxScore strong').text() === '58',
       "WAX Score가 집계되어야 한다.");
   });
 }());

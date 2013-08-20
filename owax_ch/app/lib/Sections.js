@@ -992,15 +992,16 @@ labelLoop:
           frameDocs,
           g.achecker.i18n.get('NotApplicable'),
           function () {
+            var href = this.getAttribute('href');
             var text = getTextContent(this);
             var title = this.getAttribute('title');
 
-            return [
+            return href ? [
               '',
               this.tagName.toLowerCase(),
               (text || '-') +
                 (title ? ' (title: ' + title + ')' : '')
-            ];
+            ] : false;
           },
           function () {
             var text = getTextContent(this);
@@ -1595,30 +1596,30 @@ labelLoop:
             var filterValidationResult = function (res) {
               var msgs = res.messages, newmsgs = [];
               var filters = [
-  //              /^unterminated comment: .*/,
-  //              /^literal is missing closing delimiter.*/,
-  //              /^unknown declaration type .*/,
-                /^document type does not allow element .* here; missing one of .* start\-tag.*/,
-  //              /^end tag for .* omitted, but its declaration does not permit this.*/,
+//              /^unterminated comment: .*/,
+//              /^literal is missing closing delimiter.*/,
+//              /^unknown declaration type .*/,
+//              /^document type does not allow element .* here; missing one of .* start\-tag.*/,
+//              /^end tag for .* omitted, but its declaration does not permit this.*/,
                 /^end tag for .* which is not finished.*/,
                 /^end tag for element .* which is not open.*/,
-  //              /^an attribute value must be a literal unless it contains only name characters.*/,
-  //              /^an attribute value literal can occur in an attribute specification list only after a VI delimiter.*/,
-  //              /^normalized length of attribute value literal must not exceed.*/,
-  //              /^syntax of attribute value does not conform to declared value.*/,
-  //              /^value of attribute .* must be a single token.*/,
-  //              /^value of attribute .* cannot be .*; must be one of .*/,
-  //              /^invalid comment declaration:.*/,
-                /^ID .* already defined.*/,
-  //              /^no document type declaration; will parse without validation.*/,
-                /^unclosed start-tag requires SHORTTAG YES.*/,
-                /^unclosed end-tag requires SHORTTAG YES.*/,
-  //              /^DTD did not contain element declaration for document type name.*/,
-                /^empty start-tag.*/,
-                /^empty end-tag.*/
-  //              /^no document type declaration; implying .*/,
-  //              /^no system id specified.*/,
-  //              /^.* separator in comment declaration.*/,
+//              /^an attribute value must be a literal unless it contains only name characters.*/,
+//              /^an attribute value literal can occur in an attribute specification list only after a VI delimiter.*/,
+//              /^normalized length of attribute value literal must not exceed.*/,
+//              /^syntax of attribute value does not conform to declared value.*/,
+//              /^value of attribute .* must be a single token.*/,
+//              /^value of attribute .* cannot be .*; must be one of .*/,
+//              /^invalid comment declaration:.*/,
+//              /^no document type declaration; will parse without validation.*/,
+//              /^unclosed start-tag requires SHORTTAG YES.*/,
+//              /^unclosed end-tag requires SHORTTAG YES.*/,
+//              /^DTD did not contain element declaration for document type name.*/,
+//              /^empty start-tag.*/,
+//              /^empty end-tag.*/,
+//              /^no document type declaration; implying .*/,
+//              /^no system id specified.*/,
+//              /^.* separator in comment declaration.*/,
+                /^ID .* already defined.*/
               ];
               var i, j;
 
@@ -1719,7 +1720,7 @@ labelLoop:
                 errcntEl.innerText = g.achecker.i18n.get('ValidationTimeout') + ' ';
                 errcntEl.textContent = g.achecker.i18n.get('ValidationTimeout') + ' ';
                 errcntEl.appendChild(directValidationLink);
-              }, 10 * 1000);
+              }, 20 * 1000);
 
               req2.onreadystatechange = function () {
                 try {
@@ -1731,7 +1732,9 @@ labelLoop:
 
                   if (req2.readyState === 4) {
                     if (req2.status === 200) {
-                      var res = filterValidationResult(JSON.parse(req2.responseText));
+                      var responseText = req2.responseText;
+                      responseText = responseText.replace(/> 80/g, 80);
+                      var res = filterValidationResult(JSON.parse(responseText));
 
                       var el = rdoc.getElementById("w3c_validation");
                       var headerEl = rdoc.querySelectorAll("#w3c_validation h2")[0];
@@ -1761,32 +1764,14 @@ labelLoop:
                 }
               };
 
-              if (charset === 'utf-8') {
-                try {
-                  req2.open("POST", "http://validator.w3.org/check", true);
+              try {
+                req2.open("POST", "http://validator.w3.org/check", true);
+                req2.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
-                  // Firefox < 4
-                  if (typeof FormData !== "object") {
-                    req2.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-                    req2.send('fragment=' + g.escape(html) +
-                        '&doctype=HTML%204.01%20Transitional' +
-                        '&prefill_doctype=html401' +
-                        '&output=json' +
-                        '&fbd=1');
-                  } else {
-                    var formData = new FormData();
-                    formData.append('fragment', html);
-                    formData.append('doctype', 'HTML 4.01 Transitional');
-                    formData.append('prefill_doctype', 'html401');
-                    formData.append('fbd', '1');
-                    formData.append('output', 'json');
-                    req2.send(formData);
-                  }
-                } catch (e) {
-                }
-              } else {
-                req2.open("GET", "http://validator.w3.org/check?uri=" + g.escape(url) + "&output=json", true);
-                req2.send();
+                req2.send('fragment=' + g.encodeURIComponent(html) +
+                    '&output=json' +
+                    '&fbd=1');
+              } catch (e) {
               }
             };
 
@@ -1798,6 +1783,8 @@ labelLoop:
                   if (req.status === 200) {
                     // IT WORKS!
                     var html = req.responseText;
+                    // remove BOM
+                    html = html.replace(/^\uFEFF/, '');
                     runValidator(url, html, doc);
                   } else {
                     g.alert(g.achecker.i18n.get('ValidationFail'));
