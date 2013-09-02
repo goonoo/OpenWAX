@@ -1635,9 +1635,16 @@ labelLoop:
 //              /^literal is missing closing delimiter.*/,
 //              /^unknown declaration type .*/,
 //              /^document type does not allow element .* here; missing one of .* start\-tag.*/,
-//              /^end tag for .* omitted, but its declaration does not permit this.*/,
+//
+                // html4 (negate for xhtml 1.0 self-closing tags)
+                /^end tag for (?!.*img|.*meta|.*link|.*br|.*area|.*base|.*basefont|.*hr|.*input|.*col|.*frame|.*param|.*bgsound|.*isindex|.*keygen|.*menuitem|.*source|.*track|.*wbr) omitted.*/i,
                 /^end tag for .* which is not finished.*/,
                 /^end tag for element .* which is not open.*/,
+                // html5
+                /^End tag .* seen, but there were open elements.*/,
+                /^Unclosed element .*/,
+                /^Stray end tag .*/,
+
 //              /^an attribute value must be a literal unless it contains only name characters.*/,
 //              /^an attribute value literal can occur in an attribute specification list only after a VI delimiter.*/,
 //              /^normalized length of attribute value literal must not exceed.*/,
@@ -1654,7 +1661,17 @@ labelLoop:
 //              /^no document type declaration; implying .*/,
 //              /^no system id specified.*/,
 //              /^.* separator in comment declaration.*/,
-                /^ID .* already defined.*/
+
+                // html4
+                /^ID .* already defined.*/,
+                // html5
+                /^Duplicate ID .*/,
+
+                // attribute duplicate for XHTML 1.0
+                /^duplicate specification of attribute .*/,
+
+                // attribute duplicate for HTML 5
+                /^Duplicate attribute .*/
               ];
               var i, j;
 
