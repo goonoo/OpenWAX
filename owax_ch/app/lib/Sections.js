@@ -553,8 +553,7 @@ labelLoop:
             };
             var computedStyle = this.currentStyle || cwin.getComputedStyle(this, null);
             var bgImage = computedStyle.backgroundImage;
-            if (bgImage !== 'none' &&
-                this.getElementsByTagName('*').length < 10) {
+            if (bgImage !== 'none') {
               var $bg = rdoc.createElement('span');
               url = bgImage.replace(/^url\("?/, '').replace(/"?\)$/, '');
 
@@ -573,6 +572,10 @@ labelLoop:
 
               data.preview = $bg;
               data.content = getTextContent(this);
+
+              if (data.content.length > 100) {
+                data.content = data.content.substr(0, 100) + '...';
+              }
 
               return [
                 data.hidden,
@@ -643,11 +646,12 @@ labelLoop:
               if (is_on) {
                 el.style.webkitFilter = '';
                 el.style.mozFilter = '';
-                el.style.filter = ''; // IE
+                el.style.filter = '';
                 $tool_btn.setAttribute('data-on', '');
               } else {
                 el.style.webkitFilter = 'grayscale(100%)';
                 el.style.mozFilter = 'grayscale(100%)';
+                el.style.filter = 'url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\'><filter id=\'grayscale\'><feColorMatrix type=\'matrix\' values=\'0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0\'/></filter></svg>#grayscale")'; // FF 3.5+
                 el.style.filter = 'gray'; // IE
                 $tool_btn.setAttribute('data-on', '1');
               }
