@@ -44,18 +44,6 @@
       <preference id="_allowLogging" name="extensions.achecker.allowLogging" type="bool"/>
     </preferences>
 
-	<grid>
-		<columns>
-			<column width="250" />
-			<column flex="1" />
-		</columns>
-		<rows>
-			<row>
-				<label control="allowLogging">&allowLogging.label;</label>
-				<spacer/>
-				<checkbox id="allowLogging" preference="_allowLogging" checked="true"/>
-			</row>
-		</rows>
-	</grid>
+    <checkbox id="allowLogging" label="&allowLogging.label;" preference="_allowLogging"/>
 	</prefpane>
 </prefwindow>

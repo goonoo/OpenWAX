@@ -1641,7 +1641,7 @@ labelLoop:
 //              /^document type does not allow element .* here; missing one of .* start\-tag.*/,
 //
                 // html4 (negate for xhtml 1.0 self-closing tags)
-                /^end tag for (?!.*img|.*meta|.*link|.*br|.*area|.*base|.*basefont|.*hr|.*input|.*col|.*frame|.*param|.*bgsound|.*isindex|.*keygen|.*menuitem|.*source|.*track|.*wbr) omitted.*/i,
+                /^end tag for (?!.*img|.*meta|.*link|.*br|.*area|.*base|.*basefont|.*hr|.*input|.*col|.*frame|.*param|.*bgsound|.*isindex|.*keygen|.*menuitem|.*source|.*track|.*wbr).* omitted.*/i,
                 /^end tag for .* which is not finished.*/,
                 /^end tag for element .* which is not open.*/,
                 // html5

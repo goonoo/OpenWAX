@@ -60,16 +60,14 @@
 
 	<toolbarpalette id="BrowserToolbarPalette">
 		<toolbarbutton id="achecker-button"
-			label="OpenWAX" type="button"
+			label="OpenWAX" type="menu-button"
       tooltiptext="OpenWAX"
       class="toolbarbutton-1 chromeclass-toolbar-additional custombutton"
-			oncommand="achecker.toggleChecker(); event.stopPropagation();"
-			disabled="false"
-			hidden="false">
-			<menupopup>
+			oncommand="achecker.toggleChecker();">
+			<menupopup oncommand="event.stopPropagation();">
 				<menuitem
-					label="Preferences"
-					oncommand="achecker.openOptions(); event.stopPropagation();"/>
+					label="&preferences;"
+					oncommand="achecker.openOptions();"/>
 			</menupopup>
 		</toolbarbutton>
 	</toolbarpalette>

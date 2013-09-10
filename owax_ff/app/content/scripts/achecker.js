@@ -184,7 +184,7 @@
     openOptions: function () {
       window.openDialog('chrome://achecker/content/options.xul',
         'AcheckerOptions',
-        'modal,centerscreen,chrome,resizable=no');
+        'modal,centerscreen,chrome,resizable=no,width=500,height=100');
     }
   });
 
