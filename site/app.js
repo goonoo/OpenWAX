@@ -47,6 +47,14 @@ var log = function (req, res, next) {
     return;
   }
 
+  // do nothing if domain is 127.0.0.1 or localhost or custom host(url do not have dot)
+  if (url.indexOf('://127.0.0.1') > -1 ||
+      url.indexOf('://localhost') > -1 ||
+      /^https?:\/\/[a-zA-Z0-9:]+\//.test(url)) {
+    next();
+    return;
+  }
+
   step(
     function readOldData() {
       Score.findOne({url: url}, this);
