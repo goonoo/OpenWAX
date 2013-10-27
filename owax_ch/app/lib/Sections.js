@@ -158,6 +158,70 @@
     return l1;
   };
 
+  var getLabelText = function (el) {
+    var ELEMENT_NODE = 1;
+    var txt = '';
+    var nodeType = el.nodeType;
+    var tagName = el.tagName ? el.tagName.toUpperCase() : '';
+    var attrType = el.getAttribute ? el.getAttribute('type') : '';
+    var styleDisplay;
+
+    try {
+      var computedStyle = el.currentStyle || el.ownerDocument.defaultView.getComputedStyle(el, null);
+      styleDisplay = computedStyle.display;
+    } catch (e) {
+      styleDisplay = "";
+    }
+
+    if (nodeType === ELEMENT_NODE &&
+        styleDisplay === 'none') {
+      txt += '[__[';
+    }
+
+    if (nodeType === ELEMENT_NODE &&
+        tagName === "IMG") {
+      txt += el.getAttribute('alt');
+    } else if (nodeType === ELEMENT_NODE &&
+        tagName === "AREA") {
+      txt += el.getAttribute('alt');
+    } else if (nodeType === ELEMENT_NODE &&
+        tagName === "INPUT" &&
+        attrType === 'image') {
+      txt += el.getAttribute('alt');
+    } else if (nodeType === ELEMENT_NODE &&
+        tagName === "INPUT" &&
+        (attrType === 'submit' ||
+          attrType === 'reset' ||
+          attrType === 'button')) {
+      txt += el.value;
+    } else if (nodeType === ELEMENT_NODE &&
+        tagName === "INPUT") {
+      txt += '';
+    } else if (nodeType === ELEMENT_NODE &&
+        (tagName === "TEXTAREA" || tagName === "SELECT")) {
+      txt += '';
+    } else if (nodeType !== ELEMENT_NODE ||
+        (tagName !== "SCRIPT" && tagName !== "STYLE")) {
+      var cNodes = el.childNodes;
+      var TEXT_NODE = 3;
+      var i, l;
+      for (i = 0, l = cNodes.length; i < l; i++) {
+        if (cNodes[i].nodeType === TEXT_NODE) {
+          txt += cNodes[i].nodeValue;
+        } else {
+          txt += getLabelText(cNodes[i]);
+        }
+      }
+    }
+
+    if (nodeType === ELEMENT_NODE &&
+        styleDisplay === 'none') {
+      txt += ']__]';
+    }
+    txt = txt ? txt.replace(/^\s+/, '').replace(/\s+$/, '') : '';
+    return txt;
+  };
+
   var getLabel = function (element) {
     var currentLabel = "";
     var currentLabelElement;
@@ -182,12 +246,7 @@ labelLoop:
     }
 
     if (currentLabelElement) {
-      labelChilds = currentLabelElement.childNodes;
-      for (i = 0, l = labelChilds.length; i < l; i++) {
-        if (!labelChilds[i].tagName) { // check is text node
-          currentLabel += labelChilds[i].nodeValue.replace(/^\s+/, "").replace(/\s+$/, "");
-        }
-      }
+      currentLabel = currentLabelElement.innerText;
     }
     if (!currentLabel) {
       if (element.title) {
@@ -555,18 +614,24 @@ labelLoop:
             var bgImage = computedStyle.backgroundImage;
             if (bgImage !== 'none') {
               var $bg = rdoc.createElement('span');
+              var w, h;
               url = bgImage.replace(/^url\("?/, '').replace(/"?\)$/, '');
 
               try {
                 $bg.style.backgroundImage = bgImage;
                 $bg.style.backgroundPosition = computedStyle.backgroundPosition;
                 $bg.style.backgroundRepeat = computedStyle.backgroundRepeat;
+                w = parseInt(computedStyle.width, 10);
+                h = parseInt(computedStyle.height, 10);
                 $bg.style.width = computedStyle.width;
                 $bg.style.height = computedStyle.height;
               } catch (e) {
               }
               $bg.style.maxWidth = '100px';
               $bg.style.maxHeight = '200px';
+              if (w > 100 && h > 200) {
+                $bg.style.backgroundSize = 'cover';
+              }
               $bg.style.display = 'inline-block';
               $bg.style.overflow = 'hidden';
 
@@ -910,7 +975,7 @@ labelLoop:
           cwin,
           rdoc,
           '13. ' + g.achecker.i18n.get('No13') + '(<title>)',
-          'title',
+          'body',
           null,
           isIncludeFrame,
           frameDocs,
@@ -918,7 +983,7 @@ labelLoop:
           function (doc, url) {
             var $res = rdoc.createElement('span');
             var $val = rdoc.createElement('strong');
-            var val = this.textContent || this.innerText || g.achecker.i18n.get('NoPageTitle');
+            var val = doc.title || g.achecker.i18n.get('NoPageTitle');
 
             $res.innerText = url + ': ';
             $res.textContent = url + ': ';
@@ -928,8 +993,8 @@ labelLoop:
 
             return $res;
           },
-          function () {
-            var title = this.textContent || this.innerText || '';
+          function (doc) {
+            var title = doc.title || '';
             var dupCharacters = [
               '::', '||', '--', '@@', '##', '$$', '%%', '&&', '**', '((', '))', '++', '==', '~~',
               ';;', '<<', '>>', '[[', ']]', '★★', '☆☆', '◎◎', '●●', '◆◆', '◇◇', '□□', '■■', '△△',
@@ -1127,6 +1192,7 @@ labelLoop:
             var evtWrapper = this.wrappedJSObject || this;
             var hasChangeEvent;
             var hasWindowOpenEvent;
+            var contentForTest;
 
             try {
               hasWindowOpenEvent = evtWrapper.onclick ?
@@ -1136,12 +1202,16 @@ labelLoop:
             }
 
             data.content = getTextContent(this);
+            contentForTest = data.content.replace(/ /g, '').toLowerCase();
             if (this.getAttribute('title')) {
               data.title = this.getAttribute('title');
             } else if (this.getAttribute('target') === '_blank') {
               data.title = 'target="_blank"';
+            } else if (contentForTest.indexOf('새창') > -1 ||
+                       contentForTest.indexOf('팝업') > -1 ||
+                       contentForTest.toLowerCase().indexOf('newwin') > -1) {
             } else {
-              data.title = '-';
+              data.title = 'has notice';
             }
 
             if (hasWindowOpenEvent) {
@@ -1158,10 +1228,16 @@ labelLoop:
             ];
           },
           function () {
+            var content = getTextContent(this);
             if (this.getAttribute('title')) {
               return 'warning';
             }
             if (this.getAttribute('target') === '_blank') {
+              return 'pass';
+            }
+            if (content.indexOf('새창') > -1 ||
+                content.indexOf('팝업') > -1 ||
+                content.toLowerCase().indexOf('new window') > -1) {
               return 'pass';
             }
             return 'fail';
@@ -1553,17 +1629,17 @@ labelLoop:
             var hasImplicitLabel = false;
             var parentEl = this.parentNode;
             do {
-              parentEl = parentEl.parentNode;
               if (parentEl.tagName === 'LABEL') {
                 hasImplicitLabel = true;
                 $label = parentEl;
                 break;
               }
+              parentEl = parentEl.parentNode;
             } while (parentEl.parentNode);
 
             data.el = this.tagName.toLowerCase();
             data.type = typeAttr || '-';
-            data.label = $label ? getTextContent($label) : '';
+            data.label = $label ? getLabelText($label) : '';
             if (!data.label) {
               data.label = 'X';
             }
@@ -1596,11 +1672,10 @@ labelLoop:
             var hasImplicitLabel = false;
             var parentEl = this.parentNode;
             do {
-              parentEl = parentEl.parentNode;
-
               if (parentEl.tagName === 'LABEL') {
                 hasImplicitLabel = true;
               }
+              parentEl = parentEl.parentNode;
             } while (parentEl.parentNode);
 
             if (hasLabelElement) {

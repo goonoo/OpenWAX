@@ -2,7 +2,6 @@
 <html lang="ko">
 <head>
 	<meta charset="utf-8">
-	<title>OpenWAX 테스트</title>
   <link rel="stylesheet" href="resources/qunit.css">
 	<style>
 	#outline{outline:0}
@@ -44,7 +43,7 @@
       [IMG] alt 있음: <img src="i/3.png" width="30" alt="네이버톡"><br>
       [IMG] alt+longdesc: <img src="i/4.png" width="30" alt="네이버지도" longdesc="longdesc.html"><br>
       [IMG] longdesc: <img src="i/5.png" width="30" longdesc="longdesc.html"><br>
-      [IMG] BG: <div style="display:inline-block;width:200px;height:30px;background:url(i/6.png) no-repeat 0 0;">BG 대체 텍스트</div><br>
+      [IMG] BG: <div style="display:inline-block;width:50px;height:50px;background:url(i/6.png) no-repeat 0 0;">BG 대체 텍스트</div><br>
       [INPUT type="image"] alt 있음: <input type="image" alt="전송" src="i/7.png" width="30"><br>
       [IMG] usemap: <img src="i/9.png" width="30" usemap="#test">
       <map name="test">
@@ -142,7 +141,7 @@
       onchange (분리): <input id="change" placeholder="change!"><br>
       
       window.open: <a href="http://naver.com" onclick="window.open(this.href);return false;">
-        window.open</a><br>
+      window.open (알림 포함): <a href="http://naver.com" onclick="window.open(this.href);return false;">링크 (새창)</a><br>
       window.open (분리): <a href="http://naver.com" id="windowOpen">
         window.open - separated</a>
     </div>
