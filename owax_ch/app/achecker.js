@@ -37,7 +37,8 @@
     if (isIncludeFrame) {
       for (i = 0, l = document.getElementsByTagName("iframe").length; i < l; i++) {
         var f = document.getElementsByTagName("iframe")[i];
-        if (f.src && f.contentDocument) {
+        if (f.src === location.href || (f.src.indexOf('http://') === -1 && f.src.indexOf('https://') === -1)) {
+        } else if (f.src && f.contentDocument) {
           frameDocs.push({
             src: f.src,
             doc: f.contentDocument

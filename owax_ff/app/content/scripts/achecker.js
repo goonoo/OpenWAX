@@ -103,6 +103,11 @@
 
         for (i = 0, l = win.frames.length; i < l; i++) {
           var frame = win.frames[i];
+
+          if (frame.location.href.indexOf('http://') === -1 && frame.location.href.indexOf('https://') === -1) {
+            continue;
+          }
+
           frameDocs.push({
             src: frame.location.href,
             doc: frame.window.document
