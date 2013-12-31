@@ -68,6 +68,7 @@ background:url(http://openwax.miya.pe.kr/i/error.png) no-repeat 5px 3px,-webkit-
 /* Result - List Type */
 #achecker-result ul{margin:0;padding:0;list-style:none}
 #achecker-result li{display:block;padding:5px 15px;background:#fff;border-top:1px solid #ddd;color:#333;text-decoration:none;word-break:break-all}
+#achecker-result p{display:block;padding:5px 15px;background:#fff;border-top:1px solid #ddd;color:#333;text-decoration:none;word-break:break-all}
 #achecker-result li:first-child{border-top:none}
 #achecker-result li:hover{background:#bfde6d;background:-moz-linear-gradient(top,#fff 0%,#f6f6f6 30%,#e1e1e1 100%);background:-webkit-gradient(linear,0 0,0 100%,color-stop(0%,#fff),color-stop(30%,#f6f6f6),color-stop(100%,#e1e1e1));color:#000;text-shadow:1px 1px 1px rgba(255,255,255,0.7)}
 #achecker-result li:hover>div{text-shadow:none}
