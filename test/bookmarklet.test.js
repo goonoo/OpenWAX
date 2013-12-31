@@ -204,7 +204,7 @@
       "오류를 정확히 표시한다.");
   });
 
-  test("18. Table (caption, summary)", function () {
+  test("18. Table", function () {
     expect(2);
 
     var $section = $(".waxSection").eq(13);
@@ -219,25 +219,10 @@
       "오류를 정확히 표시한다.");
   });
 
-  test("18. Table (th)", function () {
-    expect(2);
-
-    var $section = $(".waxSection").eq(14);
-    var $items = $section.find('>table>tbody>tr');
-    var isErrors = _.map($items, function (el) {
-      return $(el).hasClass('fail');
-    });
-
-    equal($section.find("h2 span").text(), '(5)',
-      "항목 갯수를 정확히 집계해야 한다.");
-    deepEqual(isErrors, [false, true, true, false, true],
-      "오류를 정확히 표시한다.");
-  });
-
   test("19. Labels", function () {
     expect(4);
 
-    var $section = $(".waxSection").eq(15);
+    var $section = $(".waxSection").eq(14);
     var $items = $section.find('>table>tbody>tr');
     var isErrors = _.map($items, function (el) {
       return $(el).hasClass('fail');

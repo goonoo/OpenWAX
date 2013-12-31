@@ -1,4 +1,4 @@
-/*! OpenWAX - v2.0.5 - 2013-11-08 */
+/*! OpenWAX - v2.0.6 - 2013-12-31 */
 (function (g) {
   "use strict";
 
@@ -1794,103 +1794,10 @@ labelLoop:
           }
         ),
 
-        tableTitle: new TableSection(
+        table: new TableSection(
           cwin,
           rdoc,
-          '18. ' + g.achecker.i18n.get('No18') + '(caption, summary)',
-          'table',
-          [ {label: g.achecker.i18n.get('Hidden'), width: 45},
-            {label: g.achecker.i18n.get('CaptionContent'), className: 'lt'},
-            {label: g.achecker.i18n.get('SummaryContent')}
-          ],
-          isIncludeFrame,
-          frameDocs,
-          g.achecker.i18n.get('NotApplicable'),
-          function () {
-            var childNodes = this.childNodes,
-              $caption = null,
-              data = {
-                hidden: '',
-                caption: '',
-                summary: ''
-              },
-              i,
-              l;
-            for (i = 0; i < childNodes.length; i++) {
-              if (childNodes[i].tagName &&
-                  childNodes[i].tagName.toLowerCase() === 'caption') {
-                $caption = childNodes[i];
-                break;
-              }
-            }
-            var hasCaption = !!$caption;
-            var hasSummary = !!this.getAttribute('summary');
-
-            data.caption = hasCaption ? getTextContent($caption) : g.achecker.i18n.get('None');
-            data.summary = hasSummary ? this.getAttribute('summary') : g.achecker.i18n.get('None');
-
-            return [
-              data.hidden,
-              data.caption,
-              data.summary
-            ];
-          },
-          function () {
-            var childNodes = this.childNodes,
-              $caption = null,
-              i,
-              l;
-            for (i = 0; i < childNodes.length; i++) {
-              if (childNodes[i].tagName &&
-                  childNodes[i].tagName.toLowerCase() === 'caption') {
-                $caption = childNodes[i];
-                break;
-              }
-            }
-            var hasCaption = !!$caption;
-            var hasSummary = !!this.getAttribute('summary');
-            var $theadTh = getElsFromChildNodes(
-                getElsFromChildNodes(
-                  getElsFromChildNodes(this, 'thead'),
-                  'tr'
-                ),
-                'th'
-              );
-            var $tfootTh = getElsFromChildNodes(
-                getElsFromChildNodes(
-                  getElsFromChildNodes(this, 'tfoot'),
-                  'tr'
-                ),
-                'th'
-              );
-            var $tbodyTh = getElsFromChildNodes(
-                getElsFromChildNodes(
-                  getElsFromChildNodes(this, 'tbody'),
-                  'tr'
-                ),
-                'th'
-              ).concat(
-                getElsFromChildNodes(
-                  getElsFromChildNodes(this, 'tr'),
-                  'th'
-                )
-              );
-            var hasTh = $theadTh.length || $tfootTh.length || $tbodyTh.length;
-
-            if (hasCaption && hasTh) {
-              return 'pass';
-            } else if (!hasCaption && !hasSummary && !hasTh) {
-              return 'warning';
-            } else {
-              return 'fail';
-            }
-          }
-        ),
-
-        tableStructure: new TableSection(
-          cwin,
-          rdoc,
-          '18. ' + g.achecker.i18n.get('No18') + '(th)',
+          '18. ' + g.achecker.i18n.get('No18'),
           'table',
           [ {label: g.achecker.i18n.get('Hidden'), width: 45},
             {label: g.achecker.i18n.get('Structure'), className: 'tb_str'}
@@ -1903,6 +1810,25 @@ labelLoop:
               hidden: '',
               structure: ''
             };
+            var childNodes = this.childNodes;
+            var $caption = null;
+            var $resultCaption = rdoc.createElement('p');
+            var $resultSummary = rdoc.createElement('p');
+            var i, l;
+
+            for (i = 0; i < childNodes.length; i++) {
+              if (childNodes[i].tagName &&
+                  childNodes[i].tagName.toLowerCase() === 'caption') {
+                $caption = childNodes[i];
+                break;
+              }
+            }
+            var hasCaption = !!$caption;
+            var hasSummary = !!this.getAttribute('summary');
+
+            $resultCaption.innerHTML = '[caption] ' + (hasCaption ? getTextContent($caption) : g.achecker.i18n.get('None'));
+            $resultSummary.innerHTML = '[summary] ' +  (hasSummary ? this.getAttribute('summary') : g.achecker.i18n.get('None'));
+
             var $thead = getElsFromChildNodes(this, 'thead');
             var $tfoot = getElsFromChildNodes(this, 'tfoot');
             var $tbody = getElsFromChildNodes(this, 'tbody');
@@ -1949,7 +1875,6 @@ labelLoop:
             var $resultTd2 = rdoc.createElement('td');
             var $resultTd3 = rdoc.createElement('td');
             var $resultTd3Ul;
-            var i, l;
             var $th;
             var scope;
             var $infoItem;
@@ -2055,7 +1980,12 @@ labelLoop:
             $resultTr.appendChild($resultTd3);
             $resultTbody.appendChild($resultTr);
 
-            data.structure = $resultTable;
+            var $resultDiv = rdoc.createElement('div');
+            $resultDiv.appendChild($resultCaption);
+            $resultDiv.appendChild($resultSummary);
+            $resultDiv.appendChild($resultTable);
+
+            data.structure = $resultDiv;
 
             return [
               data.hidden,
