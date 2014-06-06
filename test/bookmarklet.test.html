@@ -140,10 +140,12 @@
       onchange: <input onchange="alert('changed!')" placeholder="change!"><br>
       onchange (분리): <input id="change" placeholder="change!"><br>
       
-      window.open: <a href="http://naver.com" onclick="window.open(this.href);return false;">
+      window.open: <a href="http://naver.com" onclick="window.open(this.href);return false;">링크링크</a>
       window.open (알림 포함): <a href="http://naver.com" onclick="window.open(this.href);return false;">링크 (새창)</a><br>
-      window.open (분리): <a href="http://naver.com" id="windowOpen">
-        window.open - separated</a>
+      window.open (분리): <a href="http://naver.com" id="windowOpen">window.open - separated</a>
+      window.open (title 포함): <a href="http://naver.com" onclick="window.open(this.href);return false;" title="새창">링크</a><br>
+      window.open (title 포함): <a href="http://naver.com" onclick="window.open(this.href);return false;"
+        title="의미없는 타이틀ㅋㅋ">링크</a><br>
     </div>
 
     <h2>23. 프레임 사용</h2>
