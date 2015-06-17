@@ -2,15 +2,16 @@
   "name": "openwax-node",
   "version": "0.0.1",
   "private": true,
+  "main": "app.js",
   "scripts": {
   },
   "dependencies": {
-    "locale": "latest",
-    "i18n-2": "https://github.com/maurousuga/i18n-node-2/tarball/master",
-    "express": "latest",
-    "mongoose": "latest",
-    "step": "latest",
-    "ejs-locals": "latest"
+    "locale": "^0.0.8",
+    "i18n-2": "https://github.com/mctenshi/i18n-2/tarball/master",
+    "express": "^3.1.0",
+    "mongoose": "^3.5.7",
+    "step": "^0.0.5",
+    "ejs-locals": "^1.0.2"
   },
   "devDependencies": {
   }

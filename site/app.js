@@ -156,7 +156,8 @@ app.configure(function () {
   });
   */
   I18n.expressBind(app, {
-    locales: ['en', 'ko']
+    locales: ['en', 'ko'],
+    directory: __dirname + "/locales"
   });
 
   app.use(express.bodyParser());
