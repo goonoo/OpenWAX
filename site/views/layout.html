@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <title><%= title ? title + ' | ' : '' %>OpenWAX</title>
+  <link rel="stylesheet" href="c/s.css?2" />
+  <meta property="og:url" content="http://goonoo.github.com/OpenWAX" />
+</head>
+<body>
+
+<div id="wrap">
+  <header role="banner" id="top">
+    <h1><a href="/">OpenWAX <span class="version">v2.0.8</span></a></h1>
+    <p><%= __("OpenWAX is a tool that can help diagnose and fix the accessibility problem") %></p>
+    <div class="img"><img alt="screenshot of OpenWAX" src="i/app.png" /></div>
+  </header>
+
+  <nav role="navigation">
+    <ul>
+      <li class="download"><a href="/#download"><%= __('Download') %></a></li>
+      <li class="guide"><a href="/#guide"><%= __('Guide') %></a></li>
+    </ul>
+  </nav>
+
+  <div id="body" role="main">
+    <%- body %>
+  </div>
+
+  <footer role="contentinfo">
+    <p>&copy; 2013 by <a href="https://github.com/goonoo">Goonoo</a>, some rights reserved.</p>
+  </footer>
+</div>
+
+<a href="#top" id="tothetop">△ Top</a>
+<a href="https://github.com/goonoo/OpenWAX" id="github_fork"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_left_orange_ff7600.png" alt="Fork me on GitHub"></a>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script> 
+<script>
+$(function () {
+  var fixNav = false;
+  $(window).on('scroll', function (e) {
+    var y = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement ||
+          document.body.parentNode || document.body).scrollTop;
+    if (y > 260 && fixNav === false) {
+      $('body').addClass('fix_nav');
+      fixNav = true;
+    } else if (y < 260 && fixNav === true) {
+      $('body').removeClass('fix_nav');
+      fixNav = false;
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-37817939-3']);
+_gaq.push(['_trackPageview']);
+
+(function() {
+  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+  ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+</script>
+
+</body>
+</html>

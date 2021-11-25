@@ -133,35 +133,9 @@ figcaption {
   text-decoration: underline;
 }
 
-[role=search] {
-  margin: 44px 0 0;
-  background: #ddf;
-}
-[role=search] fieldset {
-  width: 70%;
-  margin: 0 auto;
-  padding: 3px;
-  border: 0;
-  text-align: right;
-}
-[role=search] fieldset legend {
-  display: none;
-}
-[role=search] fieldset input {
-  max-width: 250px;
-  width: 70%;
-  vertical-align: middle;
-  font-size: 30px;
-}
-[role=search] fieldset button {
-  background: #66d;
-  vertical-align: middle;
-  color: #fff;
-}
-
 #body {
   width: 70%;
-  margin: 0 auto;
+  margin: 20px auto 0;
   padding: 1px 15% 40px;
   background: #fff;
   line-height: 1.6;
@@ -311,45 +285,5 @@ figcaption {
 
   #github_fork {
     display: none;
-  }
-}
-
-@media screen and (min-width: 1200px) {
-  #wrap {
-    max-width: 850px;
-  }
-
-  [role=navigation] {
-    max-width: 850px;
-  }
-  [role=navigation] .comments {
-    visibility: hidden;
-  }
-
-  .fix_nav #tothetop {
-    left: 780px;
-  }
-
-  #comments {
-    position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 850px;
-    box-shadow: 0 0 5px rgba(0,0,0,.2);
-    background: #fff;
-    overflow-y: auto;
-  }
-  #comments h1 {
-    display: none;
-  }
-
-  #affogato {
-    padding: 0 10px;
-  }
-
-  #skp_comment_form,
-  #skp_indicator {
-    display: none !important;
   }
 }

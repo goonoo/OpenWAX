@@ -1,3 +1,41 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <title>OpenWAX</title>
+  <link rel="stylesheet" href="c/s.css?2" />
+  <meta property="og:url" content="http://goonoo.github.com/OpenWAX" />
+</head>
+<body>
+
+<div id="wrap">
+  <header role="banner" id="top">
+    <h1><a href="/">OpenWAX <span class="version">v2.0.8</span></a></h1>
+    <p>OpenWAX(Open Web Accessibility eXtension)는 웹 페이지의 접근성 진단을 쉽게 할 수 있도록 제작된 도구입니다.</p>
+    <div class="img"><img alt="screenshot of OpenWAX" src="i/app.png" /></div>
+  </header>
+
+  <nav role="navigation">
+    <ul>
+      <li class="download"><a href="/#download">다운로드</a></li>
+      <li class="guide"><a href="/#guide">가이드</a></li>
+    </ul>
+  </nav>
+
+  <div id="body" role="main">
+    
+<section id="download">
+  <h1>Download</h1>
+  <p>OpenWAX(Open Web Accessibility eXtension)는 웹 페이지의 접근성 진단을 쉽게 할 수 있도록 제작된 도구입니다.</p>
+  <p>사용하시는 브라우저에 맞는 OpenWAX를 설치 후 진단을 원하는 웹 페이지에 접속 후 OpenWAX를 실행하세요!</p>
+  <ul>
+    <li><a href="https://addons.mozilla.org/ko/firefox/addon/openwax/" target="_blank">파이어폭스용 OpenWAX</a></li>
+    <li><a href="https://chrome.google.com/webstore/detail/openwax/bfahpbmaknaeohgdklfbobogpdngngoe?hl=ko" target="_blank">구글크롬용 OpenWAX</a></li>
+    <li><a href="javascript:(function(d){__a=d.createElement('script');__a.charset='UTF-8';__a.src='http://openwax.miya.pe.kr/j/bookmarklet.js?t=' + Math.random();d.body.appendChild(__a);})(document);">OpenWAX
+      bookmarklet</a> - 링크 우클릭 후 북마크로 추가하거나 드래그하여 북마크바에 놓으면 사용할 수 있습니다. (IE용)</li>
+  </ul>
+</section>
+
 <section id="guide">
   <h1>Guide</h1>
   <h2 id="guide_exec">OpenWAX 실행</h2>
@@ -14,33 +52,7 @@
     <img alt="" src="i/guide/0-4.png" />
     <figcaption>북마클릿으로 실행하려면 (1. 북마클릿 링크를 북마크에 추가한 후, 2. 원하는 페이지에서 북마크 실행!)</figcaption>
   </figure>
-  <h2 id="guide_score">WAX Score</h2>
-  <p>OpenWAX가 제공하는 접근성 점수입니다. WAX Score는 기계적으로 검사할 수 있는 접근성 관련 항목들을 100점 만점으로 수치화하여 표시합니다.</p>
-  <figure>
-    <img alt="" src="i/guide/score100.png" />
-    <figcaption>WAX Score: 100과 같이 OpenWAX 검사결과 상단에 WAX Score가 표시됩니다.</figcaption>
-  </figure>
-  <p>WAX Score가 100점이라고 정말로 접근성을 100%로 지킨건 아니라는 건 알고계시죠? 바보 이미지에 "천재"라고 대체
-    텍스트를 달아도 기계적으로는 대체 텍스트를 일단 달았으니 접근성을 준수한 것으로 판단하니까요. 물론 대체 텍스트를
-    달았다는 것 자체가 접근성을 준수했을 가능성이 높으므로 WAX Score는 충분히 의미를 가진답니다.</p>
-  <p>아래는 WAX Score의 점수 구성에 대한 설명입니다.</p>
-  <ul>
-    <li><b>대체 텍스트(30점)</b>: 전체 이미지 대비 대체 텍스트가 제공된 이미지를 10점 만점으로 환산합니다. 이미지가 사용되지
-    않았다면 30점입니다.</li>
-    <li><b>키보드 포커스(10점)</b>: <code>onfocus</code> 이벤트에 <code>blur()</code> 함수를 실행하여 키보드 포커스를 없애는 경우, CSS의
-      <code>outline</code> 속성이 0으로 설정된 경우가 있으면 0점, 그런 경우가 없으면 10점입니다.</li>
-    <li><b>프레임 제목(10점)</b>: 페이지에 프레임이 제공되었다면 프레임에 제목(<code>title</code> 속성)이 제공된 비율을 10점
-      만점으로 환산합니다. 프레임이 제공되지 않았다면 10점입니다.</li>
-    <li><b>링크 텍스트(10점)</b>: 전체 링크 대비 링크 텍스트가 제공된 링크를 10점 만점으로 환산합니다. 링크가 사용되지
-      않았다면 10점입니다.</li>
-    <li><b>기본 언어(10점)</b>: 페이지에 기본 언어가 명시되었는지를 점수로 환산합니다. 프레임을 포함하여 검사하는 경우 기본
-      언어가 명시된 비율로 점수가 계산됩니다.</li>
-    <li><b>의도하지 않은 실행(10점)</b>: <code>onclick</code> 이벤트에 <code>window.open</code>이 포함된 경우 새 창 알림(<code>title</code> 속성,
-      <code>target="_blank"</code>)이 제공된 비율을 10점 만점으로 환산합니다. <code>window.open</code>이 포함된
-      <code>onclick</code> 이벤트가 없다면 10점입니다.</li>
-    <li><b>레이블(20점)</b>: 전체 폼 서식 대비 레이블이 제공된 폼 서식의 비율을 20점 만점으로 환산합니다. 폼 서식이 사용되지
-    않았다면 20점입니다.</li>
-  </ul>
+
   <h2 id="guide_pages">대상 페이지</h2>
   <p>이제부터는 OpenWAX 실행결과에서 표시되는 항목들에 대한 설명입니다.</p>
   <p>대상 페이지는 OpenWAX가 검사를 수행한 페이지를 표시합니다. 페이지 안에 프레임이 들어있다면 OpenWAX의 옵션에 따라 대상 페이지가 될 수도, 그렇지 않을 수도 있습니다.</p>
@@ -129,12 +141,9 @@
     <code>&lt;input&gt;</code> 및 <code>&lt;textarea&gt;</code>,
     <code>&lt;select&gt;</code>입니다.</p>
   <h2 id="guide_validation">21. 마크업 오류 방지</h2>
-  <p><a href="http://validator.w3.org/" target="_blank">W3C Validation Service</a>의 HTML 유효성 검사 결과 중 접근성
+  <p><a href="https://validator.w3.org/" target="_blank">W3C Validation Service</a>의 HTML 유효성 검사 결과 중 접근성
     오류를 일으킬 수 있는 항목들을 표시합니다.</p>
-  <p>HTML 유효성 검사 결과에는 <a href="http://www.htmlhelp.com/tools/validator/problems.html" target="_blank">알려진
-    문제</a>가 발생할 수 있으니 무조건 오류라고 판단하지 않아야 하니 주의하세요!</p>
   <p>OpenWAX가 HTML 유효성 검사 결과 중 접근성 오류를 일으킬 수 있는 항목으로 판단하는 목록은 다음과 같습니다.</p>
-  <p>북마클릿에서는 작동하지 않습니다. ㅠㅠ</p>
   <ul lang="en">
     <li>document type does not allow element * here; missing one of * start-tag.</li>
     <li>end tag for * which is not finished*</li>
@@ -146,5 +155,51 @@
     <li>empty end-tag *</li>
   </ul>
   <h2 id="guide_license">License</h2>
-  <p>OpenWAX is on <a href="http://opensource.org/licenses/MIT">MIT license</a>.</p>
+  <p>OpenWAX is on <a href="https://opensource.org/licenses/MIT">MIT license</a>.</p>
 </section>
+
+
+  </div>
+
+  <footer role="contentinfo">
+    <p>&copy; 2013 by <a href="http://miya.pe.kr">mctenshi</a>, some rights reserved.</p>
+  </footer>
+</div>
+
+<a href="#top" id="tothetop">△ Top</a>
+<a href="https://github.com/mctenshi/OpenWAX" id="github_fork"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_left_orange_ff7600.png" alt="Fork me on GitHub"></a>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script> 
+<script>
+$(function () {
+  var fixNav = false;
+  $(window).on('scroll', function (e) {
+    var y = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement ||
+          document.body.parentNode || document.body).scrollTop;
+    if (y > 260 && fixNav === false) {
+      $('body').addClass('fix_nav');
+      fixNav = true;
+    } else if (y < 260 && fixNav === true) {
+      $('body').removeClass('fix_nav');
+      fixNav = false;
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-37817939-3']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+</body>
+</html>
