@@ -1,0 +1,1 @@
+javascript:(function(d){__a=d.createElement("script");__a.src="http://openwax.miya.pe.kr/j/bookmarklet.js";d.body.appendChild(__a);})(document);
