@@ -1,3 +1,4 @@
 OpenWAX Site
 ------------
 
+DEPRECATED
