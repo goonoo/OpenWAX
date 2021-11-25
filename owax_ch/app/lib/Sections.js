@@ -1627,271 +1627,34 @@ labelLoop:
           'w3c_validation',
           '21. ' + g.achecker.i18n.get('No21'),
           function (win, rdoc) {
-            var isChromeAddon = typeof chrome === "object" && chrome.extension;
-            var isFirefoxAddon = typeof Components === "object" && Components.classes;
-            if (!isChromeAddon && !isFirefoxAddon) {
-              var $res = rdoc.createElement('p');
-              $res.className = 'comment';
-              $res.innerText = 'Not Supported.';
-              $res.textContent = 'Not Supported.';
-              return $res;
-            }
-
-            var filterValidationResult = function (res) {
-              var msgs = res.messages, newmsgs = [];
-              var filters = [
-//              /^unterminated comment: .*/,
-//              /^literal is missing closing delimiter.*/,
-//              /^unknown declaration type .*/,
-//              /^document type does not allow element .* here; missing one of .* start\-tag.*/,
-//
-                // html4 (negate for xhtml 1.0 self-closing tags)
-                /^end tag for (?!.*img|.*meta|.*link|.*br|.*area|.*base|.*basefont|.*hr|.*input|.*col|.*frame|.*param|.*bgsound|.*isindex|.*keygen|.*menuitem|.*source|.*track|.*wbr).* omitted.*/i,
-                /^end tag for .* which is not finished.*/,
-                /^end tag for element .* which is not open.*/,
-                // html5
-                /^End tag .* seen, but there were open elements.*/,
-                /^Unclosed element .*/,
-                /^Stray end tag .*/,
-
-//              /^an attribute value must be a literal unless it contains only name characters.*/,
-//              /^an attribute value literal can occur in an attribute specification list only after a VI delimiter.*/,
-//              /^normalized length of attribute value literal must not exceed.*/,
-//              /^syntax of attribute value does not conform to declared value.*/,
-//              /^value of attribute .* must be a single token.*/,
-//              /^value of attribute .* cannot be .*; must be one of .*/,
-//              /^invalid comment declaration:.*/,
-//              /^no document type declaration; will parse without validation.*/,
-//              /^unclosed start-tag requires SHORTTAG YES.*/,
-//              /^unclosed end-tag requires SHORTTAG YES.*/,
-//              /^DTD did not contain element declaration for document type name.*/,
-//              /^empty start-tag.*/,
-//              /^empty end-tag.*/,
-//              /^no document type declaration; implying .*/,
-//              /^no system id specified.*/,
-//              /^.* separator in comment declaration.*/,
-
-                // html4
-                /^ID .* already defined.*/,
-                // html5
-                /^Duplicate ID .*/,
-
-                // attribute duplicate for XHTML 1.0
-                /^duplicate specification of attribute .*/,
-
-                // attribute duplicate for HTML 5
-                /^Duplicate attribute .*/
-              ];
-              var i, j;
-
-              for (i = 0; i < msgs.length; i++) {
-                if (msgs[i].type === 'error') {
-                  for (j = 0; j < filters.length; j++) {
-                    if (filters[j].test(msgs[i].message)) {
-                      newmsgs.push(msgs[i]);
-                      break;
-                    }
-                  }
-                }
-              }
-
-              res.messages = newmsgs;
-              return res;
-            };
-
-            var getResultDetailEl = function (messages, url) {
-              var $res = rdoc.createElement('div');
-              $res.className = 'validationResult';
-              var $errhead = rdoc.createElement('h3');
-              $errhead.innerText = 'Error';
-              $errhead.textContent = 'Error';
-              $errhead.className = 'fail';
-              var $errul = rdoc.createElement('ul');
-              var $warninghead = rdoc.createElement('h3');
-              $warninghead.innerText = 'Warning';
-              $warninghead.textContent = 'Warning';
-              $warninghead.className = 'warning';
-              var $warningul = rdoc.createElement('ul');
-              var onClickMessageLink = function (e) {
-                e.preventDefault();
-                e.stopPropagation();
-                openDialog("chrome://global/content/viewSource.xul",
-                         "achecker_sourceView",
-                         "scrollbars,resizable,chrome,dialog=no",
-                         url, null, null, this.getAttribute('data-line'),
-                         false);
-              }, i;
-
-              for (i = 0; i < messages.length; i++) {
-                var msg = messages[i];
-                var $li = rdoc.createElement('li');
-                var $msg = rdoc.createElement('div');
-                var $msga = rdoc.createElement('a');
-                $msga.innerText = msg.message;
-                $msga.textContent = msg.message;
-                $msga.setAttribute('href', '#');
-                $msga.setAttribute('data-line', msg.lastLine);
-                addEvent($msga, 'click', onClickMessageLink);
-                $msg.appendChild($msga);
-                var $subinfo = rdoc.createElement('div');
-                $subinfo.className = 'subinfo';
-                $subinfo.innerText = msg.lastLine + ' line, ' + msg.lastColumn + ' column';
-                $subinfo.textContent = msg.lastLine + ' line, ' + msg.lastColumn + ' column';
-                $li.appendChild($msg);
-                $li.appendChild($subinfo);
-                switch (msg.type) {
-                case 'error':
-                  $errul.appendChild($li);
-                  break;
-                case 'info':
-                  $warningul.appendChild($li);
-                  break;
-                }
-              }
-              $res.appendChild($errhead);
-              $res.appendChild($errul);
-              $res.appendChild($warninghead);
-              $res.appendChild($warningul);
-              return $res;
-            };
-
-            var getItemEl = function (url) {
-              var el = rdoc.getElementById("w3c_validation");
-              var itemEls = rdoc.querySelectorAll("#w3c_validation li.validationItem");
-              var i;
-
-              for (i = 0; i < itemEls.length; i++) {
-                var urlEl = itemEls[i].getElementsByClassName("url")[0];
-                if (urlEl.innerText === url || urlEl.textContent === url) {
-                  return itemEls[i];
-                }
-              }
-            };
-
-            var runValidator = function (url, html, doc) {
-              var req2 = new XMLHttpRequest();
-              var charset = html.toLowerCase().indexOf('euc-kr') > 0 ? 'euc-kr' : 'utf-8';
-              var ggTimeout = setTimeout(function () {
-                var itemEl = getItemEl(url);
-                var errcntEl = itemEl.getElementsByClassName("errcnt")[0];
-                var directValidationLink = rdoc.createElement("a");
-                directValidationLink.target = '_blank';
-                directValidationLink.href = 'http://validator.w3.org/check?uri=' + encodeURIComponent(url);
-                directValidationLink.textContent = '(' + g.achecker.i18n.get('ValidateManually') + ')';
-                errcntEl.innerText = g.achecker.i18n.get('ValidationTimeout') + ' ';
-                errcntEl.textContent = g.achecker.i18n.get('ValidationTimeout') + ' ';
-                errcntEl.appendChild(directValidationLink);
-              }, 20 * 1000);
-
-              req2.onreadystatechange = function () {
-                try {
-                  var i;
-                  var onClickItem = function () {
-                    var $res = this.getElementsByTagName("div")[0];
-                    $res.style.display = $res.style.display === 'none' ? 'block' : 'none';
-                  };
-
-                  if (req2.readyState === 4) {
-                    if (req2.status === 200) {
-                      var responseText = req2.responseText;
-                      responseText = responseText.replace(/> 80/g, 80);
-                      var res = filterValidationResult(JSON.parse(responseText));
-
-                      var el = rdoc.getElementById("w3c_validation");
-                      var headerEl = rdoc.querySelectorAll("#w3c_validation h2")[0];
-                      var itemEl = getItemEl(url);
-                      var errcnt = 0;
-                      for (i = 0; i < res.messages.length; i++) {
-                        if (res.messages[i].type === 'error') {
-                          errcnt++;
-                        }
-                      }
-
-                      clearTimeout(ggTimeout);
-                      var errcntEl = itemEl.getElementsByClassName("errcnt")[0];
-                      errcntEl.innerText = errcnt + ' Errors';
-                      errcntEl.textContent = errcnt + ' Errors';
-                      itemEl.className = errcnt > 0 ? 'fail' : 'pass';
-                      if (errcnt > 0) {
-                        headerEl.className += " fail";
-                      }
-                      var $res = getResultDetailEl(res.messages, url);
-                      $res.style.display = 'none';
-                      itemEl.appendChild($res);
-                      itemEl.onclick = onClickItem;
-                    }
-                  }
-                } catch (e) {
-                }
-              };
-
-              try {
-                req2.open("POST", "http://validator.w3.org/check", true);
-                req2.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-
-                req2.send('fragment=' + g.encodeURIComponent(html) +
-                    '&output=json' +
-                    '&fbd=1');
-              } catch (e) {
-              }
-            };
-
-            var doValidation = function (url, doc) {
-              var sourceUrl = url;
-              var req = new XMLHttpRequest();
-              req.onreadystatechange = function () {
-                if (req.readyState === 4) {
-                  if (req.status === 200) {
-                    // IT WORKS!
-                    var html = req.responseText;
-                    // remove BOM
-                    html = html.replace(/^\uFEFF/, '');
-                    runValidator(url, html, doc);
-                  } else {
-                    g.alert(g.achecker.i18n.get('ValidationFail'));
-                  }
-                }
-              };
-              req.open("GET", sourceUrl, true);
-              req.send(null);
-            };
-
-            var urls = [], docs = [], i, l;
+            var urls = [], i, l;
             if (win.location.href.substr(0, 7) === 'http://' ||
                   win.location.href.substr(0, 8) === 'https://' ||
                   win.location.href.substr(0, 7) === 'file://') {
               urls.push(win.location.href);
-              docs.push(win.document);
             }
             if (isIncludeFrame) {
               for (i = 0, l = frameDocs.length; i < l; i++) {
                 var _url = frameDocs[i].src;
                 if (_url.substr(0, 7) === 'http://' || _url.substr(0, 8) === 'https://') {
                   urls.push(_url);
-                  docs.push(frameDocs[i]);
                 }
               }
             }
 
-            var $output = rdoc.createElement('ul');
-            for (i = 0, l = urls.length; i < l; i++) {
-              doValidation(urls[i], docs[i]);
+            var $ul = rdoc.createElement('ul');
+            for (i = 0; i < urls.length; i++) {
+              var url = urls[i];
               var $item = rdoc.createElement('li');
-              $item.className = 'validationItem';
-              var $_url = rdoc.createElement('span');
-              $_url.className = 'url';
-              $_url.innerText = urls[i];
-              $_url.textContent = urls[i];
-              var $_errcnt = rdoc.createElement('b');
-              $_errcnt.className = 'errcnt';
-              $_errcnt.innerText = g.achecker.i18n.get('Loading');
-              $_errcnt.textContent = g.achecker.i18n.get('Loading');
-              $item.appendChild($_url);
-              $item.appendChild(rdoc.createTextNode(': '));
-              $item.appendChild($_errcnt);
-              $output.appendChild($item);
+              var directValidationLink = rdoc.createElement("a");
+              directValidationLink.target = '_blank';
+              directValidationLink.href = 'https://validator.w3.org/check?uri=' + encodeURIComponent(url);
+              directValidationLink.textContent = g.achecker.i18n.get('ValidateManually');
+              $item.textContent = url + ': ';
+              $item.appendChild(directValidationLink);
+              $ul.appendChild($item);
             }
-            return $output;
+            return $ul;
           }
         )
       }
