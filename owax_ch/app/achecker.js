@@ -95,6 +95,15 @@
       }
     }
 
+    var homeEl = rdoc.createElement("div");
+    homeEl.className = "openwax-home";
+    var homeLinkEl = rdoc.createElement("a");
+    homeLinkEl.setAttribute("href", "https://goonoo.github.io/OpenWAX/");
+    homeLinkEl.setAttribute("target", "_blank");
+    homeLinkEl.textContent = "OpenWAX Docs";
+    homeEl.appendChild(homeLinkEl);
+    resultEl.appendChild(homeEl);
+
     rdoc.body.appendChild(resultEl);
     return {
       err: false
@@ -113,7 +122,7 @@
     return res;
   };
 
-  chrome.extension.onMessage.addListener(function (request, sender, sendResponse) {
+  chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     var res;
     if (request.action === 'execute_with_frames') {
       res = execute(true, request.allowLogging);
