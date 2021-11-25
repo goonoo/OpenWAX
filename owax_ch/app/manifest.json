@@ -28,7 +28,6 @@
 			"lib/colorInspector.js",
 			"lib/Section.js",
 			"lib/Sections.js",
-			"lib/Score.js",
 			"i18n.js",
 			"achecker.js"
 		],

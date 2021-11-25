@@ -322,21 +322,6 @@
     */
     return $section;
   };
-  g.achecker.Wax.ListSection.prototype.getScore = function () {
-    var count = this.contents.length,
-        pass = 0;
-
-    for (var i = 0; i < count; i++) {
-      if (this.contents[i].validStatus !== 'fail') {
-        pass++;
-      }
-    }
-
-    return {
-      all: count,
-      pass: pass
-    };
-  };
 
   g.achecker.Wax.TableSection = g.achecker.Wax.Section;
   g.achecker.Wax.TableSection = function (cwin, rdoc, title, targetSelector,
@@ -547,21 +532,6 @@
     */
     return $section;
   };
-  g.achecker.Wax.TableSection.prototype.getScore = function () {
-    var count = this.contents.length,
-        pass = 0;
-
-    for (var i = 0; i < count; i++) {
-      if (this.contents[i].validStatus !== 'fail') {
-        pass++;
-      }
-    }
-
-    return {
-      all: count,
-      pass: pass
-    };
-  };
 
   g.achecker.Wax.ToolSection = function (cwin, rdoc, id, title, content, eventHandlers) {
     var this_ = this;
@@ -613,8 +583,5 @@
     });
     */
     return $section;
-  };
-  g.achecker.Wax.ToolSection.prototype.getScore = function () {
-    return null;
   };
 }(this));
