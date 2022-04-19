@@ -2,7 +2,7 @@ OpenWAX (Open Web Accessibility eXtension)
 ========================================
 [![Build Status](https://travis-ci.org/mctenshi/OpenWAX.png?branch=master)](https://travis-ci.org/mctenshi/OpenWAX)
 
-[OpenWAX(Open Web Accessibility eXtension)](http://openwax.miya.pe.kr) is a tool that can help diagnose and fix the accessibility problem.
+[OpenWAX(Open Web Accessibility eXtension)](https://goonoo.github.io/OpenWAX/) is a tool that can help diagnose and fix the accessibility problem.
 
 OpenWAX can diagnose following accessibility problems.
 
@@ -24,10 +24,10 @@ OpenWAX is based on and branch of [N-WAX](http://html.nhncorp.com/markup_tools/n
 
 Download
 --------
-You can download OpenWAX in [OpenWAX official site](http://openwax.miya.pe.kr)
+You can download OpenWAX in [OpenWAX official site](https://goonoo.github.io/OpenWAX/)
 
 ----
 
 Guide
 -----
-[See guide](http://openwax.miya.pe.kr/#guide).
+[See guide](https://goonoo.github.io/OpenWAX/#guide).
