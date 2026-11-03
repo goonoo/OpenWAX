@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <title>aria-label 호환 검사 테스트</title>
+  <link rel="stylesheet" href="resources/qunit.css">
+</head>
+<body>
+  <div id="qunit"></div>
+  <div id="qunit-fixture">
+    <h2>14. 링크 텍스트 (aria-label)</h2>
+    <div>
+      <a href="#" id="link-aria-only" aria-label="닫기"></a>
+      <a href="#" id="link-aria-blank" aria-label="   "></a>
+      <a href="#" id="link-empty"></a>
+      <a href="#" id="link-text-and-aria" aria-label="장바구니로 이동">장바구니</a>
+      <a href="#" id="link-icon-aria" aria-label="홈으로"><span class="icon"></span></a>
+    </div>
+
+    <h2>19. 레이블 (aria-label)</h2>
+    <div>
+      <input type="text" id="input-aria-only" aria-label="검색어">
+      <input type="text" id="input-aria-blank" aria-label="   ">
+      <input type="text" id="input-aria-empty" aria-label="">
+      <input type="text" id="input-title-and-aria" title="이름 입력" aria-label="이름">
+      <select id="select-aria" aria-label="정렬 순서"><option>최신순</option></select>
+      <textarea id="textarea-aria" aria-label="내용"></textarea>
+      <input type="text" id="input-explicit-label"> <label for="input-explicit-label">명시 레이블</label>
+      <input type="text" id="input-no-label">
+    </div>
+  </div>
+
+  <script src="resources/jquery.min.js"></script>
+  <script src="resources/underscore-min.js"></script>
+  <script src="resources/qunit.js"></script>
+  <script src="../lib/Section.js"></script>
+  <script src="../lib/Sections.js"></script>
+  <script src="../lib/Score.js"></script>
+  <script src="../owax_bookmarklet/dist/locale_ko.js"></script>
+  <script src="../owax_bookmarklet/lib/i18n.js"></script>
+  <script src="../owax_bookmarklet/src/app.js"></script>
+  <script src="aria-label.test.js"></script>
+</body>
+</html>
