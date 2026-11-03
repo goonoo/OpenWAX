@@ -222,6 +222,12 @@
     return txt;
   };
 
+  // aria-label 값을 앞뒤 공백을 제거해 반환한다. 없거나 공백뿐이면 빈 문자열.
+  var getAriaLabel = function (el) {
+    var value = el.getAttribute ? el.getAttribute('aria-label') : null;
+    return value ? value.replace(/^\s+/, '').replace(/\s+$/, '') : '';
+  };
+
   var getLabel = function (element) {
     var currentLabel = "";
     var currentLabelElement;
@@ -972,18 +978,20 @@ labelLoop:
             var href = this.getAttribute('href');
             var text = getTextContent(this);
             var title = this.getAttribute('title');
+            var ariaLabel = getAriaLabel(this);
 
             return href ? [
               '',
               this.tagName.toLowerCase(),
               (text || '-') +
-                (title ? ' (title: ' + title + ')' : '')
+                (title ? ' (title: ' + title + ')' : '') +
+                (ariaLabel ? ' (aria-label: ' + ariaLabel + ')' : '')
             ] : false;
           },
           function () {
             var text = getTextContent(this);
 
-            return text ? 'pass' : 'fail';
+            return (text || getAriaLabel(this)) ? 'pass' : 'fail';
           }
         ),
 
@@ -1443,6 +1451,11 @@ labelLoop:
             data.el = this.tagName.toLowerCase();
             data.type = typeAttr || '-';
             data.label = $label ? getLabelText($label) : '';
+            var ariaLabel = getAriaLabel(this);
+            if (ariaLabel) {
+              data.label = (data.label ? data.label + ' ' : '') +
+                '(aria-label: ' + ariaLabel + ')';
+            }
             if (!data.label) {
               data.label = 'X';
             }
@@ -1485,6 +1498,9 @@ labelLoop:
               return 'pass';
             }
             if (hasImplicitLabel) {
+              return 'pass';
+            }
+            if (getAriaLabel(this)) {
               return 'pass';
             }
             if (hasTitle) {
