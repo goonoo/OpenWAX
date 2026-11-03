@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <title>결과 행 클릭 시 요소 이동 테스트</title>
+  <link rel="stylesheet" href="resources/qunit.css">
+</head>
+<body>
+  <div id="qunit"></div>
+  <!-- #qunit-fixture는 테스트마다 다시 그려져 결과 행이 가리키는 요소가 분리되므로 일반 영역에 둔다 -->
+  <div id="focus-fixture">
+    <h2>19. 레이블 (포커스 이동)</h2>
+    <input type="text" id="input-enabled" aria-label="이름">
+    <select id="select-disabled" aria-label="일" disabled style="outline: 1px dotted blue"><option>1</option></select>
+  </div>
+
+  <script src="resources/jquery.min.js"></script>
+  <script src="resources/underscore-min.js"></script>
+  <script src="resources/qunit.js"></script>
+  <script src="../lib/Section.js"></script>
+  <script src="../lib/Sections.js"></script>
+  <script src="../lib/Score.js"></script>
+  <script src="../owax_bookmarklet/dist/locale_ko.js"></script>
+  <script src="../owax_bookmarklet/lib/i18n.js"></script>
+  <script src="../owax_bookmarklet/src/app.js"></script>
+  <script src="focus.test.js"></script>
+</body>
+</html>
